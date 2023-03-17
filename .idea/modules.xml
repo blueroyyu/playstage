@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/playstage.iml" filepath="$PROJECT_DIR$/.idea/playstage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/playstage_android.iml" filepath="$PROJECT_DIR$/android/playstage_android.iml" />
+    </modules>
+  </component>
+</project>
