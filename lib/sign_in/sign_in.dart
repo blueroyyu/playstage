@@ -8,6 +8,8 @@ import 'package:playstage/sign_in/input_phone_number.dart';
 
 import 'dart:io' show Platform;
 
+import 'package:playstage/sign_up/add_photo.dart';
+
 enum LanguageMenuItem { itemOne, itemTwo, itemThree }
 
 class SignIn extends StatefulWidget {
@@ -104,7 +106,8 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   onPressed: () {
-                    Get.to(const InputPhoneNumber());
+                    // Get.to(const InputPhoneNumber());
+                    Get.to(() => const AddPhoto());
                   },
                 ),
               ],

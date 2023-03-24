@@ -136,7 +136,7 @@ class _InputPhoneNumberState extends State<InputPhoneNumber> {
     String number = '${unformatted.substring(0, 3)}-${unformatted.substring(3, 7)}-${unformatted.substring(7, 11)}';
     final msg = jsonEncode({"authValue": number});
 
-    String url = BASE_URL + '/member/smsAuth';
+    String url = baseUrl + '/member/smsAuth';
     var response = await http.post(Uri.parse(url),
         headers: {
           "accept": "*/*",

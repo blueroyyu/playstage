@@ -2,12 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'subscriber_info.dart';
-import 'select_popup.dart';
-import 'allow_location.dart';
 
 class AddPhoto extends StatefulWidget {
   const AddPhoto({
@@ -21,8 +18,14 @@ class AddPhoto extends StatefulWidget {
 class _AddPhotoState extends State<AddPhoto> {
   bool _filled = false;
 
-  List<String> _imageFilePath = List.generate(6, (_) => "");
+  final List<String> _imageFilePath = List.generate(6, (_) => "");
   final ImagePicker _imagePicker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,17 +46,22 @@ class _AddPhotoState extends State<AddPhoto> {
           Container(
             margin: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_filled == false) {
                   return;
                 }
 
                 SubscriberInfo info = SubscriberInfo();
                 for (String path in _imageFilePath) {
+                  // Upload image with the current time as the key
+                  final key = DateTime.now().toString();
+                  final file = File(path);
+
+
                   info.profileImages.add(path);
                 }
 
-                Get.to(const AllowLocation());
+                // Get.to(const AllowLocation());
               },
               style: ElevatedButton.styleFrom(
                 elevation: 0.0,
@@ -115,7 +123,7 @@ class _AddPhotoState extends State<AddPhoto> {
               GridView.builder(
                 shrinkWrap: true,
                 itemCount: 6,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 8.0,
                   mainAxisSpacing: 8.0,
@@ -137,7 +145,7 @@ class _AddPhotoState extends State<AddPhoto> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     ListTile(
-                                      leading: Icon(Icons.photo_library),
+                                      leading: const Icon(Icons.photo_library),
                                       title: Text('album'.tr),
                                       onTap: () {
                                         _pickImage(index);
@@ -145,7 +153,7 @@ class _AddPhotoState extends State<AddPhoto> {
                                       },
                                     ),
                                     ListTile(
-                                      leading: Icon(Icons.camera_alt),
+                                      leading: const Icon(Icons.camera_alt),
                                       title: Text('camera'.tr),
                                       onTap: () {
                                         _takePhoto(index);
@@ -173,12 +181,12 @@ class _AddPhotoState extends State<AddPhoto> {
                                       File(_imageFilePath[index]),
                                       fit: BoxFit.cover,
                                     )
-                                  : SizedBox()),
+                                  : const SizedBox()),
                           _imageFilePath[index].isEmpty
-                              ? Center(
+                              ? const Center(
                                   child: Icon(Icons.add),
                                 )
-                              : Positioned(
+                              : const Positioned(
                                   right: 0,
                                   child: Icon(
                                     Icons.remove_circle,

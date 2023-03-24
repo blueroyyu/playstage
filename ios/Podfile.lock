@@ -1,4 +1,59 @@
 PODS:
+  - Amplify (1.28.3):
+    - Amplify/Default (= 1.28.3)
+  - Amplify/Default (1.28.3)
+  - amplify_auth_cognito_ios (0.0.1):
+    - Amplify (= 1.28.3)
+    - amplify_core
+    - AmplifyPlugins/AWSCognitoAuthPlugin (= 1.28.3)
+    - Flutter
+    - ObjectMapper
+  - amplify_core (0.0.1):
+    - Flutter
+    - SwiftFormat/CLI
+    - SwiftLint (= 0.48.0)
+  - amplify_flutter_ios (0.0.1):
+    - Amplify (= 1.28.3)
+    - amplify_core
+    - AmplifyPlugins/AWSCognitoAuthPlugin (= 1.28.3)
+    - AWSPluginsCore (= 1.28.3)
+    - Flutter
+    - SwiftFormat/CLI
+    - SwiftLint (= 0.48.0)
+  - amplify_storage_s3_ios (0.0.1):
+    - Amplify (= 1.28.3)
+    - amplify_core
+    - AmplifyPlugins/AWSS3StoragePlugin (= 1.28.3)
+    - Flutter
+  - AmplifyPlugins/AWSCognitoAuthPlugin (1.28.3):
+    - AWSAuthCore (~> 2.28.0)
+    - AWSCognitoIdentityProvider (~> 2.28.0)
+    - AWSCognitoIdentityProviderASF (~> 2.28.0)
+    - AWSCore (~> 2.28.0)
+    - AWSMobileClient (~> 2.28.0)
+    - AWSPluginsCore (= 1.28.3)
+  - AmplifyPlugins/AWSS3StoragePlugin (1.28.3):
+    - AWSCore (~> 2.28.0)
+    - AWSPluginsCore (= 1.28.3)
+    - AWSS3 (~> 2.28.0)
+  - AWSAuthCore (2.28.5):
+    - AWSCore (= 2.28.5)
+  - AWSCognitoIdentityProvider (2.28.5):
+    - AWSCognitoIdentityProviderASF (= 2.28.5)
+    - AWSCore (= 2.28.5)
+  - AWSCognitoIdentityProviderASF (2.28.5):
+    - AWSCore (= 2.28.5)
+  - AWSCore (2.28.5)
+  - AWSMobileClient (2.28.5):
+    - AWSAuthCore (= 2.28.5)
+    - AWSCognitoIdentityProvider (= 2.28.5)
+    - AWSCognitoIdentityProviderASF (= 2.28.5)
+    - AWSCore (= 2.28.5)
+  - AWSPluginsCore (1.28.3):
+    - Amplify (= 1.28.3)
+    - AWSCore (~> 2.28.0)
+  - AWSS3 (2.28.5):
+    - AWSCore (= 2.28.5)
   - Flutter (1.0.0)
   - flutter_native_splash (0.0.1):
     - Flutter
@@ -11,6 +66,7 @@ PODS:
     - Flutter
   - image_picker_ios (0.0.1):
     - Flutter
+  - ObjectMapper (4.2.0)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -24,8 +80,14 @@ PODS:
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
+  - SwiftFormat/CLI (0.51.2)
+  - SwiftLint (0.48.0)
 
 DEPENDENCIES:
+  - amplify_auth_cognito_ios (from `.symlinks/plugins/amplify_auth_cognito_ios/ios`)
+  - amplify_core (from `.symlinks/plugins/amplify_core/ios`)
+  - amplify_flutter_ios (from `.symlinks/plugins/amplify_flutter_ios/ios`)
+  - amplify_storage_s3_ios (from `.symlinks/plugins/amplify_storage_s3_ios/ios`)
   - Flutter (from `Flutter`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
@@ -39,9 +101,29 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Amplify
+    - AmplifyPlugins
+    - AWSAuthCore
+    - AWSCognitoIdentityProvider
+    - AWSCognitoIdentityProviderASF
+    - AWSCore
+    - AWSMobileClient
+    - AWSPluginsCore
+    - AWSS3
     - FMDB
+    - ObjectMapper
+    - SwiftFormat
+    - SwiftLint
 
 EXTERNAL SOURCES:
+  amplify_auth_cognito_ios:
+    :path: ".symlinks/plugins/amplify_auth_cognito_ios/ios"
+  amplify_core:
+    :path: ".symlinks/plugins/amplify_core/ios"
+  amplify_flutter_ios:
+    :path: ".symlinks/plugins/amplify_flutter_ios/ios"
+  amplify_storage_s3_ios:
+    :path: ".symlinks/plugins/amplify_storage_s3_ios/ios"
   Flutter:
     :path: Flutter
   flutter_native_splash:
@@ -64,17 +146,33 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite/ios"
 
 SPEC CHECKSUMS:
+  Amplify: e89b493fc2fe840ac044bd4ddf71ad9828f8c364
+  amplify_auth_cognito_ios: e532d70387aa0fe6f456855afe78ea275d58fe4b
+  amplify_core: 0876b2fbbcec7619f5b58b20c59ecc0118f65a47
+  amplify_flutter_ios: 8943b5e5fb995a7aa3eb5c5238a6822756703584
+  amplify_storage_s3_ios: 4742284f7820a0f5c87e0592bc4e1678cf5041ae
+  AmplifyPlugins: 98bcd23f2c13179f75c733b887e80dd06243be5e
+  AWSAuthCore: e728d73a2b4eed9e826506a1f0fcc58171537267
+  AWSCognitoIdentityProvider: 261fac98d461e9e398bf3c1e18c3cd90578b33ca
+  AWSCognitoIdentityProviderASF: 8e35d6414d9ee2443e9167414ef5e839a58e1e72
+  AWSCore: 4bad3f0eb17393b4926a9491e32b835991c56382
+  AWSMobileClient: c898658a4d15e64e07d39c7dc6354fd3ea3055a9
+  AWSPluginsCore: 93f813579479fa4c5bfff58817df89e0e10f9f3b
+  AWSS3: 4bc7118f373a6c25543d99e67c55b409eaf769fd
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geocoding_ios: a389ea40f6f548de6e63006a2e31bf66ff80769a
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
   image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
+  ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
   smart_auth: 4bedbc118723912d0e45a07e8ab34039c19e04f2
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  SwiftFormat: 8904869cd98b67b351c3ab5dea605d00db320e14
+  SwiftLint: 284cea64b6187c5d6bd83e9a548a64104d546447
 
 PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3
 

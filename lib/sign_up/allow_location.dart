@@ -249,7 +249,7 @@ class _AllowLocationState extends State<AllowLocation> {
       "searchTendencyCd3": info.toFind.length > 2 && info.toFind[2].isNotEmpty ? info.toFind[2] : "",
     });
 
-    String url = BASE_URL + '/member/joinMember';
+    String url = baseUrl + '/member/joinMember';
     var response = await http.post(Uri.parse(url),
       headers: {
         "accept": "*/*",
