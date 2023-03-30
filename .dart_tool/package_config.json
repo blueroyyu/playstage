@@ -56,6 +56,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "checked_yaml",
+      "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/checked_yaml-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "cli_util",
+      "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/cli_util-0.3.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "clock",
       "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/clock-1.1.1",
       "packageUri": "lib/",
@@ -132,6 +144,12 @@
       "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/flutter_cache_manager-3.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_launcher_icons",
+      "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/flutter_launcher_icons-0.12.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
     },
     {
       "name": "flutter_lints",
@@ -300,6 +318,12 @@
       "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/js-0.6.5",
       "packageUri": "lib/",
       "languageVersion": "2.16"
+    },
+    {
+      "name": "json_annotation",
+      "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/json_annotation-4.8.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
     },
     {
       "name": "lints",
@@ -620,7 +644,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-03-23T03:14:48.944553Z",
+  "generated": "2023-03-30T07:06:28.325757Z",
   "generator": "pub",
   "generatorVersion": "2.19.5"
 }

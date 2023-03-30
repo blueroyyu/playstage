@@ -10,7 +10,6 @@ import 'languages.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
