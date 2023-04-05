@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -249,7 +250,7 @@ class _AllowLocationState extends State<AllowLocation> {
       "searchTendencyCd3": info.toFind.length > 2 && info.toFind[2].isNotEmpty ? info.toFind[2] : "",
     });
 
-    String url = baseUrl + '/member/joinMember';
+    String url = '$baseUrl/member/joinMember';
     var response = await http.post(Uri.parse(url),
       headers: {
         "accept": "*/*",
@@ -283,7 +284,9 @@ class _AllowLocationState extends State<AllowLocation> {
 
     } else {
       // 요청이 실패함
-      print('Request failed with status: ${response.statusCode}.');
+      if (kDebugMode) {
+        print('Request failed with status: ${response.statusCode}.');
+      }
     }
   }
 }

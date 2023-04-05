@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -113,7 +114,9 @@ class _InputPhoneNumberState extends State<InputPhoneNumber> {
                   }
                 },
                 onCountryChanged: (country) {
-                  print('Country changed to: ' + country.name);
+                  if (kDebugMode) {
+                    print('Country changed to: ${country.name}');
+                  }
                 },
               ),
               const SizedBox(height: 70),
@@ -136,7 +139,7 @@ class _InputPhoneNumberState extends State<InputPhoneNumber> {
     String number = '${unformatted.substring(0, 3)}-${unformatted.substring(3, 7)}-${unformatted.substring(7, 11)}';
     final msg = jsonEncode({"authValue": number});
 
-    String url = baseUrl + '/member/smsAuth';
+    String url = '$baseUrl/member/smsAuth';
     var response = await http.post(Uri.parse(url),
         headers: {
           "accept": "*/*",
@@ -158,8 +161,10 @@ class _InputPhoneNumberState extends State<InputPhoneNumber> {
     if (response.statusCode == 200) {
       // 요청이 성공적으로 처리됨
       var jsonResponse = json.decode(response.body);
-      print('Response status: ${response.statusCode}');
-      print('ID: ${jsonResponse['data']['authNumber']}');
+      if (kDebugMode) {
+        print('Response status: ${response.statusCode}');
+        print('ID: ${jsonResponse['data']['authNumber']}');
+      }
 
       Get.to(() => InputAuthCode(
             phoneNumber: number,
@@ -168,7 +173,9 @@ class _InputPhoneNumberState extends State<InputPhoneNumber> {
           ));
     } else {
       // 요청이 실패함
-      print('Request failed with status: ${response.statusCode}.');
+      if (kDebugMode) {
+        print('Request failed with status: ${response.statusCode}.');
+      }
     }
   }
 }

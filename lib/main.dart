@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:playstage/people/main_view.dart';
 import 'package:playstage/sign_in/sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'const.dart';
 import 'languages.dart';
 
 void main() async {
@@ -16,7 +16,7 @@ void main() async {
   ]);
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isLoggedIn = prefs.getBool('isLogged') ?? false;
+  bool isLoggedIn = prefs.getBool(keyLoggedIn) ?? false;
 
   runApp(PlayStageApp(isLoggedIn: isLoggedIn));
 }
@@ -34,7 +34,8 @@ class PlayStageApp extends StatelessWidget {
       translations: Languages(),
       locale: Get.deviceLocale,
       fallbackLocale: const Locale('ko', 'KR'),
-      initialRoute: isLoggedIn ? '/main_view' : '/sign_in',
+      // initialRoute: isLoggedIn ? '/main_view' : '/sign_in',
+      initialRoute: '/main_view',
       routes: {
         '/main_view': (context) => const MainView(),
         '/sign_in': (context) => const SignIn(),

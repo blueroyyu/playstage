@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:playstage/const.dart';
 
 class MainView extends StatefulWidget {
   const MainView({
@@ -12,6 +15,20 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  void _loadMemberList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString(keyUserId) ?? '';
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
