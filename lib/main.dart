@@ -34,8 +34,8 @@ class PlayStageApp extends StatelessWidget {
       translations: Languages(),
       locale: Get.deviceLocale,
       fallbackLocale: const Locale('ko', 'KR'),
-      // initialRoute: isLoggedIn ? '/main_view' : '/sign_in',
-      initialRoute: '/main_view',
+      initialRoute: isLoggedIn ? '/main_view' : '/sign_in',
+      // initialRoute: '/main_view',
       routes: {
         '/main_view': (context) => const MainView(),
         '/sign_in': (context) => const SignIn(),

@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:playstage/people/member_info_entity.dart';
+import 'package:playstage/utils/api_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:playstage/const.dart';
@@ -15,18 +20,37 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
+  final List<MemberInfoEntity> _memberList = <MemberInfoEntity>[];
 
   @override
   void initState() {
     super.initState();
 
+    _loadMemberList();
   }
 
   void _loadMemberList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString(keyUserId) ?? '75fb08b3-e2f9-4a25-b58b-bc6fbfe5c09f';
 
+    final responseData = await ApiProvider.requestMemberList(userId);
+    if (responseData['resultCode'] == '200') {
+      final memberList = responseData['data'];
+      if (memberList.length > 0) {
+        for (dynamic json in memberList) {
+          MemberInfoEntity info = MemberInfoEntity.fromJson(json);
+          if (kDebugMode) {
+            print(info.toString());
+          }
 
+          _memberList.add(info);
+        }
+
+        if (kDebugMode) {
+          print(_memberList.toString());
+        }
+      }
+    }
   }
 
   @override

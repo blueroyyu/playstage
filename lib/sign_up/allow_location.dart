@@ -13,7 +13,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'subscriber_info.dart';
 import 'package:playstage/people/main_view.dart';
 
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:dio/src/form_data.dart' as fd;
+import 'package:dio/src/multipart_file.dart' as mf;
 
 class AllowLocation extends StatefulWidget {
   const AllowLocation({
@@ -264,54 +266,40 @@ class _AllowLocationState extends State<AllowLocation> {
       "ci": info.ci ?? info.phoneNumber,  // TODO: 본인인증
     });
 
-    var headers = {'Content-Type': 'application/json'};
-
-    var request = http.MultipartRequest("POST", Uri.parse('$baseUrl/member/joinMember'));
-    request.headers.addAll(headers);
-    request.fields['joinMemberReqDto'] = jsonData;
-
-    final files = info.profileImages;
-    for (var imageFile in files) {
-      request.files.add(await http.MultipartFile.fromPath('imageFileList', imageFile));
-    }
-
-    /*
-    {
-      "resultCode": "200",
-      "resultMessage": "string",
-      "data": {
-        "memberId": "string"
-      }
-    }
-     */
     try {
-      var response = await request.send();
+      final dio = Dio();
+      final formData = fd.FormData();
 
-      if (kDebugMode) {
-        print(response);
+      final files = info.profileImages;
+      for (final file in files) {
+        formData.files.add(MapEntry(
+          'files',
+          await mf.MultipartFile.fromFile(file),
+        ));
       }
 
-      if (response.statusCode! >= 200 && response.statusCode! < 300) {
-        final responseData = await http.Response.fromStream(response);
-        if (kDebugMode) {
-          print(responseData.body);
-        }
+      formData.fields.add(MapEntry('joinMemberReqDto', jsonData));
 
-        final jsonResponse = jsonDecode(responseData.body);
-        if (jsonResponse['resultCode'] == 200) {
-          var memberId = jsonResponse['data']['memberId'];
-          SharedPreferences.getInstance().then((prefs) {
-            prefs.setString(keyUserId, memberId);
-            prefs.setBool(keyLoggedIn, true);
-          });
-        }
+      final response = await dio.post(
+        '$baseUrl/member/joinMember',
+        data: formData,
+      );
 
-        Get.offAll(() => const MainView());
-      } else {
-        return;
+      final responseData = json.decode(response.toString());
+
+      if (responseData['resultCode'] == '200') {
+        var memberId = responseData['data']['memberId'];
+        SharedPreferences.getInstance().then((prefs) {
+          prefs.setString(keyUserId, memberId);
+          prefs.setBool(keyLoggedIn, true);
+
+          Get.offAll(() => const MainView());
+        });
       }
     } catch (error) {
-      rethrow;
+      if (kDebugMode) {
+        print(error);
+      }
     }
   }
 }
