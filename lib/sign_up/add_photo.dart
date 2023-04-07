@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'allow_location.dart';
 import 'subscriber_info.dart';
 
 class AddPhoto extends StatefulWidget {
@@ -53,15 +54,13 @@ class _AddPhotoState extends State<AddPhoto> {
 
                 SubscriberInfo info = SubscriberInfo();
                 for (String path in _imageFilePath) {
-                  // Upload image with the current time as the key
-                  final key = DateTime.now().toString();
                   final file = File(path);
-
-
-                  info.profileImages.add(path);
+                  if (await file.exists()) {
+                    info.profileImages.add(path);
+                  }
                 }
 
-                // Get.to(const AllowLocation());
+                Get.to(() => const AllowLocation());
               },
               style: ElevatedButton.styleFrom(
                 elevation: 0.0,

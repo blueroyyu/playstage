@@ -24,7 +24,7 @@ class _MainViewState extends State<MainView> {
 
   void _loadMemberList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString(keyUserId) ?? '';
+    String userId = prefs.getString(keyUserId) ?? '75fb08b3-e2f9-4a25-b58b-bc6fbfe5c09f';
 
 
   }
@@ -57,42 +57,200 @@ class _MainViewState extends State<MainView> {
         ],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 19),
-              Expanded(
-                child: Swiper(
-                  itemBuilder: (BuildContext context, int index) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(15.0),
-                      child: Image.network(
-                        "https://picsum.photos/${300 + index}/500",
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                            ),
-                          );
-                        },
-                        fit: BoxFit.fill,
+        child: Center(
+          child: Container(
+            width: 330,
+            height: 582,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children:[
+                Container(
+                  width: 330,
+                  height: 582,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x00000000), Colors.black], ),
+                  ),
+                  child: Stack(
+                    children:[
+                      Positioned(
+                        left: 71,
+                        top: 533,
+                        child: Container(
+                          width: 188,
+                          height: 41,
+                          child: Stack(
+                            children:[Container(
+                              width: 188,
+                              height: 41,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Color(0xff2a2a2a),
+                              ),
+                            ),],
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                  itemCount: 5,
-                  containerHeight: 582,
-                  containerWidth: 330,
-                  loop: false,
+                      Positioned(
+                        left: 7,
+                        top: 533,
+                        child: Container(
+                          width: 57,
+                          height: 41,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children:[
+                              Container(
+                                width: 57,
+                                height: 41,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Color(0xff2a2a2a),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12, ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children:[
+                                    Container(
+                                      width: 17,
+                                      height: 17,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 266,
+                        top: 533,
+                        child: Container(
+                          width: 57,
+                          height: 41,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children:[
+                              Container(
+                                width: 57,
+                                height: 41,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Color(0xff2a2a2a),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 11, ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children:[
+                                    Container(
+                                      width: 19,
+                                      height: 19,
+                                      child: Stack(
+                                        children:[Container(
+                                          width: 19,
+                                          height: 19,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 20,
+                        top: 442,
+                        child: SizedBox(
+                          width: 310,
+                          height: 24,
+                          child: Text(
+                            "Daniel Kim 36",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 20,
+                        top: 476,
+                        child: SizedBox(
+                          width: 310,
+                          height: 14,
+                          child: Text(
+                            "남성 싱글 · 3 km",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 15,
+                        top: 7,
+                        child: Container(
+                          width: 148,
+                          height: 3,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2),
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 167,
+                        top: 7,
+                        child: Container(
+                          width: 148,
+                          height: 3,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2),
+                            color: Color(0x7fffffff),
+                          ),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Container(
+                            width: 165,
+                            height: 523,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(0), topRight: Radius.circular(15), bottomLeft: Radius.circular(0), bottomRight: Radius.circular(15), ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 100),
-            ],
+              ],
+            ),
           ),
-        ),
+        )
       ),
     );
   }

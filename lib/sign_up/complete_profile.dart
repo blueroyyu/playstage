@@ -357,6 +357,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                 print('Selected height: $height');
 
                 SubscriberInfo info = SubscriberInfo();
+                info.height = height;
 
                 setState(() {
                   _height = '$height cm';

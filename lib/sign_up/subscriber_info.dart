@@ -1,3 +1,25 @@
+/*
+memberName*	[...]
+memberIntro*	[...]
+memberHeight	[...]
+bodyInfo	[...]
+language	[...]
+drinkInfo	[...]
+smokingInfo	[...]
+memberTendencyCd*	[...]
+searchTendencyCd1*	[...]
+searchTendencyCd2	[...]
+searchTendencyCd3	[...]
+memberPhone*	[...]
+memberBirthday*	[...]
+latitude	[...]
+longitude	[...]
+address	[...]
+address2	[...]
+address3	[...]
+ci	[...]
+ */
+
 class SubscriberInfo {
   static final SubscriberInfo _singleton = SubscriberInfo._internal();
 
@@ -21,6 +43,9 @@ class SubscriberInfo {
   double? longitude;
 
   String? address;
+  String? address2;
+  String? address3;
+  String? ci;
 
   factory SubscriberInfo() {
     return _singleton;

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:playstage/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'subscriber_info.dart';
 import 'package:playstage/people/main_view.dart';
+
 import 'package:http/http.dart' as http;
 
 class AllowLocation extends StatefulWidget {
@@ -229,35 +231,49 @@ class _AllowLocationState extends State<AllowLocation> {
     "searchTendencyCd1": "T0000",
     "searchTendencyCd2": "T0000",
     "searchTendencyCd3": "T0000"
+    latitude	[...]
+    longitude	[...]
+    address	[...]
+    address2	[...]
+    address3	[...]
+    ci	[...]
   }
    */
   Future<void> signUp() async {
     SubscriberInfo info = SubscriberInfo();
 
-    final msg = jsonEncode({
+    final jsonData = jsonEncode({
       "memberPhone": info.phoneNumber,
       "memberName": info.name,
-      "memberBirthday": info.birthDay?.replaceAll('/', ''),
+      "memberBirthday": info.birthDay!.replaceAll('/', ''),
       "memberIntro": info.aboutMe,
-      "memberHeight": info.height.toString(),
-      "bodyInfo": info.bodyType,
-      "language": info.languageSpoken,
-      "drinkInfo": info.drink,
-      "smokingInfo": info.smoking,
+      "memberHeight": info.height?.toString() ?? "",
+      "bodyInfo": info.bodyType ?? "",
+      "language": info.languageSpoken ?? "",
+      "drinkInfo": info.drink ?? "",
+      "smokingInfo": info.smoking ?? "",
       "memberTendencyCd": info.iam,
       "searchTendencyCd1": info.toFind[0],
       "searchTendencyCd2": info.toFind.length > 1 && info.toFind[1].isNotEmpty ? info.toFind[1] : "",
       "searchTendencyCd3": info.toFind.length > 2 && info.toFind[2].isNotEmpty ? info.toFind[2] : "",
+      "latitude": info.latitude.toString(),
+      "longitude": info.longitude.toString(),
+      "address": info.address ?? "",
+      "address2": info.address2 ?? "",
+      "address3": info.address3 ?? "",
+      "ci": info.ci ?? info.phoneNumber,  // TODO: 본인인증
     });
 
-    String url = '$baseUrl/member/joinMember';
-    var response = await http.post(Uri.parse(url),
-      headers: {
-        "accept": "*/*",
-        "Content-Type": "application/json",
-      },
-      body: msg,
-    );
+    var headers = {'Content-Type': 'application/json'};
+
+    var request = http.MultipartRequest("POST", Uri.parse('$baseUrl/member/joinMember'));
+    request.headers.addAll(headers);
+    request.fields['joinMemberReqDto'] = jsonData;
+
+    final files = info.profileImages;
+    for (var imageFile in files) {
+      request.files.add(await http.MultipartFile.fromPath('imageFileList', imageFile));
+    }
 
     /*
     {
@@ -268,25 +284,34 @@ class _AllowLocationState extends State<AllowLocation> {
       }
     }
      */
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
+    try {
+      var response = await request.send();
 
-      if (jsonResponse['resultCode'] == 200) {
-        var memberId = jsonResponse['data']['memberId'];
-        SharedPreferences.getInstance().then((prefs) {
-          prefs.setString('memberId', memberId);
-          prefs.setBool('isLogged', true);
-        });
-
-      }
-
-      Get.offAll(() => const MainView());
-
-    } else {
-      // 요청이 실패함
       if (kDebugMode) {
-        print('Request failed with status: ${response.statusCode}.');
+        print(response);
       }
+
+      if (response.statusCode! >= 200 && response.statusCode! < 300) {
+        final responseData = await http.Response.fromStream(response);
+        if (kDebugMode) {
+          print(responseData.body);
+        }
+
+        final jsonResponse = jsonDecode(responseData.body);
+        if (jsonResponse['resultCode'] == 200) {
+          var memberId = jsonResponse['data']['memberId'];
+          SharedPreferences.getInstance().then((prefs) {
+            prefs.setString(keyUserId, memberId);
+            prefs.setBool(keyLoggedIn, true);
+          });
+        }
+
+        Get.offAll(() => const MainView());
+      } else {
+        return;
+      }
+    } catch (error) {
+      rethrow;
     }
   }
 }

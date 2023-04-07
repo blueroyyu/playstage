@@ -106,8 +106,7 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   onPressed: () {
-                    // Get.to(const InputPhoneNumber());
-                    Get.to(() => const AddPhoto());
+                    Get.to(const InputPhoneNumber());
                   },
                 ),
               ],
