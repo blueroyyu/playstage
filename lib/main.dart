@@ -18,6 +18,8 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool(keyLoggedIn) ?? false;
 
+  Paint.enableDithering = true;
+
   runApp(PlayStageApp(isLoggedIn: isLoggedIn));
 }
 

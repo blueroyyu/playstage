@@ -132,7 +132,7 @@ const List<Map<String, String>> languages = [
   {'label': '우즈베크어', 'code': 'L0023'},
   {'label': '우크라이나어', 'code': 'L0024'},
   {'label': '이탈리아어', 'code': 'L0025'},
-  {'label': '--인도어', 'code': 'L0026'},
+  // {'label': '--인도어', 'code': 'L0026'},
   {'label': '일본어', 'code': 'L0027'},
   {'label': '중국어', 'code': 'L0028'},
   {'label': '체코어', 'code': 'L0029'},

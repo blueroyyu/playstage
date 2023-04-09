@@ -5,18 +5,18 @@ import 'dart:convert';
 @JsonSerializable()
 class MemberInfoEntity {
 	late String memberId;
-	late String memberName;
-	late String memberBirthday;
-	late String memberIntro;
-	late String memberHeight;
-	late String language;
-	late String bodyInfo;
-	late String drinkInfo;
-	late String smokingInfo;
-	late String memberTendencyCd;
-	late String searchTendencyCd1;
-	late String searchTendencyCd2;
-	late String searchTendencyCd3;
+	String? memberName;
+	String? memberBirthday;
+	String? memberIntro;
+	String? memberHeight;
+	String? language;
+	String? bodyInfo;
+	String? drinkInfo;
+	String? smokingInfo;
+	String? memberTendencyCd;
+	String? searchTendencyCd1;
+	String? searchTendencyCd2;
+	String? searchTendencyCd3;
 	late List<MemberInfoTbMemberPhotoInfoList> tbMemberPhotoInfoList;
 
 	MemberInfoEntity();

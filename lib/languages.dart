@@ -49,6 +49,7 @@ class Languages extends Translations {
       'allow_location_desc': '해당 앱을 사용하기 위해 위치 권한 허용이 필요합니다.',
       'people': '피플',
       'check_auth_code': '인증코드를 확인해 주세요.',
+      'try_again': '다시 시도해 주세요.',
     },
     'en_US': {
       'greeting': 'Hello',

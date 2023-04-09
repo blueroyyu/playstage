@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:playstage/people/member_info_entity.dart';
+import 'package:playstage/sign_up/subscriber_info.dart';
 import 'package:playstage/utils/api_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +23,10 @@ class MainView extends StatefulWidget {
 class _MainViewState extends State<MainView> {
   final List<MemberInfoEntity> _memberList = <MemberInfoEntity>[];
 
+  int _currentProfileIndex = 0;
+  int _currentMemberIndex = 0;
+  MemberInfoEntity? _currentMember;
+
   @override
   void initState() {
     super.initState();
@@ -31,7 +36,8 @@ class _MainViewState extends State<MainView> {
 
   void _loadMemberList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString(keyUserId) ?? '75fb08b3-e2f9-4a25-b58b-bc6fbfe5c09f';
+    String userId =
+        prefs.getString(keyUserId) ?? 'ab946ff4-ee4a-4e9c-ab9d-41efb3914218';
 
     final responseData = await ApiProvider.requestMemberList(userId);
     if (responseData['resultCode'] == '200') {
@@ -50,7 +56,18 @@ class _MainViewState extends State<MainView> {
           print(_memberList.toString());
         }
       }
+
+      setState(() {
+        _currentMember = _memberList[0];
+      });
     }
+  }
+
+  String _makeCurrentImagePath() {
+    if (_currentMember!.tbMemberPhotoInfoList.isEmpty) {
+      return '';
+    }
+    return '$s3Url${_currentMember!.memberId}/profile/${_currentMember!.tbMemberPhotoInfoList[_currentProfileIndex].photoSavedFileName}';
   }
 
   @override
@@ -60,7 +77,7 @@ class _MainViewState extends State<MainView> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         leading: Padding(
-          padding: const EdgeInsets.only(left: 15),
+          padding: const EdgeInsets.only(left: 15.0, top: 15.0),
           child: Text(
             'people'.tr,
             style: const TextStyle(
@@ -81,201 +98,404 @@ class _MainViewState extends State<MainView> {
         ],
       ),
       body: SafeArea(
-        child: Center(
-          child: Container(
-            width: 330,
-            height: 582,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children:[
-                Container(
-                  width: 330,
-                  height: 582,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x00000000), Colors.black], ),
-                  ),
-                  child: Stack(
-                    children:[
-                      Positioned(
-                        left: 71,
-                        top: 533,
-                        child: Container(
-                          width: 188,
-                          height: 41,
-                          child: Stack(
-                            children:[Container(
-                              width: 188,
-                              height: 41,
+          child: Column(
+        children: [
+          Expanded(
+            flex: 88,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: PageView.builder(
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentMember = _memberList[index];
+                      _currentProfileIndex = 0;
+                    });
+                  },
+                  itemCount: _memberList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 500),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                              layoutBuilder: (Widget? currentChild,
+                                  List<Widget> previousChildren) {
+                                return Stack(
+                                  fit: StackFit.expand,
+                                  children: <Widget>[
+                                    ...previousChildren,
+                                    if (currentChild != null) currentChild,
+                                  ],
+                                );
+                              },
+                              child: _currentMember != null
+                                  ? Image.network(
+                                      _makeCurrentImagePath(),
+                                      key: ValueKey<int>(_currentProfileIndex),
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (BuildContext context,
+                                          Object exception,
+                                          StackTrace? stackTrace) {
+                                        return Image.asset(
+                                          'assets/background.png',
+                                          // fit: BoxFit.contain,
+                                        );
+                                      },
+                                      loadingBuilder: (BuildContext context,
+                                          Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      },
+                                    )
+                                  : Image.asset(
+                                      'assets/background.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 15,
+                            top: 7,
+                            child: Container(
+                              width: 148,
+                              height: 3,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Color(0xff2a2a2a),
+                                borderRadius: BorderRadius.circular(2),
+                                color: Colors.white,
                               ),
-                            ),],
+                            ),
                           ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 7,
-                        top: 533,
-                        child: Container(
-                          width: 57,
-                          height: 41,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children:[
-                              Container(
-                                width: 57,
-                                height: 41,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Color(0xff2a2a2a),
-                                ),
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12, ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children:[
-                                    Container(
-                                      width: 17,
-                                      height: 17,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                          Positioned(
+                            left: 167,
+                            top: 7,
+                            child: Container(
+                              width: 148,
+                              height: 3,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(2),
+                                color: const Color(0x7fffffff),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 266,
-                        top: 533,
-                        child: Container(
-                          width: 57,
-                          height: 41,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children:[
-                              Container(
-                                width: 57,
-                                height: 41,
+                          Positioned.fill(
+                            child: GestureDetector(
+                              onTapUp: (TapUpDetails details) {
+                                _onTapUp(details, context);
+                              },
+                              child: Container(
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Color(0xff2a2a2a),
+                                  borderRadius: BorderRadius.circular(15),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withOpacity(0.25),
+                                      Colors.black.withOpacity(0.50),
+                                      Colors.black.withOpacity(1.0),
+                                    ],
+                                    stops: const [0.0, 0.5, 0.75, 1.0],
+                                  ),
                                 ),
-                                padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 11, ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children:[
-                                    Container(
-                                      width: 19,
-                                      height: 19,
-                                      child: Stack(
-                                        children:[Container(
-                                          width: 19,
-                                          height: 19,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.white,
-                                          ),
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      left: 20,
+                                      bottom: 140,
+                                      child: Text(
+                                        _memberName(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold,
                                         ),
-
-                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 20,
+                                      bottom: 116,
+                                      child: Text(
+                                        '${_memberTendency()} · 3 km',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 71,
+                                      top: 533,
+                                      child: Container(
+                                        width: 188,
+                                        height: 41,
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              width: 188,
+                                              height: 41,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                color: const Color(0xff2a2a2a),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 7,
+                                      top: 533,
+                                      child: Container(
+                                        width: 57,
+                                        height: 41,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: 57,
+                                              height: 41,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                color: const Color(0xff2a2a2a),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 20,
+                                                vertical: 12,
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    width: 17,
+                                                    height: 17,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 266,
+                                      top: 533,
+                                      child: Container(
+                                        width: 57,
+                                        height: 41,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: 57,
+                                              height: 41,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                color: const Color(0xff2a2a2a),
+                                              ),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 19,
+                                                vertical: 11,
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    width: 19,
+                                                    height: 19,
+                                                    child: Stack(
+                                                      children: [
+                                                        Container(
+                                                          width: 19,
+                                                          height: 19,
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 20,
-                        top: 442,
-                        child: SizedBox(
-                          width: 310,
-                          height: 24,
-                          child: Text(
-                            "Daniel Kim 36",
-                            style: TextStyle(
-                              color: Colors.white,
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                      Positioned(
-                        left: 20,
-                        top: 476,
-                        child: SizedBox(
-                          width: 310,
-                          height: 14,
-                          child: Text(
-                            "남성 싱글 · 3 km",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 15,
-                        top: 7,
-                        child: Container(
-                          width: 148,
-                          height: 3,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(2),
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 167,
-                        top: 7,
-                        child: Container(
-                          width: 148,
-                          height: 3,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(2),
-                            color: Color(0x7fffffff),
-                          ),
-                        ),
-                      ),
-                      Positioned.fill(
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: Container(
-                            width: 165,
-                            height: 523,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(0), topRight: Radius.circular(15), bottomLeft: Radius.circular(0), bottomRight: Radius.circular(15), ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                    );
+                  }),
             ),
           ),
-        )
-      ),
+          const SizedBox(height: 19),
+          Expanded(
+            flex: 12,
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30)),
+                color: Colors.white,
+              ),
+              padding: const EdgeInsets.only(
+                top: 22,
+                bottom: 21,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 26,
+                    height: 26,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: const Color(0xffffc800),
+                    ),
+                  ),
+                  const SizedBox(width: 114),
+                  Container(
+                    width: 26,
+                    height: 26,
+                    child: const FlutterLogo(size: 26),
+                  ),
+                  const SizedBox(width: 114),
+                  Container(
+                    width: 26,
+                    height: 26,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 11.44,
+                          height: 11.92,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xffd9d9d9),
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 1.08),
+                        Container(
+                          width: 26,
+                          height: 13,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                              bottomLeft: Radius.circular(5),
+                              bottomRight: Radius.circular(5),
+                            ),
+                            border: Border.all(
+                              color: const Color(0xffd9d9d9),
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      )),
     );
+  }
+
+  String _memberName() => _currentMember?.memberName ?? '';
+
+  String _memberTendency() {
+    String? td = tendencies.firstWhere((element) =>
+        element["code"] == _currentMember?.memberTendencyCd)["label"];
+    return td ?? '';
+  }
+
+  void _onTapUp(TapUpDetails details, BuildContext context) {
+    final double x = details.globalPosition.dx;
+    if (x < MediaQuery.of(context).size.width / 2) {
+      _showPrevImage();
+    } else {
+      _showNextImage();
+    }
+  }
+
+  void _showNextImage() {
+    setState(() {
+      if (_currentMember != null) {
+        if (_currentMember!.tbMemberPhotoInfoList.isNotEmpty) {
+          _currentProfileIndex = (_currentProfileIndex + 1) %
+              _currentMember!.tbMemberPhotoInfoList.length;
+        }
+      }
+    });
+  }
+
+  void _showPrevImage() {
+    setState(() {
+      if (_currentMember != null) {
+        if (_currentMember!.tbMemberPhotoInfoList.isNotEmpty) {
+          _currentProfileIndex = (_currentProfileIndex - 1) %
+              _currentMember!.tbMemberPhotoInfoList.length;
+        }
+      }
+    });
   }
 }

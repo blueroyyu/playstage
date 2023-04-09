@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 
 import 'package:playstage/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:playstage/utils/loader.dart';
 import 'subscriber_info.dart';
 import 'package:playstage/people/main_view.dart';
 
@@ -28,6 +28,7 @@ class AllowLocation extends StatefulWidget {
 
 class _AllowLocationState extends State<AllowLocation> {
   bool _filled = false;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +164,9 @@ class _AllowLocationState extends State<AllowLocation> {
                   ),
                 ),
               ),
+              Container(
+                  child: _isLoading ? const Loader(loadingTxt: '') : Container()
+              ),
             ],
           ),
         ),
@@ -280,10 +284,18 @@ class _AllowLocationState extends State<AllowLocation> {
 
       formData.fields.add(MapEntry('joinMemberReqDto', jsonData));
 
+      setState(() {
+        _isLoading = true;
+      });
+
       final response = await dio.post(
         '$baseUrl/member/joinMember',
         data: formData,
       );
+
+      setState(() {
+        _isLoading = false;
+      });
 
       final responseData = json.decode(response.toString());
 
@@ -297,9 +309,15 @@ class _AllowLocationState extends State<AllowLocation> {
         });
       }
     } catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
+
       if (kDebugMode) {
         print(error);
       }
+
+      Get.showSnackbar(GetSnackBar(message: 'try_again'.tr));
     }
   }
 }
