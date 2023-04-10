@@ -232,7 +232,7 @@ class _MainViewState extends State<MainView> {
                                       left: 20,
                                       bottom: 116,
                                       child: Text(
-                                        '${_memberTendency()} · 3 km',
+                                        '${_memberTendency()} · 1km',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -240,133 +240,56 @@ class _MainViewState extends State<MainView> {
                                       ),
                                     ),
                                     Positioned(
-                                      left: 71,
-                                      top: 533,
-                                      child: Container(
-                                        width: 188,
-                                        height: 41,
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              width: 188,
-                                              height: 41,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color: const Color(0xff2a2a2a),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      left: 7,
-                                      top: 533,
-                                      child: Container(
-                                        width: 57,
-                                        height: 41,
+                                      left: 8,
+                                      bottom: 8,
+                                      child: SizedBox(
+                                        width: MediaQuery.of(context).size.width - 46,
+                                        height: 50.0,
                                         child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            Container(
-                                              width: 57,
-                                              height: 41,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color: const Color(0xff2a2a2a),
+                                            Expanded(
+                                              flex: 2,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.black,
+                                                ),
+                                                onPressed: () {
+                                                  // 버튼1 클릭 시 수행할 동작
+                                                },
+                                                child: const Icon(Icons.close, color: Colors.white),
                                               ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 20,
-                                                vertical: 12,
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              flex: 6,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.black,
+                                                ),
+                                                onPressed: () {
+                                                  // 버튼2 클릭 시 수행할 동작
+                                                },
+                                                child: const Icon(Icons.favorite, color: Colors.red),
                                               ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    width: 17,
-                                                    height: 17,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ],
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              flex: 2,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.black,
+                                                ),
+                                                onPressed: () {
+                                                  // 버튼3 클릭 시 수행할 동작
+                                                },
+                                                child: const Icon(Icons.info, color: Colors.white),
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                    Positioned(
-                                      left: 266,
-                                      top: 533,
-                                      child: Container(
-                                        width: 57,
-                                        height: 41,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 57,
-                                              height: 41,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color: const Color(0xff2a2a2a),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 19,
-                                                vertical: 11,
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    width: 19,
-                                                    height: 19,
-                                                    child: Stack(
-                                                      children: [
-                                                        Container(
-                                                          width: 19,
-                                                          height: 19,
-                                                          decoration:
-                                                              const BoxDecoration(
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+
                                     ),
                                   ],
                                 ),
@@ -389,66 +312,68 @@ class _MainViewState extends State<MainView> {
                     topRight: Radius.circular(30)),
                 color: Colors.white,
               ),
-              padding: const EdgeInsets.only(
-                top: 22,
-                bottom: 21,
-              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: 26,
-                    height: 26,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: const Color(0xffffc800),
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.transparent,
+                    ),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.home),
+                      color: Colors.yellow,
+                      iconSize: 40,
                     ),
                   ),
-                  const SizedBox(width: 114),
                   Container(
-                    width: 26,
-                    height: 26,
-                    child: const FlutterLogo(size: 26),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.transparent,
+                    ),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.star_border_outlined),
+                      color: Colors.grey,
+                      iconSize: 40,
+                    ),
                   ),
-                  const SizedBox(width: 114),
                   Container(
-                    width: 26,
-                    height: 26,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 11.44,
-                          height: 11.92,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: const Color(0xffd9d9d9),
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 1.08),
-                        Container(
-                          width: 26,
-                          height: 13,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                              bottomLeft: Radius.circular(5),
-                              bottomRight: Radius.circular(5),
-                            ),
-                            border: Border.all(
-                              color: const Color(0xffd9d9d9),
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                      ],
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.transparent,
+                    ),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.radar),
+                      color: Colors.grey,
+                      iconSize: 40,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.transparent,
+                    ),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.chat_bubble_outline),
+                      color: Colors.grey,
+                      iconSize: 40,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.transparent,
+                    ),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.person),
+                      color: Colors.grey,
+                      iconSize: 40,
                     ),
                   ),
                 ],
