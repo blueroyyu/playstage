@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -75,7 +76,7 @@ class _MainViewState extends State<MainView> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.white,
+        backgroundColor: colorContainerBg,
         leading: Padding(
           padding: const EdgeInsets.only(left: 15.0, top: 15.0),
           child: Text(
@@ -98,365 +99,301 @@ class _MainViewState extends State<MainView> {
         ],
       ),
       body: SafeArea(
-          child: Column(
+          child: Container(
+            color: colorContainerBg,
+            child: Column(
         children: [
-          Expanded(
-            flex: 88,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: PageView.builder(
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentMember = _memberList[index];
-                      _currentProfileIndex = 0;
-                    });
-                  },
-                  itemCount: _memberList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 500),
-                              transitionBuilder:
-                                  (Widget child, Animation<double> animation) {
-                                return FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                );
-                              },
-                              layoutBuilder: (Widget? currentChild,
-                                  List<Widget> previousChildren) {
-                                return Stack(
-                                  fit: StackFit.expand,
-                                  children: <Widget>[
-                                    ...previousChildren,
-                                    if (currentChild != null) currentChild,
-                                  ],
-                                );
-                              },
-                              child: _currentMember != null
-                                  ? Image.network(
-                                      _makeCurrentImagePath(),
-                                      key: ValueKey<int>(_currentProfileIndex),
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (BuildContext context,
-                                          Object exception,
-                                          StackTrace? stackTrace) {
-                                        return Image.asset(
-                                          'assets/background.png',
-                                          // fit: BoxFit.contain,
-                                        );
-                                      },
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent? loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        }
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      },
-                                    )
-                                  : Image.asset(
-                                      'assets/background.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 15,
-                            top: 7,
-                            child: Container(
-                              width: 148,
-                              height: 3,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(2),
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 167,
-                            top: 7,
-                            child: Container(
-                              width: 148,
-                              height: 3,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(2),
-                                color: const Color(0x7fffffff),
-                              ),
-                            ),
-                          ),
-                          Positioned.fill(
-                            child: GestureDetector(
-                              onTapUp: (TapUpDetails details) {
-                                _onTapUp(details, context);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black.withOpacity(0.25),
-                                      Colors.black.withOpacity(0.50),
-                                      Colors.black.withOpacity(1.0),
+            Expanded(
+              flex: 88,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: PageView.builder(
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentMember = _memberList[index];
+                        _currentProfileIndex = 0;
+                      });
+                    },
+                    itemCount: _memberList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 500),
+                                transitionBuilder:
+                                    (Widget child, Animation<double> animation) {
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  );
+                                },
+                                layoutBuilder: (Widget? currentChild,
+                                    List<Widget> previousChildren) {
+                                  return Stack(
+                                    fit: StackFit.expand,
+                                    children: <Widget>[
+                                      ...previousChildren,
+                                      if (currentChild != null) currentChild,
                                     ],
-                                    stops: const [0.0, 0.5, 0.75, 1.0],
+                                  );
+                                },
+                                child: _currentMember != null
+                                    ? Image.network(
+                                        _makeCurrentImagePath(),
+                                        key: ValueKey<int>(_currentProfileIndex),
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (BuildContext context,
+                                            Object exception,
+                                            StackTrace? stackTrace) {
+                                          return Image.asset(
+                                            'assets/background.png',
+                                            // fit: BoxFit.contain,
+                                          );
+                                        },
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        },
+                                      )
+                                    : Image.asset(
+                                        'assets/background.png',
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                            ),
+                            Positioned(
+                              left: 15,
+                              top: 7,
+                              child: Container(
+                                width: 148,
+                                height: 3,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(2),
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              left: 167,
+                              top: 7,
+                              child: Container(
+                                width: 148,
+                                height: 3,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(2),
+                                  color: const Color(0x7fffffff),
+                                ),
+                              ),
+                            ),
+                            Positioned.fill(
+                              child: GestureDetector(
+                                onTapUp: (TapUpDetails details) {
+                                  _onTapUp(details, context);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.transparent,
+                                        Colors.black.withOpacity(0.25),
+                                        Colors.black.withOpacity(0.50),
+                                        Colors.black.withOpacity(1.0),
+                                      ],
+                                      stops: const [0.0, 0.5, 0.75, 1.0],
+                                    ),
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        left: 20,
+                                        bottom: 140,
+                                        child: Text(
+                                          _memberName(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 24.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 20,
+                                        bottom: 116,
+                                        child: Text(
+                                          '${_memberTendency()} · 1km',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 8,
+                                        bottom: 8,
+                                        child: SizedBox(
+                                          width:
+                                              MediaQuery.of(context).size.width -
+                                                  46,
+                                          height: 50.0,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Expanded(
+                                                flex: 2,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: colorBtnBg,
+                                                  ),
+                                                  onPressed: () {
+                                                    // 버튼1 클릭 시 수행할 동작
+                                                  },
+                                                  child: const Icon(Icons.close,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                flex: 6,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: colorBtnBg,
+                                                  ),
+                                                  onPressed: () {
+                                                    // 버튼2 클릭 시 수행할 동작
+                                                  },
+                                                  child: const Icon(
+                                                      Icons.favorite,
+                                                      color: Colors.red),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Expanded(
+                                                flex: 2,
+                                                child: ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: colorBtnBg,
+                                                  ),
+                                                  onPressed: () {
+                                                    // 버튼3 클릭 시 수행할 동작
+                                                  },
+                                                  child: const Icon(Icons.info,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      left: 20,
-                                      bottom: 140,
-                                      child: Text(
-                                        _memberName(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 24.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      left: 20,
-                                      bottom: 116,
-                                      child: Text(
-                                        '${_memberTendency()} · 3 km',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      left: 71,
-                                      top: 533,
-                                      child: Container(
-                                        width: 188,
-                                        height: 41,
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              width: 188,
-                                              height: 41,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color: const Color(0xff2a2a2a),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      left: 7,
-                                      top: 533,
-                                      child: Container(
-                                        width: 57,
-                                        height: 41,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 57,
-                                              height: 41,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color: const Color(0xff2a2a2a),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 20,
-                                                vertical: 12,
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    width: 17,
-                                                    height: 17,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      left: 266,
-                                      top: 533,
-                                      child: Container(
-                                        width: 57,
-                                        height: 41,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 57,
-                                              height: 41,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color: const Color(0xff2a2a2a),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 19,
-                                                vertical: 11,
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    width: 19,
-                                                    height: 19,
-                                                    child: Stack(
-                                                      children: [
-                                                        Container(
-                                                          width: 19,
-                                                          height: 19,
-                                                          decoration:
-                                                              const BoxDecoration(
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      );
+                    }),
+              ),
+            ),
+            const SizedBox(height: 19),
+            Expanded(
+              flex: 12,
+              child: Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30)),
+                  color: Colors.white,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.transparent,
                       ),
-                    );
-                  }),
-            ),
-          ),
-          const SizedBox(height: 19),
-          Expanded(
-            flex: 12,
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30)),
-                color: Colors.white,
-              ),
-              padding: const EdgeInsets.only(
-                top: 22,
-                bottom: 21,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 26,
-                    height: 26,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: const Color(0xffffc800),
-                    ),
-                  ),
-                  const SizedBox(width: 114),
-                  Container(
-                    width: 26,
-                    height: 26,
-                    child: const FlutterLogo(size: 26),
-                  ),
-                  const SizedBox(width: 114),
-                  Container(
-                    width: 26,
-                    height: 26,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 11.44,
-                          height: 11.92,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: const Color(0xffd9d9d9),
-                              width: 1,
-                            ),
-                          ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          CupertinoIcons.house_fill,
+                          color: Colors.yellow,
+                          size: 32,
                         ),
-                        const SizedBox(height: 1.08),
-                        Container(
-                          width: 26,
-                          height: 13,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                              bottomLeft: Radius.circular(5),
-                              bottomRight: Radius.circular(5),
-                            ),
-                            border: Border.all(
-                              color: const Color(0xffd9d9d9),
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.transparent,
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(CupertinoIcons.star),
+                        color: Colors.grey,
+                        iconSize: 32,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.transparent,
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(CupertinoIcons.globe),
+                        color: Colors.grey,
+                        iconSize: 32,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.transparent,
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(CupertinoIcons.chat_bubble),
+                        color: Colors.grey,
+                        iconSize: 32,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.transparent,
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(CupertinoIcons.person),
+                        color: Colors.grey,
+                        iconSize: 32,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
         ],
-      )),
+      ),
+          )),
     );
   }
 

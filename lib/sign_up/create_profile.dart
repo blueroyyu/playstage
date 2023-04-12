@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -17,11 +18,11 @@ class _CreateProfileState extends State<CreateProfile> {
   bool _filled = false;
 
   final TextEditingController _controller = TextEditingController();
-  int _characterLimit = 15;
+  final int _characterLimit = 15;
 
   String _name = "";
   String _birthDay = "yyyy/MM/dd";
-  String _df = "yyyy/MM/dd";
+  final String _df = "yyyy/MM/dd";
 
   String _aboutMe = "";
 
@@ -147,7 +148,9 @@ class _CreateProfileState extends State<CreateProfile> {
                   onTap: () async {
                     DateTime? selectedDate = await _selectDate(context);
                     if (selectedDate != null) {
-                      print(selectedDate.toString());
+                      if (kDebugMode) {
+                        print(selectedDate.toString());
+                      }
                       setState(() {
                         _birthDay = DateFormat(_df).format(selectedDate);
 
@@ -225,7 +228,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     },
                     onTap: () {
                       _scrollController.animateTo(120.0,
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           curve: Curves.ease);
                     },
                   ),
