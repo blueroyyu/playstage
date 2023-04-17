@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:playstage/people/member_info_entity.dart';
+import 'package:playstage/people/people_detail.dart';
 import 'package:playstage/sign_up/subscriber_info.dart';
 import 'package:playstage/utils/api_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -290,7 +291,7 @@ class _MainViewState extends State<MainView> {
                                                     backgroundColor: colorBtnBg,
                                                   ),
                                                   onPressed: () {
-                                                    // 버튼3 클릭 시 수행할 동작
+                                                    Get.to(() => PeopleDetail(memberInfoEntity: _currentMember!));
                                                   },
                                                   child: const Icon(Icons.info,
                                                       color: Colors.white),
