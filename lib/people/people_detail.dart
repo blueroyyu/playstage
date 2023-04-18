@@ -70,138 +70,199 @@ class _PeopleDetailState extends State<PeopleDetail> {
 
   @override
   Widget build(BuildContext context) {
+    double safeAreaHeight = MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom;
+
     return Scaffold(
       body: SafeArea(
-          child: Container(
-        color: colorContainerBg,
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Expanded(
-                  flex: 90,
-                  child: GestureDetector(
-                    onTapUp: (TapUpDetails details) {
-                      _onTapUp(details, context);
-                    },
-                    child: Stack(
+        child: Container(
+          color: colorContainerBg,
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  Expanded(
+                    flex: 90,
+                    child: Column(
                       children: [
-                        Positioned.fill(
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 500),
-                            transitionBuilder:
-                                (Widget child, Animation<double> animation) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              );
+                        Expanded(
+                          flex: 70,
+                          child: GestureDetector(
+                            onTapUp: (TapUpDetails details) {
+                              _onTapUp(details, context);
                             },
-                            layoutBuilder: (Widget? currentChild,
-                                List<Widget> previousChildren) {
-                              return Stack(
-                                fit: StackFit.expand,
-                                children: <Widget>[
-                                  ...previousChildren,
-                                  if (currentChild != null) currentChild,
-                                ],
-                              );
-                            },
-                            child: _currentMember != null
-                                ? Image.network(
-                                    _makeCurrentImagePath(),
-                                    key: ValueKey<int>(_currentProfileIndex),
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (BuildContext context,
-                                        Object exception,
-                                        StackTrace? stackTrace) {
-                                      return Image.asset(
-                                        'assets/background.png',
-                                        fit: BoxFit.contain,
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 500),
+                                    transitionBuilder: (Widget child,
+                                        Animation<double> animation) {
+                                      return FadeTransition(
+                                        opacity: animation,
+                                        child: child,
                                       );
                                     },
-                                    loadingBuilder: (BuildContext context,
-                                        Widget child,
-                                        ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      }
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
+                                    layoutBuilder: (Widget? currentChild,
+                                        List<Widget> previousChildren) {
+                                      return Stack(
+                                        fit: StackFit.expand,
+                                        children: <Widget>[
+                                          ...previousChildren,
+                                          if (currentChild != null)
+                                            currentChild,
+                                        ],
                                       );
                                     },
-                                  )
-                                : Image.asset(
-                                    'assets/background.png',
-                                    fit: BoxFit.cover,
+                                    child: _currentMember != null
+                                        ? Image.network(
+                                            _makeCurrentImagePath(),
+                                            key: ValueKey<int>(
+                                                _currentProfileIndex),
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (BuildContext context,
+                                                Object exception,
+                                                StackTrace? stackTrace) {
+                                              return Image.asset(
+                                                'assets/background.png',
+                                                fit: BoxFit.contain,
+                                              );
+                                            },
+                                            loadingBuilder:
+                                                (BuildContext context,
+                                                    Widget child,
+                                                    ImageChunkEvent?
+                                                        loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return const Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            },
+                                          )
+                                        : Image.asset(
+                                            'assets/background.png',
+                                            fit: BoxFit.cover,
+                                          ),
                                   ),
-                          ),
-                        ),
-                        Positioned(
-                          left: 15,
-                          top: 7,
-                          child: Container(
-                            width: 148,
-                            height: 3,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
-                              color: Colors.white,
+                                ),
+                                Positioned(
+                                  left: 15,
+                                  top: 7,
+                                  child: Container(
+                                    width: 148,
+                                    height: 3,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(2),
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 167,
+                                  top: 7,
+                                  child: Container(
+                                    width: 148,
+                                    height: 3,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(2),
+                                      color: const Color(0x7fffffff),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        Positioned(
-                          left: 167,
-                          top: 7,
+                        Expanded(
+                          flex: 30,
                           child: Container(
-                            width: 148,
-                            height: 3,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2),
-                              color: const Color(0x7fffffff),
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+
+                              ],
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                Expanded(
-                  flex: 10,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30)),
-                      color: Colors.white,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            CupertinoIcons.clear_thick_circled,
-                            color: Color(0xFFFF2D2D),
-                            size: 60,
+                  Expanded(
+                    flex: 10,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30)),
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                // TODO: Dislike
+                                Get.back();
+                              },
+                              child: Image.asset(
+                                'assets/images/btn_dislike_red.png',
+                                width: 60.0,
+                              )),
+                          InkWell(
+                            onTap: () {
+                              // TODO: Like
+                              Get.back();
+                            },
+                            child: Image.asset(
+                              'assets/images/btn_like_yellow.png',
+                              width: 60.0,
+                            ),
                           ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            CupertinoIcons.heart_circle_fill,
-                            color: Color(0xFFFFC800),
-                            size: 60,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
+                ],
+              ),
+              Positioned(
+                top: safeAreaHeight * 0.6,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Spacer(),
+                      InkWell(
+                          onTap: () {
+                            // TODO: chat
+                            Get.back();
+                          },
+                          child: Image.asset(
+                            'assets/images/btn_chat.png',
+                            width: 60.0,
+                          )),
+                      const SizedBox(width: 10.0),
+                      InkWell(
+                          onTap: () {
+                            // TODO: ?
+                            Get.back();
+                          },
+                          child: Image.asset(
+                            'assets/images/btn_under_arrow.png',
+                            width: 60.0,
+                          )),
+                      const SizedBox(width: 20.0),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 
@@ -224,22 +285,18 @@ class _PeopleDetailState extends State<PeopleDetail> {
 
   void _showNextImage() {
     setState(() {
-      if (_currentMember != null) {
-        if (_currentMember!.tbMemberPhotoInfoList.isNotEmpty) {
-          _currentProfileIndex = (_currentProfileIndex + 1) %
-              _currentMember!.tbMemberPhotoInfoList.length;
-        }
+      if (_currentMember!.tbMemberPhotoInfoList.isNotEmpty) {
+        _currentProfileIndex = (_currentProfileIndex + 1) %
+            _currentMember!.tbMemberPhotoInfoList.length;
       }
     });
   }
 
   void _showPrevImage() {
     setState(() {
-      if (_currentMember != null) {
-        if (_currentMember!.tbMemberPhotoInfoList.isNotEmpty) {
-          _currentProfileIndex = (_currentProfileIndex - 1) %
-              _currentMember!.tbMemberPhotoInfoList.length;
-        }
+      if (_currentMember!.tbMemberPhotoInfoList.isNotEmpty) {
+        _currentProfileIndex = (_currentProfileIndex - 1) %
+            _currentMember!.tbMemberPhotoInfoList.length;
       }
     });
   }
