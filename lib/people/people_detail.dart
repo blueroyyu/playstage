@@ -123,8 +123,8 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                                 Object exception,
                                                 StackTrace? stackTrace) {
                                               return Image.asset(
-                                                'assets/background.png',
-                                                fit: BoxFit.contain,
+                                                'assets/default_profile.png',
+                                                fit: BoxFit.cover,
                                               );
                                             },
                                             loadingBuilder:
@@ -142,7 +142,7 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                             },
                                           )
                                         : Image.asset(
-                                            'assets/background.png',
+                                            'assets/default_profile.png',
                                             fit: BoxFit.cover,
                                           ),
                                   ),
