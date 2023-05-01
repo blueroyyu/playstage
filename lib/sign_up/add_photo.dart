@@ -25,7 +25,6 @@ class _AddPhotoState extends State<AddPhoto> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override

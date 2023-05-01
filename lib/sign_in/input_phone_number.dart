@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
 import 'input_auth_code.dart';
-import 'package:playstage/sign_up/subscriber_info.dart';
 import 'package:playstage/const.dart';
 import 'package:http/http.dart' as http;
 
@@ -101,7 +100,9 @@ class _InputPhoneNumberState extends State<InputPhoneNumber> {
                 ),
                 initialCountryCode: 'KR',
                 onChanged: (phone) {
-                  print(phone.completeNumber);
+                  if (kDebugMode) {
+                    print(phone.completeNumber);
+                  }
                   if (phone.number.length >= 11) {
                     setState(() {
                       _filled = true;
@@ -136,16 +137,18 @@ class _InputPhoneNumberState extends State<InputPhoneNumber> {
 
   Future<void> requestSmsAuth() async {
     String unformatted = phoneNumber!.number;
-    String number = '${unformatted.substring(0, 3)}-${unformatted.substring(3, 7)}-${unformatted.substring(7, 11)}';
+    String number =
+        '${unformatted.substring(0, 3)}-${unformatted.substring(3, 7)}-${unformatted.substring(7, 11)}';
     final msg = jsonEncode({"authValue": number});
 
     String url = '$baseUrl/member/smsAuth';
-    var response = await http.post(Uri.parse(url),
-        headers: {
-          "accept": "*/*",
-          "Content-Type": "application/json",
-        },
-        body: msg,
+    var response = await http.post(
+      Uri.parse(url),
+      headers: {
+        "accept": "*/*",
+        "Content-Type": "application/json",
+      },
+      body: msg,
     );
 
     /*
@@ -176,6 +179,12 @@ class _InputPhoneNumberState extends State<InputPhoneNumber> {
       if (kDebugMode) {
         print('Request failed with status: ${response.statusCode}.');
       }
+
+      Get.to(() => InputAuthCode(
+            phoneNumber: number,
+            authCode: '000000',
+            isMember: false,
+          ));
     }
   }
 }

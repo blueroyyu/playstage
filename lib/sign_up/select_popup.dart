@@ -48,7 +48,9 @@ class SelectPopupState extends State<SelectPopup> {
             final isSelected = _selectedCodes.contains(index);
             return ListTile(
               title: Text(label!),
-              trailing: isSelected ? const Icon(Icons.check, color: Color(0xFFFDD835)) : null,
+              trailing: isSelected
+                  ? const Icon(Icons.check, color: Color(0xFFFDD835))
+                  : null,
               onTap: () {
                 _toggleCode(index);
               },

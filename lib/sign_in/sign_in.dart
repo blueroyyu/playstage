@@ -1,14 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:playstage/sign_in/input_phone_number.dart';
 import 'package:playstage/sign_in/privacy_policy.dart';
 import 'package:playstage/sign_in/terms.dart';
 import 'package:playstage/factory.dart';
-import 'package:playstage/sign_in/input_phone_number.dart';
 
 import 'dart:io' show Platform;
-
-import 'package:playstage/sign_up/add_photo.dart';
 
 enum LanguageMenuItem { itemOne, itemTwo, itemThree }
 
@@ -107,6 +105,7 @@ class _SignInState extends State<SignIn> {
                   ),
                   onPressed: () {
                     Get.to(const InputPhoneNumber());
+                    // Get.to(const MainView());
                   },
                 ),
               ],

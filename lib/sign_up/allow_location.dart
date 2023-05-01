@@ -152,8 +152,10 @@ class _AllowLocationState extends State<AllowLocation> {
                       onPressed: () async {
                         await _determinePosition();
 
-                        Position position = await Geolocator.getCurrentPosition();
-                        String address = await getAddressFromLatLng(position.latitude, position.longitude);
+                        Position position =
+                            await Geolocator.getCurrentPosition();
+                        String address = await getAddressFromLatLng(
+                            position.latitude, position.longitude);
 
                         SubscriberInfo info = SubscriberInfo();
                         info.latitude = position.latitude;
@@ -165,8 +167,8 @@ class _AllowLocationState extends State<AllowLocation> {
                 ),
               ),
               Container(
-                  child: _isLoading ? const Loader(loadingTxt: '') : Container()
-              ),
+                  child:
+                      _isLoading ? const Loader(loadingTxt: '') : Container()),
             ],
           ),
         ),
@@ -218,7 +220,8 @@ class _AllowLocationState extends State<AllowLocation> {
   Future<String> getAddressFromLatLng(double lat, double lng) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
     Placemark place = placemarks[0];
-    String address = '${place.street}, ${place.locality}, ${place.administrativeArea} ${place.postalCode}, ${place.country}';
+    String address =
+        '${place.street}, ${place.locality}, ${place.administrativeArea} ${place.postalCode}, ${place.country}';
     return address;
   }
 
@@ -260,14 +263,18 @@ class _AllowLocationState extends State<AllowLocation> {
       "smokingInfo": info.smoking ?? "",
       "memberTendencyCd": info.iam,
       "searchTendencyCd1": info.toFind[0],
-      "searchTendencyCd2": info.toFind.length > 1 && info.toFind[1].isNotEmpty ? info.toFind[1] : "",
-      "searchTendencyCd3": info.toFind.length > 2 && info.toFind[2].isNotEmpty ? info.toFind[2] : "",
+      "searchTendencyCd2": info.toFind.length > 1 && info.toFind[1].isNotEmpty
+          ? info.toFind[1]
+          : "",
+      "searchTendencyCd3": info.toFind.length > 2 && info.toFind[2].isNotEmpty
+          ? info.toFind[2]
+          : "",
       "latitude": info.latitude.toString(),
       "longitude": info.longitude.toString(),
       "address": info.address ?? "",
       "address2": info.address2 ?? "",
       "address3": info.address3 ?? "",
-      "ci": info.ci ?? info.phoneNumber,  // TODO: 본인인증
+      "ci": info.ci ?? info.phoneNumber, // TODO: 본인인증
     });
 
     try {

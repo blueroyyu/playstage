@@ -21,7 +21,8 @@ class _TermsState extends State<PrivacyPolicy> {
 
   Future<void> readFile() async {
     try {
-      String content = await rootBundle.loadString('assets/privacy_policy_kr.txt');
+      String content =
+          await rootBundle.loadString('assets/privacy_policy_kr.txt');
       setState(() {
         fileContent = content;
       });
@@ -36,7 +37,8 @@ class _TermsState extends State<PrivacyPolicy> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('terms_agree4'.tr,
+        title: Text(
+          'terms_agree4'.tr,
           style: const TextStyle(
             color: Colors.black,
           ),

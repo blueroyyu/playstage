@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "22052510911",
+    "firebase_url": "https://playstage-dev-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "playstage-dev",
+    "storage_bucket": "playstage-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22052510911:android:512f1c6145b8fa69327a0a",
+        "android_client_info": {
+          "package_name": "com.playstage.playstage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22052510911-bbm428bfbpv3nl658tla4e9cg7shkn9g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnvoabATTdKu702_Z5q19Gt0Zfs4yOAj0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22052510911-bbm428bfbpv3nl658tla4e9cg7shkn9g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

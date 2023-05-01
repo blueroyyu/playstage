@@ -18,13 +18,14 @@ const String changePassword = '/change-password';
 const String memberList = '/member/getMemberList';
 const String likeMemberList = '/member/getLikeMemberList';
 const String receiveLikeMemberList = '/member/getReceiveLikeMemberList';
-const String memberInfo = '/member/getMember/'; // /member/getMember/{memberId}
+const String memberInfo = '/member/getMember/'; // /member/getMember/{memberSeq}
 const String likeToggleMember = '/member/likeToggleMember';
 const String hateAddMember = '/member/hateAddMember';
 const String updateMember = '/member/updateMember';
 
-const String feedList = '/feed/getFeedList/'; // /feed/getFeedList/{memberId}
-const String memberFeedList = '/feed/getFeedListByMemberId/'; // /feed/getFeedListByMemberId/{memberId}
+const String feedList = '/feed/getFeedList/'; // /feed/getFeedList/{memberSeq}
+const String memberFeedList =
+    '/feed/getFeedListByMemberSeq/'; // /feed/getFeedListByMemberSeq/{memberSeq}
 const String handleFeedLike = '/feed/handleFeedLike';
 const String handleFeedComment = '/feed/handleFeedComment';
 const String addFeed = '/feed/addFeed';
@@ -101,7 +102,11 @@ class ApiProvider {
     "distance": 0
   }
   */
-  static Future<dynamic> requestMemberList(String memberId, {String location = '', int fromAge = 0, int toAge = 0, double distance = 0.0}) async {
+  static Future<dynamic> requestMemberList(String memberId,
+      {String location = '',
+      int fromAge = 0,
+      int toAge = 0,
+      double distance = 0.0}) async {
     final data = {
       'memberId': memberId,
       'location': location,
@@ -117,7 +122,19 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestLikeMemberList(String memberId, {String location = '', int fromAge = 0, int toAge = 0, double distance = 0.0}) async {
+  static Future<dynamic> requestMember(int memberSeq) async {
+    try {
+      return await postData('$memberInfo$memberSeq', null);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> requestLikeMemberList(String memberId,
+      {String location = '',
+      int fromAge = 0,
+      int toAge = 0,
+      double distance = 0.0}) async {
     final data = {
       'memberId': memberId,
       'location': location,
@@ -133,7 +150,11 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestReceiveLikeMemberList(String memberId, {String location = '', int fromAge = 0, int toAge = 0, double distance = 0.0}) async {
+  static Future<dynamic> requestReceiveLikeMemberList(String memberId,
+      {String location = '',
+      int fromAge = 0,
+      int toAge = 0,
+      double distance = 0.0}) async {
     final data = {
       'memberId': memberId,
       'location': location,
@@ -155,7 +176,8 @@ class ApiProvider {
     "targetMemberId": "string"
   }
    */
-  static Future<dynamic> requestToggleMemberLike(String memberId, String targetId) async {
+  static Future<dynamic> requestToggleMemberLike(
+      String memberId, String targetId) async {
     final data = {
       'memberId': memberId,
       'targetId': targetId,
@@ -168,7 +190,8 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestAddHateMember(String memberId, String targetId) async {
+  static Future<dynamic> requestAddHateMember(
+      String memberId, String targetId) async {
     final data = {
       'memberId': memberId,
       'targetId': targetId,
@@ -181,21 +204,19 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestFeedList(String memberId) async {
+  static Future<dynamic> requestFeedList(int memberSeq) async {
     try {
-      return await postData('$feedList$memberId', null);
+      return await getData('$feedList$memberSeq');
     } catch (error) {
       rethrow;
     }
   }
 
-  static Future<dynamic> requestMemberFeedList(String memberId) async {
+  static Future<dynamic> requestMemberFeedList(int memberSeq) async {
     try {
-      return await postData('$memberFeedList$memberId', null);
+      return await getData('$memberFeedList$memberSeq');
     } catch (error) {
       rethrow;
     }
   }
-
-
 }

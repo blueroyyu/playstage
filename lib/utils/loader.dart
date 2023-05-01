@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Loader extends StatelessWidget  {
-  const Loader({Key? key, this.opacity = 0.5,
-    this.dismissibles = false, this.color = Colors.black, this.loadingTxt = 'Loading...'
-  }) : super(key: key);
+class Loader extends StatelessWidget {
+  const Loader(
+      {Key? key,
+      this.opacity = 0.5,
+      this.dismissibles = false,
+      this.color = Colors.black,
+      this.loadingTxt = 'Loading...'})
+      : super(key: key);
 
   final double opacity;
   final bool dismissibles;
@@ -20,21 +24,21 @@ class Loader extends StatelessWidget  {
         ),
         Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.only(top: 10),
-                  child: const CircularProgressIndicator(),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  child: Text(loadingTxt, style: const TextStyle(color: Colors.white70, fontSize: 18)),
-                ),
-              ],
-            )
-        ),
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.only(top: 10),
+              child: const CircularProgressIndicator(),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 5),
+              child: Text(loadingTxt,
+                  style: const TextStyle(color: Colors.white70, fontSize: 18)),
+            ),
+          ],
+        )),
       ],
     );
   }

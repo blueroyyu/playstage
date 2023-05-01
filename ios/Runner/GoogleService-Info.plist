@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>22052510911-5v6ero341ugv3h8u6rc0evucpvpj9ej1.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.22052510911-5v6ero341ugv3h8u6rc0evucpvpj9ej1</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA8Xo77SyunTxmaCTlMb43XD3FMsGSpORE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>22052510911</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.playstage.playstage</string>
+	<key>PROJECT_ID</key>
+	<string>playstage-dev</string>
+	<key>STORAGE_BUCKET</key>
+	<string>playstage-dev.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:22052510911:ios:e21e89eacb938306327a0a</string>
+	<key>DATABASE_URL</key>
+	<string>https://playstage-dev-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>

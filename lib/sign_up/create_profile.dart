@@ -63,7 +63,9 @@ class _CreateProfileState extends State<CreateProfile> {
                 elevation: 0.0,
                 side: BorderSide(
                   width: 2.0,
-                  color: _filled ? const Color(0xFFFFC800) : const Color(0xFFE9E9E9),
+                  color: _filled
+                      ? const Color(0xFFFFC800)
+                      : const Color(0xFFE9E9E9),
                 ),
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -73,7 +75,9 @@ class _CreateProfileState extends State<CreateProfile> {
               child: Text(
                 'next'.tr,
                 style: TextStyle(
-                  color: _filled ? const Color(0xFFFFC800) : const Color(0xFFE9E9E9),
+                  color: _filled
+                      ? const Color(0xFFFFC800)
+                      : const Color(0xFFE9E9E9),
                 ),
               ),
             ),
@@ -120,7 +124,9 @@ class _CreateProfileState extends State<CreateProfile> {
                   onChanged: (value) {
                     _name = value;
 
-                    if (_name.isNotEmpty && _birthDay.isNotEmpty && _aboutMe.isNotEmpty) {
+                    if (_name.isNotEmpty &&
+                        _birthDay.isNotEmpty &&
+                        _aboutMe.isNotEmpty) {
                       setState(() {
                         _filled = true;
                       });
@@ -154,8 +160,10 @@ class _CreateProfileState extends State<CreateProfile> {
                       setState(() {
                         _birthDay = DateFormat(_df).format(selectedDate);
 
-                        if (_name.isNotEmpty && _birthDay.isNotEmpty && _aboutMe.isNotEmpty) {
-                            _filled = true;
+                        if (_name.isNotEmpty &&
+                            _birthDay.isNotEmpty &&
+                            _aboutMe.isNotEmpty) {
+                          _filled = true;
                         }
                       });
                     }
@@ -210,7 +218,8 @@ class _CreateProfileState extends State<CreateProfile> {
                     maxLength: 50,
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
                       hintText: 'input_after_touch'.tr,
                       hintStyle: const TextStyle(
                         fontSize: 15,
@@ -220,7 +229,9 @@ class _CreateProfileState extends State<CreateProfile> {
                     onChanged: (value) {
                       _aboutMe = value;
 
-                      if (_name.isNotEmpty && _birthDay.isNotEmpty && _aboutMe.isNotEmpty) {
+                      if (_name.isNotEmpty &&
+                          _birthDay.isNotEmpty &&
+                          _aboutMe.isNotEmpty) {
                         setState(() {
                           _filled = true;
                         });

@@ -36,7 +36,8 @@ class _TermsState extends State<Terms> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('terms_agree2'.tr,
+        title: Text(
+          'terms_agree2'.tr,
           style: const TextStyle(
             color: Colors.black,
           ),

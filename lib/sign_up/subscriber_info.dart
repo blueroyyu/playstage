@@ -31,7 +31,7 @@ class SubscriberInfo {
   String? name;
   String? birthDay;
   String? aboutMe;
-  int?  height;
+  int? height;
   String? bodyType;
   String? languageSpoken;
   String? drink;

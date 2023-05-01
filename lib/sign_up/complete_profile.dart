@@ -15,7 +15,7 @@ class CompleteProfile extends StatefulWidget {
 }
 
 class _CompleteProfileState extends State<CompleteProfile> {
-  bool _filled = true;
+  final bool _filled = true;
 
   String _height = "";
   String _bodyType = "";
@@ -55,7 +55,9 @@ class _CompleteProfileState extends State<CompleteProfile> {
                 elevation: 0.0,
                 side: BorderSide(
                   width: 2.0,
-                  color: _filled ? const Color(0xFFFFC800) : const Color(0xFFE9E9E9),
+                  color: _filled
+                      ? const Color(0xFFFFC800)
+                      : const Color(0xFFE9E9E9),
                 ),
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -65,7 +67,9 @@ class _CompleteProfileState extends State<CompleteProfile> {
               child: Text(
                 'skip'.tr,
                 style: TextStyle(
-                  color: _filled ? const Color(0xFFFFC800) : const Color(0xFFE9E9E9),
+                  color: _filled
+                      ? const Color(0xFFFFC800)
+                      : const Color(0xFFE9E9E9),
                 ),
               ),
             ),
@@ -275,7 +279,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'cigarettes'.tr,
+                  'smoking'.tr,
                   style: const TextStyle(
                     fontSize: 15,
                     color: Colors.black,
@@ -330,7 +334,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
         int height = 170;
         return AlertDialog(
           title: const Text('Select your height'),
-          content: Container(
+          content: SizedBox(
             height: 200.0,
             child: CupertinoPicker(
               scrollController: FixedExtentScrollController(initialItem: 50),
@@ -457,7 +461,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
       context: context,
       builder: (context) {
         return SelectPopup(
-          title: 'cigarettes'.tr,
+          title: 'smoking'.tr,
           length: 1,
           codes: frequencies,
         );

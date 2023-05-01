@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
@@ -113,7 +114,9 @@ class _InputAuthCodeState extends State<InputAuthCode> {
                   setState(() {
                     _filled = true;
                   });
-                  print(pin);
+                  if (kDebugMode) {
+                    print(pin);
+                  }
                 },
               ),
               const SizedBox(height: 70),

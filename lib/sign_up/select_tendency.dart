@@ -48,7 +48,9 @@ class _SelectTendencyState extends State<SelectTendency> {
                 elevation: 0.0,
                 side: BorderSide(
                   width: 2.0,
-                  color: _filled ? const Color(0xFFFFC800) : const Color(0xFFE9E9E9),
+                  color: _filled
+                      ? const Color(0xFFFFC800)
+                      : const Color(0xFFE9E9E9),
                 ),
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -58,7 +60,9 @@ class _SelectTendencyState extends State<SelectTendency> {
               child: Text(
                 'next'.tr,
                 style: TextStyle(
-                  color: _filled ? const Color(0xFFFFC800) : const Color(0xFFE9E9E9),
+                  color: _filled
+                      ? const Color(0xFFFFC800)
+                      : const Color(0xFFE9E9E9),
                 ),
               ),
             ),
@@ -72,7 +76,8 @@ class _SelectTendencyState extends State<SelectTendency> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('STEP 1/5',
+              const Text(
+                'STEP 1/5',
                 style: TextStyle(
                   fontSize: 18,
                   color: Color(0xFFFFC000),
