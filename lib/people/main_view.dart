@@ -81,7 +81,7 @@ class _MainViewState extends State<MainView> {
       print(sbUser.toJson());
     }
 
-    sendbird.updateCurrentUserInfo(fileInfo: FileInfo.fromUrl(url: profileUrl));
+    sendbird.updateCurrentUserInfo(nickname: row['mamber_name'], fileInfo: FileInfo.fromUrl(url: profileUrl));
   }
 
   Future<User> _connect(String memberId, String name) async {
