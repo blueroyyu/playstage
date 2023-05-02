@@ -52,7 +52,7 @@ class _AddFeedState extends State<AddFeed> {
             flex: 1,
             child: GridView.builder(
               shrinkWrap: true,
-              itemCount: 6,
+              itemCount: 3,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 8.0,

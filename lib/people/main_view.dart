@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:playstage/people/channel_list_view.dart';
+import 'package:playstage/people/feed_view.dart';
 import 'package:playstage/people/member_info_entity/member_info_entity.dart';
 import 'package:playstage/people/people_detail.dart';
 import 'package:playstage/sign_up/subscriber_info.dart';
@@ -28,6 +29,7 @@ class _MainViewState extends State<MainView> {
   int _currentProfileIndex = 0;
   final int _currentMemberIndex = 0;
   MemberInfoEntity? _currentMember;
+  MemberInfoEntity? _owner;
 
   late final SendbirdSdk sendbird;
 
@@ -81,7 +83,19 @@ class _MainViewState extends State<MainView> {
       print(sbUser.toJson());
     }
 
-    sendbird.updateCurrentUserInfo(nickname: row['mamber_name'], fileInfo: FileInfo.fromUrl(url: profileUrl));
+    sendbird.updateCurrentUserInfo(
+        nickname: row['member_name'],
+        fileInfo: FileInfo.fromUrl(url: profileUrl));
+
+    final memberResponse = await ApiProvider.requestMember(row['member_seq']);
+    if (memberResponse['resultCode'] == '200') {
+      final memberData = memberResponse['data'];
+
+      _owner = MemberInfoEntity.fromMap(memberData);
+      if (kDebugMode) {
+        print(_owner.toString());
+      }
+    }
   }
 
   Future<User> _connect(String memberId, String name) async {
@@ -409,7 +423,9 @@ class _MainViewState extends State<MainView> {
                         color: Colors.transparent,
                       ),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(() => FeedView(member: _owner!));
+                        },
                         icon: const Icon(CupertinoIcons.globe),
                         color: Colors.grey,
                         iconSize: 32,
