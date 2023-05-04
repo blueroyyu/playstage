@@ -139,28 +139,33 @@ class MemberInfoEntity {
   String name() => memberName ?? '';
 
   String memberTendency() {
-    String? td = tendencies
-        .firstWhere((element) => element["code"] == memberTendencyCd)["label"];
-    return td ?? '';
+    Map? data = tendencies
+        .firstWhereOrNull((element) => element["code"] == memberTendencyCd);
+
+    if (data != null) {
+      return data['label'];
+    }
+
+    return '';
   }
 
   String searchTendency() {
-    String? td1 = tendencies
-        .firstWhere((element) => element["code"] == searchTendencyCd1)["label"];
-    String? td2 = tendencies
-        .firstWhere((element) => element["code"] == searchTendencyCd2)["label"];
-    String? td3 = tendencies
-        .firstWhere((element) => element["code"] == searchTendencyCd3)["label"];
+    Map? data1 = tendencies
+        .firstWhereOrNull((element) => element["code"] == searchTendencyCd1);
+    Map? data2 = tendencies
+        .firstWhereOrNull((element) => element["code"] == searchTendencyCd2);
+    Map? data3 = tendencies
+        .firstWhereOrNull((element) => element["code"] == searchTendencyCd3);
 
     String td = '';
-    if (td1 != null && td1.isNotEmpty) {
-      td = td1;
+    if (data1 != null) {
+      td = data1['label'];
     }
-    if (td2 != null && td2.isNotEmpty) {
-      td += ', $td2';
+    if (data2 != null) {
+      td += ', ${data2['label']}';
     }
-    if (td3 != null && td3.isNotEmpty) {
-      td += ', $td3';
+    if (data3 != null) {
+      td += ', ${data3['label']}';
     }
 
     return td;

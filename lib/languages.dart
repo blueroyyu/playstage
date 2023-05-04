@@ -56,6 +56,12 @@ class Languages extends Translations {
           'feed': '피드',
           'tendency': '성향',
           'feed_detail': '피드 (상세)',
+          'app_settings': '앱 설정',
+          'account': '계정',
+          'notice': '알림',
+          'prevented_list': '차단 목록',
+          'qa': '문의하기',
+          'about': '앱 정보',
         },
         'en_US': {
           'greeting': 'Hello',

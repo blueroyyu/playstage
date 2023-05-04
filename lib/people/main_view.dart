@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:playstage/settings/app_settings.dart';
 import 'package:playstage/people/channel_list_view.dart';
 import 'package:playstage/people/connection_view.dart';
 import 'package:playstage/people/feed_view.dart';
@@ -150,7 +151,7 @@ class _MainViewState extends State<MainView> {
         actions: [
           IconButton(
             onPressed: () {
-              // do something when button is pressed
+              Get.to(() => const AppSettings());
             },
             icon: Image.asset('assets/images/icon_menu.png'),
             iconSize: 26,
