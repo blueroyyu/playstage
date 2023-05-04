@@ -145,16 +145,18 @@ void main() async {
       token = await messaging.getToken();
     }
 
-    var sendbird = SendbirdSdk(appId: sendbirdApiId);
-    await sendbird.connect(memberId);
-    await sendbird.registerPushToken(
-      type: kIsWeb
-          ? PushTokenType.none
-          : Platform.isIOS
-              ? PushTokenType.apns
-              : PushTokenType.fcm,
-      token: token!,
-    );
+    if (memberId.isNotEmpty) {
+      var sendbird = SendbirdSdk(appId: sendbirdApiId);
+      await sendbird.connect(memberId);
+      await sendbird.registerPushToken(
+        type: kIsWeb
+            ? PushTokenType.none
+            : Platform.isIOS
+                ? PushTokenType.apns
+                : PushTokenType.fcm,
+        token: token!,
+      );
+    }
   }
 
   if (kDebugMode) {

@@ -14,15 +14,15 @@ class AddFeed extends StatefulWidget {
 class _AddFeedState extends State<AddFeed> {
   final List<String> _imageFilePath = List.generate(6, (_) => "");
   final ImagePicker _imagePicker = ImagePicker();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.black,
         ),
-        title: Text(
+        title: const Text(
           '업로드',
           style: TextStyle(
             color: Colors.black,
@@ -33,14 +33,14 @@ class _AddFeedState extends State<AddFeed> {
             onPressed: () {
               // do something when button is pressed
             },
-            icon: Icon(Icons.check),
+            icon: const Icon(Icons.check),
             iconSize: 26,
           ),
         ],
       ),
       body: Column(
         children: [
-          Expanded(
+          const Expanded(
             flex: 2,
             child: TextField(
               decoration: InputDecoration(

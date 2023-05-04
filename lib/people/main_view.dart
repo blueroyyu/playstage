@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:playstage/people/channel_list_view.dart';
+import 'package:playstage/people/connection_view.dart';
 import 'package:playstage/people/feed_view.dart';
 import 'package:playstage/people/member_info_entity/member_info_entity.dart';
 import 'package:playstage/people/people_detail.dart';
@@ -411,7 +412,10 @@ class _MainViewState extends State<MainView> {
                         color: Colors.transparent,
                       ),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(() =>
+                              ConnectionView(memberId: _owner!.memberId!));
+                        },
                         icon: const Icon(CupertinoIcons.star),
                         color: Colors.grey,
                         iconSize: 32,

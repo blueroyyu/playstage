@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:playstage/const.dart';
+import 'package:playstage/people/like_feed_view.dart';
 import 'package:playstage/people/member_feed_entity/member_feed_entity.dart';
 import 'package:playstage/people/member_feed_entity/tb_feed_like_member_info_list.dart';
 import 'package:playstage/people/member_info_entity/member_info_entity.dart';
@@ -220,26 +221,31 @@ class _FeedDetailState extends State<FeedDetail> {
               ),
             ),
             const SizedBox(height: 10.0),
-            SizedBox(
-              width: safeAreaWidth,
-              height: 30.0,
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: likeList.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {},
-                    child: likeList.isNotEmpty
-                        ? CircleAvatar(
-                            backgroundImage: CachedNetworkImageProvider(
-                              likeList[index].makeProfileImagePath(),
-                            ),
-                          )
-                        : Container(),
-                  );
-                },
+            GestureDetector(
+              onTap: () {
+                Get.to(() => LikeFeedView(likeList: likeList));
+              },
+              child: SizedBox(
+                width: safeAreaWidth,
+                height: 30.0,
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: likeList.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {},
+                      child: likeList.isNotEmpty
+                          ? CircleAvatar(
+                              backgroundImage: CachedNetworkImageProvider(
+                                likeList[index].makeProfileImagePath(),
+                              ),
+                            )
+                          : Container(),
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(height: 20.0),
