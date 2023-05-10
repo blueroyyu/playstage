@@ -14,6 +14,8 @@ const Color colorPeopleDetailBg = Color(0xFFF6F6F6);
 const Color colorBtnBg = Color(0xFF2A2A2A);
 const Color colorTabBottom = Color(0xFFFFC800);
 const Color colorTextGrey = Color(0xFFB4B4B4);
+const Color colorSlderInactive = Color(0xFFD9D9D9);
+const Color colorTextFieldBg = Color(0xFFF1F1F1);
 
 const String sendbirdApiId = '2A9E213D-FD3F-40E3-9AC4-29F7527F09CD';
 

@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:playstage/const.dart';
+import 'package:playstage/shared_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:playstage/utils/loader.dart';
 import 'subscriber_info.dart';
@@ -217,14 +216,6 @@ class _AllowLocationState extends State<AllowLocation> {
     return await Geolocator.getCurrentPosition();
   }
 
-  Future<String> getAddressFromLatLng(double lat, double lng) async {
-    List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
-    Placemark place = placemarks[0];
-    String address =
-        '${place.street}, ${place.locality}, ${place.administrativeArea} ${place.postalCode}, ${place.country}';
-    return address;
-  }
-
   /*
   {
     "memberPhone": "010-1234-1234",
@@ -283,6 +274,10 @@ class _AllowLocationState extends State<AllowLocation> {
 
       final files = info.profileImages;
       for (final file in files) {
+        if (file.isEmpty) {
+          continue;
+        }
+
         formData.files.add(MapEntry(
           'files',
           await mf.MultipartFile.fromFile(file),

@@ -30,6 +30,13 @@
             {
               "client_id": "22052510911-bbm428bfbpv3nl658tla4e9cg7shkn9g.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "22052510911-5v6ero341ugv3h8u6rc0evucpvpj9ej1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.playstage.playstage"
+              }
             }
           ]
         }

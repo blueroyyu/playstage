@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'input_auth_code.dart';
 import 'package:playstage/const.dart';
 import 'package:http/http.dart' as http;
@@ -169,10 +170,15 @@ class _InputPhoneNumberState extends State<InputPhoneNumber> {
         print('ID: ${jsonResponse['data']['authNumber']}');
       }
 
+      final isMember = jsonResponse['data']['isMember'];
+      if (isMember) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString(keyUserId, jsonResponse['data']['memberId']);
+      }
       Get.to(() => InputAuthCode(
             phoneNumber: number,
             authCode: jsonResponse['data']['authNumber'],
-            isMember: jsonResponse['data']['isMember'],
+            isMember: isMember,
           ));
     } else {
       // 요청이 실패함

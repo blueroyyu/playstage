@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:playstage/const.dart';
-import 'package:playstage/people/feed_detail.dart';
+import 'package:playstage/feed/feed_detail.dart';
 import 'package:playstage/people/member_feed_entity/member_feed_entity.dart';
 import 'package:playstage/people/member_info_entity/member_info_entity.dart';
 
@@ -39,13 +39,13 @@ Widget iconButton(
   );
 }
 
-ListView makeFeedList(
-    MemberInfoEntity member, List<MemberFeedEntity> feedList) {
+ListView makeFeedList(MemberInfoEntity member, List<MemberFeedEntity> feedList,
+    {bool shrinkWrap = true}) {
   final df = DateFormat('yyyy/MM/dd');
 
   return ListView.builder(
     physics: const NeverScrollableScrollPhysics(),
-    shrinkWrap: true,
+    shrinkWrap: shrinkWrap,
     itemCount: feedList.length,
     itemBuilder: (BuildContext context, int index) {
       final feed = feedList[index];
@@ -111,6 +111,9 @@ ListView makeFeedList(
                 String photoPath = image.photoPath!;
                 if (photoPath.startsWith('/') == false) {
                   photoPath = '/$photoPath';
+                }
+                if (photoPath.endsWith('/') == false) {
+                  photoPath = '$photoPath/';
                 }
                 return Padding(
                   padding: const EdgeInsets.all(20.0),

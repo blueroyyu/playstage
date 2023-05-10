@@ -2,53 +2,35 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:playstage/chat/chat_view.dart';
 import 'package:playstage/const.dart';
 import 'package:playstage/factory.dart';
-import 'package:playstage/people/matched_view.dart';
+import 'package:playstage/people/main_view.dart';
 import 'package:playstage/people/member_feed_entity/member_feed_entity.dart';
 import 'package:playstage/shared_data.dart';
 import 'package:playstage/utils/api_provider.dart';
-import 'package:playstage/people/member_info_entity/member_info_entity.dart';
-import 'package:playstage/utils/chat_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class PeopleDetail extends StatefulWidget {
-  final MemberInfoEntity memberInfoEntity;
-
-  const PeopleDetail({Key? key, required this.memberInfoEntity})
-      : super(key: key);
+class ProfileView extends StatefulWidget {
+  const ProfileView({super.key});
 
   @override
-  State<PeopleDetail> createState() => _PeopleDetailState();
+  State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _PeopleDetailState extends State<PeopleDetail> {
+class _ProfileViewState extends State<ProfileView> {
   final List<MemberFeedEntity> _feedList = <MemberFeedEntity>[];
 
-  late final MemberInfoEntity _currentMember;
-
   int _currentProfileIndex = 0;
-
   int _selectedIndex = 0;
-
-  late final String userId;
-
-  bool _following = false;
 
   @override
   void initState() {
-    _currentMember = widget.memberInfoEntity;
-    _loadMemberFeed();
-
     super.initState();
+
+    _loadMemberFeed();
   }
 
   void _loadMemberFeed() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId = prefs.getString(keyUserId)!;
-
-    int memberSeq = _currentMember.memberSeq!;
+    int memberSeq = SharedData().owner!.memberSeq!;
 
     final responseData = await ApiProvider.requestMemberFeedList(memberSeq);
     if (responseData['resultCode'] == '200') {
@@ -60,7 +42,9 @@ class _PeopleDetailState extends State<PeopleDetail> {
             print(info.toString());
           }
 
-          _feedList.add(info);
+          setState(() {
+            _feedList.add(info);
+          });
         }
 
         if (kDebugMode) {
@@ -71,10 +55,10 @@ class _PeopleDetailState extends State<PeopleDetail> {
   }
 
   String _makeCurrentImagePath() {
-    if (_currentMember.tbMemberPhotoInfoList!.isEmpty) {
+    if (SharedData().owner!.tbMemberPhotoInfoList!.isEmpty) {
       return '';
     }
-    return '$s3Url/${_currentMember.memberId}/profile/${_currentMember.tbMemberPhotoInfoList![_currentProfileIndex].photoSavedFileName}';
+    return '$s3Url/${SharedData().owner!.memberId}/profile/${SharedData().owner!.tbMemberPhotoInfoList![_currentProfileIndex].photoSavedFileName}';
   }
 
   @override
@@ -87,13 +71,13 @@ class _PeopleDetailState extends State<PeopleDetail> {
       body: SafeArea(
         child: Container(
           color: colorPeopleDetailBg,
-          child: Stack(
+          child: Column(
             children: [
-              Column(
-                children: [
-                  Expanded(
-                    flex: 90,
-                    child: SingleChildScrollView(
+              Expanded(
+                flex: 88,
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
                       child: Stack(
                         children: [
                           Column(
@@ -192,7 +176,7 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                           child: SizedBox(width: 20.0),
                                         ),
                                         TextSpan(
-                                          text: _currentMember.name(),
+                                          text: SharedData().owner!.name(),
                                           style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 26.0,
@@ -202,7 +186,10 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                           child: SizedBox(width: 10.0),
                                         ),
                                         TextSpan(
-                                          text: _currentMember.age().toString(),
+                                          text: SharedData()
+                                              .owner!
+                                              .age()
+                                              .toString(),
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 16.0,
@@ -216,7 +203,7 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20.0),
                                     child: Text(
-                                      _currentMember.memberTendency(),
+                                      SharedData().owner!.memberTendency(),
                                       style: const TextStyle(
                                         fontSize: 16.0,
                                       ),
@@ -317,7 +304,7 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              _currentMember.memberIntro!,
+                                              SharedData().owner!.memberIntro!,
                                               style: const TextStyle(
                                                 fontSize: 16.0,
                                               ),
@@ -337,7 +324,8 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                                     ),
                                                   ),
                                                   TextSpan(
-                                                    text: _currentMember
+                                                    text: SharedData()
+                                                        .owner!
                                                         .searchTendency(),
                                                     style: const TextStyle(
                                                       fontSize: 15.0,
@@ -361,8 +349,9 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                                     ),
                                                   ),
                                                   TextSpan(
-                                                    text:
-                                                        _currentMember.height(),
+                                                    text: SharedData()
+                                                        .owner!
+                                                        .height(),
                                                     style: const TextStyle(
                                                       fontSize: 15.0,
                                                       color: Colors.black,
@@ -385,7 +374,8 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                                     ),
                                                   ),
                                                   TextSpan(
-                                                    text: _currentMember
+                                                    text: SharedData()
+                                                        .owner!
                                                         .bodyType(),
                                                     style: const TextStyle(
                                                       fontSize: 15.0,
@@ -410,7 +400,8 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                                     ),
                                                   ),
                                                   TextSpan(
-                                                    text: _currentMember
+                                                    text: SharedData()
+                                                        .owner!
                                                         .spokenLanguage(),
                                                     style: const TextStyle(
                                                       fontSize: 15.0,
@@ -434,9 +425,11 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                                     ),
                                                   ),
                                                   TextSpan(
-                                                    text: _currentMember
+                                                    text: SharedData()
+                                                        .owner!
                                                         .frequency(
-                                                            code: _currentMember
+                                                            code: SharedData()
+                                                                .owner!
                                                                 .drinkInfo),
                                                     style: const TextStyle(
                                                       fontSize: 15.0,
@@ -460,9 +453,11 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                                     ),
                                                   ),
                                                   TextSpan(
-                                                    text: _currentMember
+                                                    text: SharedData()
+                                                        .owner!
                                                         .frequency(
-                                                            code: _currentMember
+                                                            code: SharedData()
+                                                                .owner!
                                                                 .smokingInfo),
                                                     style: const TextStyle(
                                                       fontSize: 15.0,
@@ -475,7 +470,8 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                           ],
                                         ),
                                       ),
-                                      makeFeedList(_currentMember, _feedList),
+                                      makeFeedList(
+                                          SharedData().owner!, _feedList),
                                     ],
                                   ),
                                 ],
@@ -491,20 +487,7 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                 children: [
                                   const Spacer(),
                                   InkWell(
-                                      onTap: () {
-                                        ChatProvider().createChannel([
-                                          userId,
-                                          _currentMember.memberId!
-                                        ]).then((channel) {
-                                          Get.to(() =>
-                                              ChatView(groupChannel: channel));
-                                        }).catchError((error) {
-                                          if (kDebugMode) {
-                                            print(
-                                                'create_channel_view: navigationBar: createChannel: ERROR: $error');
-                                          }
-                                        });
-                                      },
+                                      onTap: () {},
                                       child: Image.asset(
                                         'assets/images/btn_chat.png',
                                         width: 60.0,
@@ -526,52 +509,10 @@ class _PeopleDetailState extends State<PeopleDetail> {
                         ],
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 10,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30)),
-                        color: Colors.white,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                // TODO: Dislike
-                                Get.back();
-                              },
-                              child: Image.asset(
-                                'assets/images/btn_dislike_red.png',
-                                width: 60.0,
-                              )),
-                          InkWell(
-                            onTap: () async {
-                              final matched =
-                                  await _requestLike(_currentMember.memberId!);
-
-                              if (matched) {
-                                Get.to(() =>
-                                    MatchedView(matchedMember: _currentMember));
-                              }
-                            },
-                            child: Image.asset(
-                              _following
-                                  ? 'assets/images/btn_like_red.png'
-                                  : 'assets/images/btn_like_yellow.png',
-                              width: 60.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              MainTab(index: 4),
             ],
           ),
         ),
@@ -590,55 +531,19 @@ class _PeopleDetailState extends State<PeopleDetail> {
 
   void _showNextImage() {
     setState(() {
-      if (_currentMember.tbMemberPhotoInfoList!.isNotEmpty) {
+      if (SharedData().owner!.tbMemberPhotoInfoList!.isNotEmpty) {
         _currentProfileIndex = (_currentProfileIndex + 1) %
-            _currentMember.tbMemberPhotoInfoList!.length;
+            SharedData().owner!.tbMemberPhotoInfoList!.length;
       }
     });
   }
 
   void _showPrevImage() {
     setState(() {
-      if (_currentMember.tbMemberPhotoInfoList!.isNotEmpty) {
+      if (SharedData().owner!.tbMemberPhotoInfoList!.isNotEmpty) {
         _currentProfileIndex = (_currentProfileIndex - 1) %
-            _currentMember.tbMemberPhotoInfoList!.length;
+            SharedData().owner!.tbMemberPhotoInfoList!.length;
       }
     });
-  }
-
-  /*
-  "data": {
-    "isLike": true,
-    "isLikeByTarget": true
-  }
-  */
-  Future<bool> _requestLike(String targetMemeberId) async {
-    try {
-      var responseData = await ApiProvider.requestToggleMemberLike(
-          SharedData().owner!.memberId!, targetMemeberId);
-      if (responseData['resultCode'] == '200') {
-        final data = responseData['data'];
-        if (data != null) {
-          final isLike = data['isLike'];
-          final isLikeByTarget = data['isLikeByTarget'];
-
-          setState(() {
-            _following = isLike;
-          });
-
-          if (isLike && isLikeByTarget) {
-            return true;
-          }
-        }
-      }
-    } on Exception catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-
-      rethrow;
-    }
-
-    return false;
   }
 }

@@ -22,6 +22,8 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 0xff, 0xc8, 0x00),
       // 배경색을 노란색으로 설정합니다.
@@ -88,7 +90,7 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 100),
+                SizedBox(height: height < 620 ? 50 : 100),
                 iconButton(
                   icon: Icon(
                     Platform.isAndroid

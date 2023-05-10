@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:playstage/feed/verify_photo.dart';
 
 import 'allow_location.dart';
 import 'subscriber_info.dart';
@@ -129,8 +130,9 @@ class _AddPhotoState extends State<AddPhoto> {
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                     onTap: () {
-                      int pathCount = getPathCount();
-                      if (_imageFilePath[index].isEmpty && pathCount != index) {
+                      if (index != 0 &&
+                          _imageFilePath[index - 1].isEmpty &&
+                          _imageFilePath[index].isEmpty) {
                         return;
                       }
 
@@ -230,25 +232,33 @@ class _AddPhotoState extends State<AddPhoto> {
     return pathCount;
   }
 
-  void _pickImage(int index) async {
-    final pickedFile = await _imagePicker.getImage(source: ImageSource.gallery);
-
+  void _processPickedFile(XFile? pickedFile, int index) {
     if (pickedFile != null) {
-      setState(() {
-        _imageFilePath[index] = pickedFile.path;
-        _filled = true;
+      var result = false;
+      Get.to(() => VerifyPhoto(title: '', path: pickedFile.path))!
+          .then((value) {
+        result = value ?? false;
+
+        if (result) {
+          setState(() {
+            _imageFilePath[index] = pickedFile.path;
+            _filled = true;
+          });
+        }
       });
     }
   }
 
-  void _takePhoto(int index) async {
-    final pickedFile = await _imagePicker.getImage(source: ImageSource.camera);
+  void _pickImage(int index) async {
+    final pickedFile =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
-      setState(() {
-        _imageFilePath[index] = pickedFile.path;
-        _filled = true;
-      });
-    }
+    _processPickedFile(pickedFile, index);
+  }
+
+  void _takePhoto(int index) async {
+    final pickedFile = await _imagePicker.pickImage(source: ImageSource.camera);
+
+    _processPickedFile(pickedFile, index);
   }
 }

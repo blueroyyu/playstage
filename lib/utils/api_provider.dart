@@ -1,24 +1,18 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:playstage/const.dart';
+import 'package:playstage/people/member_info_entity/member_info_entity.dart';
 
-const String signUp = '/signup';
-const String logIn = '/login';
-const String logOut = '/logout';
-const String issueCard = '/issue-card';
-const String chargeCard = '/charge-card';
-const String refundCard = '/refund-dard';
-const String payCard = '/pay-card';
-const String inquireBalance = '/inquire-balance';
-const String inquireTran = '/inquire-tran';
-const String cancelCard = '/cancel-card';
-const String cancelMembership = '/cancel-membership';
-const String changePassword = '/change-password';
-
+const String smsAuth = '/member/smsAuth';
 const String memberList = '/member/getMemberList';
 const String likeMemberList = '/member/getLikeMemberList';
 const String receiveLikeMemberList = '/member/getReceiveLikeMemberList';
-const String memberInfo = '/member/getMember/'; // /member/getMember/{memberSeq}
+const String memberInfoBySeq =
+    '/member/getMemberBySeq/'; // /member/getMemberBySeq/{memberSeq}
+const String memberInfoById =
+    '/member/getMemberById/'; // /member/getMemberById/{memberId}
 const String likeToggleMember = '/member/likeToggleMember';
 const String hateAddMember = '/member/hateAddMember';
 const String updateMember = '/member/updateMember';
@@ -105,14 +99,18 @@ class ApiProvider {
   static Future<dynamic> requestMemberList(String memberId,
       {String location = '',
       int fromAge = 0,
-      int toAge = 0,
-      double distance = 0.0}) async {
+      int toAge = 100,
+      int distance = 9999,
+      int pageNumber = 1,
+      int pageSize = 0}) async {
     final data = {
       'memberId': memberId,
       'location': location,
       'fromAge': fromAge,
       'toAge': toAge,
       'distance': distance,
+      'pageNumber': 1,
+      'pageSize': 0,
     };
 
     try {
@@ -122,22 +120,83 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestMember(int memberSeq) async {
+  static Future<dynamic> requestMemberBySeq(int memberSeq) async {
     try {
-      return await postData('$memberInfo$memberSeq', null);
+      return await postData('$memberInfoBySeq$memberSeq', null);
     } catch (error) {
       rethrow;
     }
   }
 
+  static Future<dynamic> requestMemberById(String memberId) async {
+    try {
+      return await postData('$memberInfoById$memberId', null);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  // 삭제는 removePhotoSeqList 이 이름으로 넘기시면되구요 30,34 이런식으로 삭제할 시퀀스를 넘기면되구요
+  static Future<dynamic> requestUpdateMember(MemberInfoEntity member,
+      {String removePhotoSeqList = ''}) async {
+    final jsonData = jsonEncode({
+      'memberId': member.memberId,
+      'memberName': member.name(),
+      'memberHeight': member.memberHeight.toString(),
+      'memberIntro': member.memberIntro,
+      'bodyInfo': member.bodyInfo,
+      'language': member.language,
+      'drinkInfo': member.drinkInfo,
+      'smokingInfo': member.smokingInfo,
+      'memberTendencyCd': member.memberTendencyCd,
+      'searchTendencyCd1': member.searchTendencyCd1,
+      'searchTendencyCd2': member.searchTendencyCd2,
+      'searchTendencyCd3': member.searchTendencyCd3,
+      'removePhotoSeqList': removePhotoSeqList,
+    });
+
+    final formData = FormData();
+    formData.fields.add(MapEntry('updateMemberReqDto', jsonData));
+
+    try {
+      final response = await dio.post(
+        updateMember,
+        data: formData,
+      );
+
+      if (response.statusCode! >= 200 && response.statusCode! < 300) {
+        if (kDebugMode) {
+          print(response.data);
+        }
+        return response.data;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+/*
+{
+  "pageNumber": 0,
+  "pageSize": 0,
+  "memberId": "string",
+  "fromAge": 0,
+  "toAge": 0,
+  "distance": 0
+}
+*/
   static Future<dynamic> requestLikeMemberList(String memberId,
-      {String location = '',
-      int fromAge = 0,
-      int toAge = 0,
-      double distance = 0.0}) async {
+      {int pageNumber = 1,
+      int pageSize = 25,
+      int fromAge = 19,
+      int toAge = 120,
+      double distance = 9999.0}) async {
     final data = {
+      'pageNumber': pageNumber,
+      'pageSize': pageSize,
       'memberId': memberId,
-      'location': location,
       'fromAge': fromAge,
       'toAge': toAge,
       'distance': distance,
@@ -151,13 +210,15 @@ class ApiProvider {
   }
 
   static Future<dynamic> requestReceiveLikeMemberList(String memberId,
-      {String location = '',
-      int fromAge = 0,
-      int toAge = 0,
-      double distance = 0.0}) async {
+      {int pageNumber = 1,
+      int pageSize = 25,
+      int fromAge = 19,
+      int toAge = 120,
+      double distance = 9999.0}) async {
     final data = {
+      'pageNumber': pageNumber,
+      'pageSize': pageSize,
       'memberId': memberId,
-      'location': location,
       'fromAge': fromAge,
       'toAge': toAge,
       'distance': distance,
@@ -180,7 +241,7 @@ class ApiProvider {
       String memberId, String targetId) async {
     final data = {
       'memberId': memberId,
-      'targetId': targetId,
+      'targetMemberId': targetId,
     };
 
     try {
@@ -219,4 +280,80 @@ class ApiProvider {
       rethrow;
     }
   }
+
+  static Future<dynamic> requestSmsAuth(String mobile) async {
+    final data = {
+      'authValue': mobile,
+    };
+
+    try {
+      return await postData(smsAuth, data);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> requestAddFeed(
+      String memberId, String content, List<String> images) async {
+    final jsonData = jsonEncode({
+      "memberId": memberId,
+      "feedContent": content,
+    });
+
+    try {
+      final dio = Dio();
+      final formData = FormData();
+
+      final files = images;
+      for (final file in files) {
+        if (file.isEmpty) {
+          continue;
+        }
+
+        formData.files.add(MapEntry(
+          'files',
+          await MultipartFile.fromFile(file),
+        ));
+      }
+
+      formData.fields.add(MapEntry('addFeedReqDto', jsonData));
+
+      final response = await dio.post(
+        '$baseUrl$addFeed',
+        data: formData,
+      );
+
+      if (response.statusCode! >= 200 && response.statusCode! < 300) {
+        if (kDebugMode) {
+          print(response.data);
+        }
+        return response.data;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> requestHandleComment(
+      String memberId, int feedSeq, String comment) async {
+    final data = {
+      'memberId': memberId,
+      'feedSeq': feedSeq,
+      'comment': comment,
+    };
+
+    try {
+      return await postData(handleFeedComment, data);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  // static Future<dynamic>
 }

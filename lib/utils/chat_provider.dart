@@ -1,17 +1,17 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
+import 'package:playstage/const.dart';
 import 'package:sendbird_sdk/sendbird_sdk.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CharProvider {
-  static final CharProvider _instance = CharProvider._internal();
+class ChatProvider {
+  static final ChatProvider _instance = ChatProvider._internal();
 
-  factory CharProvider() {
+  factory ChatProvider() {
     return _instance;
   }
 
   late final SendbirdSdk _sendbird;
-  CharProvider._internal() {
+  ChatProvider._internal() {
     _sendbird = SendbirdSdk(appId: '2A9E213D-FD3F-40E3-9AC4-29F7527F09CD');
   }
 
@@ -50,6 +50,35 @@ class CharProvider {
       return user;
     } catch (e) {
       throw Exception([e, 'Connecting with Sendbird Server has failed']);
+    }
+  }
+
+  Future<GroupChannel> createChannel(List<String> userIds) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String channelUrl =
+          prefs.getString('$keyChatChannel${userIds.last}') ?? '';
+
+      GroupChannel channel;
+      if (channelUrl.isNotEmpty) {
+        channel = await GroupChannel.getChannel(channelUrl);
+      } else {
+        final params = GroupChannelParams()..userIds = userIds;
+        channel = await GroupChannel.createChannel(params);
+
+        bool bRet = await prefs.setString(
+            '$keyChatChannel${userIds.last}', channel.channelUrl);
+        if (kDebugMode) {
+          print(bRet);
+        }
+      }
+
+      return channel;
+    } catch (e) {
+      if (kDebugMode) {
+        print('createChannel: ERROR: $e');
+      }
+      rethrow;
     }
   }
 }

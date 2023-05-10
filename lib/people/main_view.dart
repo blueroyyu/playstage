@@ -2,13 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:playstage/settings/app_settings.dart';
-import 'package:playstage/people/channel_list_view.dart';
+import 'package:playstage/chat/channel_list_view.dart';
+import 'package:playstage/feed/add_feed.dart';
+import 'package:playstage/feed/feed_view.dart';
+import 'package:playstage/people/filter_view.dart';
 import 'package:playstage/people/connection_view.dart';
-import 'package:playstage/people/feed_view.dart';
+import 'package:playstage/people/matched_view.dart';
 import 'package:playstage/people/member_info_entity/member_info_entity.dart';
 import 'package:playstage/people/people_detail.dart';
-import 'package:playstage/sign_up/subscriber_info.dart';
+import 'package:playstage/people/profile_view.dart';
+import 'package:playstage/shared_data.dart';
 import 'package:playstage/utils/api_provider.dart';
 import 'package:sendbird_sdk/sendbird_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,9 +32,7 @@ class _MainViewState extends State<MainView> {
   final List<MemberInfoEntity> _memberList = <MemberInfoEntity>[];
 
   int _currentProfileIndex = 0;
-  final int _currentMemberIndex = 0;
   MemberInfoEntity? _currentMember;
-  MemberInfoEntity? _owner;
 
   late final SendbirdSdk sendbird;
 
@@ -42,60 +43,90 @@ class _MainViewState extends State<MainView> {
     sendbird = SendbirdSdk(appId: sendbirdApiId);
 
     _loadMemberList();
+    _initSendBird();
   }
 
-  void _loadMemberList() async {
+  void _loadMemberList({bool reload = false}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId =
-        prefs.getString(keyUserId) ?? 'ab946ff4-ee4a-4e9c-ab9d-41efb3914218';
+    String userId = prefs.getString(keyUserId) ?? '';
 
-    final responseData = await ApiProvider.requestMemberList(userId);
-    if (responseData['resultCode'] == '200') {
-      final memberList = responseData['data'];
-      if (memberList.length > 0) {
-        for (dynamic map in memberList) {
-          MemberInfoEntity info = MemberInfoEntity.fromMap(map);
-          if (kDebugMode) {
-            print(info.toString());
+    final SharedData sd = SharedData();
+
+    try {
+      final responseData = reload == false
+          ? await ApiProvider.requestMemberList(userId)
+          : await ApiProvider.requestMemberList(
+              userId,
+              fromAge: sd.fromAge,
+              toAge: sd.toAge > 70 ? 120 : sd.toAge,
+              distance: sd.distance > 499 ? 9999 : sd.distance,
+            );
+      if (responseData['resultCode'] == '200') {
+        final memberList = responseData['data'];
+        if (memberList.length > 0) {
+          _memberList.clear();
+
+          for (dynamic map in memberList) {
+            MemberInfoEntity info = MemberInfoEntity.fromMap(map);
+            if (kDebugMode) {
+              print(info.toString());
+            }
+
+            _memberList.add(info);
           }
 
-          _memberList.add(info);
+          if (kDebugMode) {
+            print(_memberList.toString());
+          }
         }
 
-        if (kDebugMode) {
-          print(_memberList.toString());
-        }
+        setState(() {
+          _currentMember = _memberList[0];
+        });
       }
-
-      setState(() {
-        _currentMember = _memberList[0];
-      });
-    }
-
-    // TODO: member info 서버 요청
-    var conn = await getConnection();
-    var results = await conn.query(
-        'select a.member_id, a.member_seq, c.member_name, b.photo_path, b.photo_saved_file_name  from TB_MEMBER_INFO a, TB_MEMBER_PHOTO_INFO b, TB_MEMBER_DETAIL_INFO c where member_id = ? and a.member_seq = b.member_seq and a.member_seq = c.member_seq',
-        [userId]);
-
-    var row = results.first;
-    var profileUrl = '$s3Url/$userId/profile/${row['photo_saved_file_name']}';
-    User sbUser = await _connect(userId, row['member_name']);
-    if (kDebugMode) {
-      print(sbUser.toJson());
-    }
-
-    sendbird.updateCurrentUserInfo(
-        nickname: row['member_name'],
-        fileInfo: FileInfo.fromUrl(url: profileUrl));
-
-    final memberResponse = await ApiProvider.requestMember(row['member_seq']);
-    if (memberResponse['resultCode'] == '200') {
-      final memberData = memberResponse['data'];
-
-      _owner = MemberInfoEntity.fromMap(memberData);
+    } on Exception catch (e) {
       if (kDebugMode) {
-        print(_owner.toString());
+        print(e);
+      }
+    }
+
+    // var conn = await getConnection();
+    // var results = await conn.query(
+    //     'select a.member_id, a.member_seq, c.member_name, b.photo_path, b.photo_saved_file_name  from TB_MEMBER_INFO a, TB_MEMBER_PHOTO_INFO b, TB_MEMBER_DETAIL_INFO c where member_id = ? and a.member_seq = b.member_seq and a.member_seq = c.member_seq',
+    //     [userId]);
+    // var row = results.first;
+  }
+
+  void _initSendBird() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString(keyUserId) ?? '';
+
+    final SharedData sd = SharedData();
+
+    try {
+      final memberResponse = await ApiProvider.requestMemberById(userId);
+      if (memberResponse['resultCode'] == '200') {
+        final memberData = memberResponse['data'];
+
+        sd.owner = MemberInfoEntity.fromMap(memberData);
+        if (kDebugMode) {
+          print(sd.owner.toString());
+        }
+
+        var profileUrl =
+            '$s3Url/$userId/profile/${sd.owner!.tbMemberPhotoInfoList?.first.photoSavedFileName}';
+        User sbUser = await _connect(userId, sd.owner!.name());
+        if (kDebugMode) {
+          print(sbUser.toJson());
+        }
+
+        sendbird.updateCurrentUserInfo(
+            nickname: sd.owner!.name(),
+            fileInfo: FileInfo.fromUrl(url: profileUrl));
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print(e);
       }
     }
   }
@@ -151,7 +182,11 @@ class _MainViewState extends State<MainView> {
         actions: [
           IconButton(
             onPressed: () {
-              Get.to(() => const AppSettings());
+              Get.to(() => const FilterView())!.then((value) {
+                if (value == true) {
+                  _loadMemberList(reload: value);
+                }
+              });
             },
             icon: Image.asset('assets/images/icon_menu.png'),
             iconSize: 26,
@@ -285,7 +320,7 @@ class _MainViewState extends State<MainView> {
                                         left: 20,
                                         bottom: 140,
                                         child: Text(
-                                          _memberName(),
+                                          _currentMember!.name(),
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 24.0,
@@ -297,7 +332,7 @@ class _MainViewState extends State<MainView> {
                                         left: 20,
                                         bottom: 116,
                                         child: Text(
-                                          '${_memberTendency()} · 1km',
+                                          '${_currentMember!.memberTendency()} · 1km',
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,
@@ -339,8 +374,17 @@ class _MainViewState extends State<MainView> {
                                                       ElevatedButton.styleFrom(
                                                     backgroundColor: colorBtnBg,
                                                   ),
-                                                  onPressed: () {
-                                                    // 버튼2 클릭 시 수행할 동작
+                                                  onPressed: () async {
+                                                    final matched =
+                                                        await _requestLike(
+                                                            _currentMember!
+                                                                .memberId!);
+
+                                                    if (matched) {
+                                                      Get.to(() => MatchedView(
+                                                          matchedMember:
+                                                              _currentMember!));
+                                                    }
                                                   },
                                                   child: const Icon(
                                                       Icons.favorite,
@@ -380,104 +424,11 @@ class _MainViewState extends State<MainView> {
               ),
             ),
             const SizedBox(height: 19),
-            Expanded(
-              flex: 12,
-              child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30)),
-                  color: Colors.white,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.transparent,
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          CupertinoIcons.house_fill,
-                          color: Colors.yellow,
-                          size: 32,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.transparent,
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(() =>
-                              ConnectionView(memberId: _owner!.memberId!));
-                        },
-                        icon: const Icon(CupertinoIcons.star),
-                        color: Colors.grey,
-                        iconSize: 32,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.transparent,
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(() => FeedView(member: _owner!));
-                        },
-                        icon: const Icon(CupertinoIcons.globe),
-                        color: Colors.grey,
-                        iconSize: 32,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.transparent,
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(() => const ChannelListView());
-                        },
-                        icon: const Icon(CupertinoIcons.chat_bubble),
-                        color: Colors.grey,
-                        iconSize: 32,
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.transparent,
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(CupertinoIcons.person),
-                        color: Colors.grey,
-                        iconSize: 32,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            MainTab(index: 0),
           ],
         ),
       )),
     );
-  }
-
-  String _memberName() => _currentMember?.memberName ?? '';
-
-  String _memberTendency() {
-    String? td = tendencies.firstWhere((element) =>
-        element["code"] == _currentMember?.memberTendencyCd)["label"];
-    return td ?? '';
   }
 
   void _onTapUp(TapUpDetails details, BuildContext context) {
@@ -509,5 +460,144 @@ class _MainViewState extends State<MainView> {
         }
       }
     });
+  }
+
+  Future<bool> _requestLike(String targetMemeberId) async {
+    try {
+      var responseData = await ApiProvider.requestToggleMemberLike(
+          SharedData().owner!.memberId!, targetMemeberId);
+      if (responseData['resultCode'] == '200') {
+        final data = responseData['data'];
+        if (data != null) {
+          final isLike = data['isLike'];
+          final isLikeByTarget = data['isLikeByTarget'];
+
+          if (isLike && isLikeByTarget) {
+            return true;
+          }
+        }
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+
+      rethrow;
+    }
+
+    return false;
+  }
+}
+
+class MainTab extends StatelessWidget {
+  MainTab({
+    super.key,
+    required this.index,
+  });
+
+  final int index;
+  final SharedData sd = SharedData();
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 12,
+      child: Container(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          color: Colors.white,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.transparent,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Get.to(() => const MainView());
+                },
+                icon: Icon(
+                  index == 0 ? CupertinoIcons.house_fill : CupertinoIcons.house,
+                  color: index == 0 ? Colors.yellow : Colors.grey,
+                  size: 32,
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.transparent,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Get.to(() => ConnectionView(memberId: sd.owner!.memberId!));
+                },
+                icon: Icon(index == 1
+                    ? CupertinoIcons.star_fill
+                    : CupertinoIcons.star),
+                color: index == 1 ? Colors.yellow : Colors.grey,
+                iconSize: 32,
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.transparent,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  index == 2
+                      ? Get.to(() => const AddFeed())
+                      : Get.to(() => FeedView(member: sd.owner!));
+                },
+                icon: index == 2
+                    ? const Icon(CupertinoIcons.add_circled)
+                    : const Icon(CupertinoIcons.globe),
+                color: index == 2 ? Colors.yellow : Colors.grey,
+                iconSize: index == 2 ? 40 : 32,
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.transparent,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Get.to(() => const ChannelListView());
+                },
+                icon: Icon(index == 3
+                    ? CupertinoIcons.chat_bubble_fill
+                    : CupertinoIcons.chat_bubble),
+                color: index == 3 ? Colors.yellow : Colors.grey,
+                iconSize: 32,
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.transparent,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Get.to(() => const ProfileView());
+                  // Get.to(() => MatchedView(matchedMember: SharedData().owner!));
+                },
+                icon: Icon(index == 4
+                    ? CupertinoIcons.person_fill
+                    : CupertinoIcons.person),
+                color: index == 4 ? Colors.yellow : Colors.grey,
+                iconSize: 32,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

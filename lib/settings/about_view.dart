@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:playstage/sign_in/privacy_policy.dart';
+import 'package:playstage/sign_in/terms.dart';
 
 class AboutView extends StatelessWidget {
   const AboutView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
-          title: Text('about'.tr,
-              style: const TextStyle(
-                color: Colors.black,
-              )),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        iconTheme: const IconThemeData(
+          color: Colors.black,
         ),
-        body: Column(
+        title: Text('about'.tr,
+            style: const TextStyle(
+              color: Colors.black,
+            )),
+      ),
+      body: SafeArea(
+        child: Column(
           children: [
             ListTile(
               title: Text(
@@ -27,7 +29,9 @@ class AboutView extends StatelessWidget {
                 style: const TextStyle(fontSize: 20.0),
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {},
+              onTap: () {
+                Get.to(const Terms());
+              },
             ),
             ListTile(
               title: Text(
@@ -35,7 +39,9 @@ class AboutView extends StatelessWidget {
                 style: const TextStyle(fontSize: 20.0),
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {},
+              onTap: () {
+                Get.to(const PrivacyPolicy());
+              },
             ),
             const SizedBox(height: 40.0),
             Padding(

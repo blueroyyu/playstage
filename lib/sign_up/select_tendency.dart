@@ -239,7 +239,7 @@ class _SelectTendencyState extends State<SelectTendency> {
       String tendency = "";
       for (int index in selectedCodes) {
         info.toFind.add(tendencies[index]['code']!);
-        tendency += tendencies[index]['label']! + ', ';
+        tendency += '${tendencies[index]['label']!}, ';
       }
 
       tendency = tendency.substring(0, tendency.length - 2);

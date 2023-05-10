@@ -2,9 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
+import 'package:playstage/const.dart';
 import 'package:playstage/people/main_view.dart';
 import 'package:playstage/sign_up/select_tendency.dart';
 import 'package:playstage/sign_up/subscriber_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InputAuthCode extends StatefulWidget {
   const InputAuthCode({
@@ -46,13 +48,17 @@ class _InputAuthCodeState extends State<InputAuthCode> {
           Container(
             margin: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_filled == false) {
                   return;
                 }
 
                 if (_pin == widget.authCode) {
                   if (widget.isMember) {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setBool(keyLoggedIn, true);
+
                     Get.offAll(() => const MainView());
                   } else {
                     SubscriberInfo info = SubscriberInfo();

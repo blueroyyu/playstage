@@ -109,10 +109,11 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
     // ChatMessage is a DashChat class
     List<ChatMessage> result = [];
     for (var message in messages) {
-      User user = message.sender as User;
-      if (user == null) {
+      if (message.sender == null) {
         continue;
       }
+
+      User user = message.sender as User;
       result.add(
         ChatMessage(
           createdAt: DateTime.fromMillisecondsSinceEpoch(message.createdAt),
