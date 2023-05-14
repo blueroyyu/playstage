@@ -8,6 +8,7 @@ import 'package:playstage/feed/like_feed_view.dart';
 import 'package:playstage/people/member_feed_entity/member_feed_entity.dart';
 import 'package:playstage/people/member_feed_entity/tb_feed_comment_info_list.dart';
 import 'package:playstage/people/member_feed_entity/tb_feed_like_member_info_list.dart';
+import 'package:playstage/people/member_feed_entity/tb_feed_photo_info_list.dart';
 import 'package:playstage/people/member_info_entity/member_info_entity.dart';
 import 'package:playstage/shared_data.dart';
 import 'package:playstage/utils/api_provider.dart';
@@ -25,16 +26,36 @@ class FeedDetail extends StatefulWidget {
 class _FeedDetailState extends State<FeedDetail> {
   List<MemberInfoEntity> likeList = <MemberInfoEntity>[];
 
+  MemberInfoEntity? member;
+  MemberFeedEntity? feed;
+  List<TbFeedPhotoInfoList>? images;
+  List<TbFeedLikeMemberInfoList>? likes;
+  List<TbFeedCommentInfoList>? comments;
+
+  bool liked = false;
+
   final _commentController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
+    member = widget.member;
+    feed = widget.feed;
+    images = feed?.tbFeedPhotoInfoList;
+    likes = feed?.tbFeedLikeMemberInfoList;
+    comments = feed?.tbFeedCommentInfoList;
+
+    liked = likes?.firstWhereOrNull(
+            (element) => element.memberSeq == SharedData().owner!.memberSeq) !=
+        null;
+
     _loadLikeList();
   }
 
   Future<void> _loadLikeList() async {
-    final likes = widget.feed.tbFeedLikeMemberInfoList;
+    likeList.clear();
+
     for (TbFeedLikeMemberInfoList like in likes!) {
       int seq = like.memberSeq!;
 
@@ -59,14 +80,8 @@ class _FeedDetailState extends State<FeedDetail> {
         MediaQuery.of(context).padding.left -
         MediaQuery.of(context).padding.right;
 
-    final MemberInfoEntity member = widget.member;
-    final MemberFeedEntity feed = widget.feed;
-    final images = feed.tbFeedPhotoInfoList;
-    final likes = feed.tbFeedLikeMemberInfoList;
-    var comments = feed.tbFeedCommentInfoList;
-
     final df = DateFormat('yyyy/MM/dd');
-    final feedDt = df.format(feed.createDt!);
+    final feedDt = df.format(feed!.createDt!);
 
     return Scaffold(
       appBar: AppBar(
@@ -86,7 +101,7 @@ class _FeedDetailState extends State<FeedDetail> {
         child: Column(
           children: [
             Expanded(
-              flex: 9,
+              flex: 88,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -96,7 +111,7 @@ class _FeedDetailState extends State<FeedDetail> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: member.name(),
+                              text: member!.name(),
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 16.0,
@@ -106,7 +121,7 @@ class _FeedDetailState extends State<FeedDetail> {
                               child: SizedBox(width: 5.0),
                             ),
                             TextSpan(
-                              text: member.age().toString(),
+                              text: member!.age().toString(),
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 12.0,
@@ -115,10 +130,10 @@ class _FeedDetailState extends State<FeedDetail> {
                           ],
                         ),
                       ),
-                      subtitle: Text(member.memberTendency()),
+                      subtitle: Text(member!.memberTendency()),
                       leading: CircleAvatar(
                         backgroundImage: CachedNetworkImageProvider(
-                            member.makeProfileImagePath()),
+                            member!.makeProfileImagePath()),
                       ),
                       onTap: () {},
                     ),
@@ -128,7 +143,7 @@ class _FeedDetailState extends State<FeedDetail> {
                         horizontal: 20.0,
                       ),
                       child: Text(
-                        feed.feedContent ?? '',
+                        feed!.feedContent ?? '',
                         style: const TextStyle(
                           fontSize: 17.0,
                         ),
@@ -204,13 +219,34 @@ class _FeedDetailState extends State<FeedDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             const Spacer(),
-                            const Image(
-                              image: AssetImage('assets/images/icon_like.png'),
-                              width: 20.0,
+                            InkWell(
+                              onTap: () async {
+                                try {
+                                  dynamic responseData =
+                                      await ApiProvider.requestHandleFeedLike(
+                                          SharedData().owner!.memberId!,
+                                          feed!.feedSeq!);
+
+                                  if (kDebugMode) {
+                                    print(responseData);
+                                  }
+
+                                  _loadLikeList();
+                                } on Exception catch (e) {
+                                  if (kDebugMode) {
+                                    print(e);
+                                  }
+                                }
+                              },
+                              child: const Image(
+                                image:
+                                    AssetImage('assets/images/icon_like.png'),
+                                width: 20.0,
+                              ),
                             ),
                             const SizedBox(width: 4.0),
                             Text(
-                              feed.feedLikeCnt!.toInt().toString(),
+                              likes!.length.toString(),
                               style: const TextStyle(
                                 fontSize: 18.0,
                                 color: colorTextGrey,
@@ -223,7 +259,7 @@ class _FeedDetailState extends State<FeedDetail> {
                             ),
                             const SizedBox(width: 4.0),
                             Text(
-                              feed.tbFeedCommentInfoList!.length.toString(),
+                              comments!.length.toString(),
                               style: const TextStyle(
                                 fontSize: 18.0,
                                 color: colorTextGrey,
@@ -249,7 +285,9 @@ class _FeedDetailState extends State<FeedDetail> {
                           itemCount: likeList.length,
                           itemBuilder: (context, index) {
                             return InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Get.to(() => LikeFeedView(likeList: likeList));
+                              },
                               child: likeList.isNotEmpty
                                   ? CircleAvatar(
                                       backgroundImage:
@@ -269,7 +307,7 @@ class _FeedDetailState extends State<FeedDetail> {
                       shrinkWrap: true,
                       itemCount: comments!.length,
                       itemBuilder: (context, index) {
-                        final comment = comments[index];
+                        final comment = comments![index];
                         String photoPath = comment.memberPhotoPath!;
                         if (photoPath.startsWith('https://')) {
                         } else {
@@ -321,7 +359,7 @@ class _FeedDetailState extends State<FeedDetail> {
               ),
             ),
             Expanded(
-              flex: 1,
+              flex: 12,
               child: Container(
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -329,15 +367,16 @@ class _FeedDetailState extends State<FeedDetail> {
                       topRight: Radius.circular(30)),
                   color: Colors.white,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 10.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const SizedBox(width: 20.0),
+                      Expanded(
                         child: TextFormField(
                           controller: _commentController,
+                          textAlignVertical: TextAlignVertical.bottom,
                           decoration: const InputDecoration(
                             hintText: '댓글을 입력하세요.',
                             border: OutlineInputBorder(
@@ -352,59 +391,60 @@ class _FeedDetailState extends State<FeedDetail> {
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      width: 80.0,
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                        color: colorTextFieldBg,
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
-                      child: IconButton(
-                        onPressed: () async {
-                          final comment = _commentController.text;
-                          if (comment.isEmpty) {
-                            return;
-                          }
-
-                          try {
-                            final responseData =
-                                await ApiProvider.requestHandleComment(
-                                    SharedData().owner!.memberId!,
-                                    feed.feedSeq!,
-                                    comment);
-
-                            if (kDebugMode) {
-                              print(responseData);
+                      const SizedBox(width: 12.0),
+                      Container(
+                        width: 80.0,
+                        height: 50.0,
+                        decoration: BoxDecoration(
+                          color: colorTextFieldBg,
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        child: IconButton(
+                          onPressed: () async {
+                            final comment = _commentController.text;
+                            if (comment.isEmpty) {
+                              return;
                             }
 
-                            final newComment = TbFeedCommentInfoList(
-                              feedSeq: feed.feedSeq,
-                              comment: comment,
-                              memberName: SharedData().owner!.name(),
-                              memberPhotoPath:
-                                  SharedData().owner!.makeProfileImagePath(),
-                              createDt: DateTime.now(),
-                            );
-                            setState(() {
-                              comments.add(newComment);
-                              _commentController.text = '';
-                            });
-                          } on Exception catch (e) {
-                            if (kDebugMode) {
-                              print(e);
+                            try {
+                              final responseData =
+                                  await ApiProvider.requestHandleComment(
+                                      SharedData().owner!.memberId!,
+                                      feed!.feedSeq!,
+                                      comment);
+
+                              if (kDebugMode) {
+                                print(responseData);
+                              }
+
+                              final newComment = TbFeedCommentInfoList(
+                                feedSeq: feed!.feedSeq,
+                                comment: comment,
+                                memberName: SharedData().owner!.name(),
+                                memberPhotoPath:
+                                    SharedData().owner!.makeProfileImagePath(),
+                                createDt: DateTime.now(),
+                              );
+                              setState(() {
+                                comments!.add(newComment);
+                                _commentController.text = '';
+                              });
+                            } on Exception catch (e) {
+                              if (kDebugMode) {
+                                print(e);
+                              }
                             }
-                          }
-                        },
-                        icon: Image.asset(
-                          'assets/images/icon_send.png',
-                          height: 25.0,
+                          },
+                          icon: Image.asset(
+                            'assets/images/icon_send.png',
+                            height: 25.0,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 20.0),
-                  ],
+                      const SizedBox(width: 20.0),
+                    ],
+                  ),
                 ),
               ),
             ),

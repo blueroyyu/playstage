@@ -1,18 +1,20 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:playstage/components/push_notification.dart';
+import 'package:playstage/firebase_options.dart';
 import 'package:playstage/people/main_view.dart';
 import 'package:playstage/sign_in/sign_in.dart';
-import 'package:sendbird_sdk/sendbird_sdk.dart';
+import 'package:playstage/utils/notification_service.dart';
+import 'package:sendbird_sdk/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import 'firebase_options.dart';
 import 'const.dart';
 import 'languages.dart';
 
@@ -21,77 +23,32 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (kDebugMode) {
     print("Handling background message: ${message.messageId}");
   }
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await setupFlutterNotifications();
-  showFlutterNotification(message);
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
+
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  NotificationService.showNotification(
+    message.notification?.title ?? '',
+    message.notification?.body ?? '',
+  );
+}
+
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse response) {
+  logger.i("notification tapped", response);
   if (kDebugMode) {
-    print('Handling a background message ${message.messageId}');
+    print("notification tapped");
   }
+  Get.toNamed("EmptyRoute");
 }
 
-late AndroidNotificationChannel channel;
-
-bool isFlutterLocalNotificationsInitialized = false;
-
-Future<void> setupFlutterNotifications() async {
-  if (isFlutterLocalNotificationsInitialized) {
-    return;
+void onRecieveLocalNotification(
+    int i, String? one, String? two, String? three) {
+  logger.i("notification tapped");
+  if (kDebugMode) {
+    print("notification tapped");
   }
-  channel = const AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title
-    description:
-        'This channel is used for important notifications.', // description
-    importance: Importance.high,
-  );
-
-  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  /// Create an Android Notification Channel.
-  ///
-  /// We use this channel in the `AndroidManifest.xml` file to override the
-  /// default FCM channel to enable heads up notifications.
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-
-  /// Update the iOS foreground notification presentation options to allow
-  /// heads up notifications.
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-  isFlutterLocalNotificationsInitialized = true;
+  Get.toNamed("EmptyRoute");
 }
-
-void showFlutterNotification(RemoteMessage message) {
-  RemoteNotification? notification = message.notification;
-  AndroidNotification? android = message.notification?.android;
-  if (notification != null && android != null && !kIsWeb) {
-    flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          channelDescription: channel.description,
-          // TODO add a proper drawable resource to android, for now using
-          //      one that already exists in example app.
-          icon: 'launch_background',
-        ),
-      ),
-    );
-  }
-}
-
-/// Initialize the [FlutterLocalNotificationsPlugin] package.
-late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -102,76 +59,178 @@ void main() async {
   ]);
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String memberId = prefs.getString(keyUserId) ?? '';
   bool isLoggedIn = prefs.getBool(keyLoggedIn) ?? false;
 
-  Paint.enableDithering = true;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>()
+      ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
 
+  const DarwinInitializationSettings initializationSettingsDarwin =
+      DarwinInitializationSettings(
+    onDidReceiveLocalNotification: onRecieveLocalNotification,
+  );
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsDarwin,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse:
+        (NotificationResponse notificationResponse) async {
+      if (kDebugMode) {
+        print("Notification Recieved with flutterLocalNotificationsPlugin");
+      }
+    },
+    onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+  );
+
+  // Use DefaultFirebaseOptions to allow web app
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  NotificationSettings settings = await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
-
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  // Enable notification when app is in the foreground in firebase messaging for iOS.
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true, // Required to display a heads up notification
-    badge: true,
-    sound: true,
-  );
-
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    if (kDebugMode) {
-      print('User granted permission');
-    }
-    String? token;
-
-    if (Platform.isIOS) {
-      // Retrieve a push token for iOS.
-      token = await messaging.getAPNSToken();
-    } else {
-      // Retrieve a push token for FCM.
-      token = await messaging.getToken();
-    }
-
-    if (memberId.isNotEmpty) {
-      var sendbird = SendbirdSdk(appId: sendbirdApiId);
-      await sendbird.connect(memberId);
-      await sendbird.registerPushToken(
-        type: kIsWeb
-            ? PushTokenType.none
-            : Platform.isIOS
-                ? PushTokenType.apns
-                : PushTokenType.fcm,
-        token: token!,
-      );
-    }
-  }
-
-  if (kDebugMode) {
-    print('User granted permission: ${settings.authorizationStatus}');
-  }
-
   runApp(PlayStageApp(isLoggedIn: isLoggedIn));
 }
 
-class PlayStageApp extends StatelessWidget {
+final appState = AppState();
+
+class AppState with ChangeNotifier {
+  bool didRegisterToken = false;
+  String? token;
+  String? destChannelUrl;
+
+  void setDestination(String? channelUrl) {
+    destChannelUrl = channelUrl;
+    notifyListeners();
+  }
+}
+
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  description:
+      'This channel is used for important notifications.', // description
+  importance: Importance.high,
+  playSound: true,
+);
+
+class PlayStageApp extends StatefulWidget {
   final bool isLoggedIn;
 
   const PlayStageApp({super.key, required this.isLoggedIn});
 
+  @override
+  State<PlayStageApp> createState() => _PlayStageAppState();
+}
+
+class _PlayStageAppState extends State<PlayStageApp> {
   // This widget is the root of your application.
+  late int _totalNotifications;
+  late final FirebaseMessaging _messaging;
+  PushNotification? _notificationInfo;
+
+  // [Push Notification Set Up]
+  void requestAndRegisterNotification() async {
+    // Initialize the Firebase app
+    await Firebase.initializeApp();
+
+    // Instantiate Firebase Messaging
+    _messaging = FirebaseMessaging.instance;
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    // To enable foreground notification in firebase messaging for IOS
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+
+    // On iOS, this helps to take the user permissions
+    NotificationSettings settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      if (kDebugMode) {
+        print('User granted permission');
+      }
+      String? token;
+
+      if (Platform.isIOS) {
+        //Retrieve pushtoken for IOS
+        token = await _messaging.getAPNSToken();
+      } else {
+        // Retrieve pushtoken for FCM
+        token = await _messaging.getToken();
+      }
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (token != null) {
+        prefs.setString(keyPushToken, token);
+      }
+
+      appState.token = token;
+      // For handling the received notifications
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        if (kDebugMode) {
+          print('title: ${message.notification?.title}');
+          print('body: ${message.notification?.body}');
+        }
+        // Parse the message received
+        PushNotification notification = PushNotification(
+          title: message.notification?.title,
+          body: message.notification?.body,
+        );
+
+        setState(() {
+          _notificationInfo = notification;
+          _totalNotifications++;
+        });
+        if (_notificationInfo != null) {
+          NotificationService.showNotification(
+              _notificationInfo?.title ?? '', _notificationInfo?.body ?? '');
+        }
+      });
+    } else {
+      if (kDebugMode) {
+        print('User declined or has not accepted permission');
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    requestAndRegisterNotification();
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      PushNotification notification = PushNotification(
+        title: message.notification?.title,
+        body: message.notification?.body,
+      );
+      setState(() {
+        _notificationInfo = notification;
+        _totalNotifications++;
+      });
+    });
+    _totalNotifications = 0;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -179,8 +238,7 @@ class PlayStageApp extends StatelessWidget {
       translations: Languages(),
       locale: Get.deviceLocale,
       fallbackLocale: const Locale('ko', 'KR'),
-      initialRoute: isLoggedIn ? '/main_view' : '/sign_in',
-      // initialRoute: '/main_view',
+      initialRoute: widget.isLoggedIn ? '/main_view' : '/sign_in',
       routes: {
         '/main_view': (context) => const MainView(),
         '/sign_in': (context) => const SignIn(),

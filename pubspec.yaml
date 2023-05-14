@@ -49,7 +49,7 @@ dependencies:
   flutter_launcher_icons: ^0.12.0
   dio: ^5.0.3
   sendbird_sdk: ^3.0.11
-  dash_chat: ^1.1.15
+  dash_chat_2: ^0.0.16
   firebase_core: ^2.10.0
   firebase_messaging: ^14.4.1
   mysql1: 

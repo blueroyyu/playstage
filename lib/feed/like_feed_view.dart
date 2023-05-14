@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:playstage/people/member_info_entity/member_info_entity.dart';
+import 'package:playstage/people/people_detail.dart';
 
 class LikeFeedView extends StatefulWidget {
   const LikeFeedView({super.key, required this.likeList});
@@ -25,12 +27,13 @@ class _LikeFeedViewState extends State<LikeFeedView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(
           color: Colors.black,
         ),
         title: const Text(
-          '',
+          '피드(좋아요)',
           style: TextStyle(
             color: Colors.black,
           ),
@@ -42,7 +45,6 @@ class _LikeFeedViewState extends State<LikeFeedView> {
           itemCount: _likeList.length,
           itemBuilder: (context, index) {
             var member = _likeList[index];
-
             return ListTile(
               title: RichText(
                 text: TextSpan(
@@ -72,7 +74,9 @@ class _LikeFeedViewState extends State<LikeFeedView> {
                 backgroundImage:
                     CachedNetworkImageProvider(member.makeProfileImagePath()),
               ),
-              onTap: () {},
+              onTap: () {
+                Get.to(() => PeopleDetail(memberInfoEntity: member));
+              },
             );
           },
         ),

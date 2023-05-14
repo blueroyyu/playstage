@@ -50,25 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAnvoabATTdKu702_Z5q19Gt0Zfs4yOAj0',
-    appId: '1:22052510911:android:512f1c6145b8fa69327a0a',
-    messagingSenderId: '22052510911',
-    projectId: 'playstage-dev',
-    databaseURL:
-        'https://playstage-dev-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'playstage-dev.appspot.com',
+    apiKey: 'AIzaSyAIVdnzy6jR_uXoKmn9NCkKtxE03YTC840',
+    appId: '1:516464037352:android:519fd460ebb1df9488685d',
+    messagingSenderId: '516464037352',
+    projectId: 'playstage-dev-b0ba8',
+    storageBucket: 'playstage-dev-b0ba8.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA8Xo77SyunTxmaCTlMb43XD3FMsGSpORE',
-    appId: '1:22052510911:ios:e21e89eacb938306327a0a',
-    messagingSenderId: '22052510911',
-    projectId: 'playstage-dev',
-    databaseURL:
-        'https://playstage-dev-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'playstage-dev.appspot.com',
-    iosClientId:
-        '22052510911-5v6ero341ugv3h8u6rc0evucpvpj9ej1.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDicJS2x5RAh0XsKc3covN98Gf2CUhqr1Y',
+    appId: '1:516464037352:ios:ca1fe652f884594488685d',
+    messagingSenderId: '516464037352',
+    projectId: 'playstage-dev-b0ba8',
+    storageBucket: 'playstage-dev-b0ba8.appspot.com',
+    iosClientId: '516464037352-tg2nrl2degbv56qn518lbjh1bh9btrhj.apps.googleusercontent.com',
     iosBundleId: 'com.playstage.playstage',
   );
 }

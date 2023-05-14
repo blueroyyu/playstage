@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SelectPopup extends StatefulWidget {
@@ -17,7 +18,7 @@ class SelectPopup extends StatefulWidget {
 }
 
 class SelectPopupState extends State<SelectPopup> {
-  List<int> _selectedCodes = [];
+  final List<int> _selectedCodes = [];
 
   void _toggleCode(int index) {
     setState(() {
@@ -28,7 +29,9 @@ class SelectPopupState extends State<SelectPopup> {
           _selectedCodes.add(index);
         } else {
           // You can show a message here or disable the selection
-          print('You can only select up to three codes');
+          if (kDebugMode) {
+            print('You can only select up to three codes');
+          }
         }
       }
     });

@@ -355,5 +355,17 @@ class ApiProvider {
     }
   }
 
-  // static Future<dynamic>
+  static Future<dynamic> requestHandleFeedLike(
+      String memberId, int feedSeq) async {
+    final data = {
+      'memberId': memberId,
+      'feedSeq': feedSeq,
+    };
+
+    try {
+      return await postData(handleFeedLike, data);
+    } catch (error) {
+      rethrow;
+    }
+  }
 }

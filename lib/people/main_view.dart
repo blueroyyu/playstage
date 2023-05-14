@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -123,6 +125,19 @@ class _MainViewState extends State<MainView> {
         sendbird.updateCurrentUserInfo(
             nickname: sd.owner!.name(),
             fileInfo: FileInfo.fromUrl(url: profileUrl));
+      }
+
+      String? token = prefs.getString(keyPushToken);
+      if (token != null) {
+        await sendbird.unregisterAllPushToken();
+        await sendbird.registerPushToken(
+          type: kIsWeb
+              ? PushTokenType.none
+              : Platform.isIOS
+                  ? PushTokenType.apns
+                  : PushTokenType.fcm,
+          token: token,
+        );
       }
     } on Exception catch (e) {
       if (kDebugMode) {
@@ -587,6 +602,7 @@ class MainTab extends StatelessWidget {
                 onPressed: () {
                   Get.to(() => const ProfileView());
                   // Get.to(() => MatchedView(matchedMember: SharedData().owner!));
+                  // Get.to(() => const AppSettings());
                 },
                 icon: Icon(index == 4
                     ? CupertinoIcons.person_fill

@@ -489,16 +489,14 @@ class _ProfileViewState extends State<ProfileView> {
                                   InkWell(
                                       onTap: () {},
                                       child: Image.asset(
-                                        'assets/images/btn_chat.png',
+                                        'assets/images/btn_setting.png',
                                         width: 60.0,
                                       )),
                                   const SizedBox(width: 10.0),
                                   InkWell(
-                                      onTap: () {
-                                        Get.back();
-                                      },
+                                      onTap: () {},
                                       child: Image.asset(
-                                        'assets/images/btn_under_arrow.png',
+                                        'assets/images/btn_edit.png',
                                         width: 60.0,
                                       )),
                                   const SizedBox(width: 20.0),

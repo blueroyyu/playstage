@@ -317,7 +317,7 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              _currentMember.memberIntro!,
+                                              _currentMember.memberIntro ?? '',
                                               style: const TextStyle(
                                                 fontSize: 16.0,
                                               ),

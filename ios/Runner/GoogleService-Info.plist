@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>22052510911-5v6ero341ugv3h8u6rc0evucpvpj9ej1.apps.googleusercontent.com</string>
+	<string>516464037352-tg2nrl2degbv56qn518lbjh1bh9btrhj.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.22052510911-5v6ero341ugv3h8u6rc0evucpvpj9ej1</string>
+	<string>com.googleusercontent.apps.516464037352-tg2nrl2degbv56qn518lbjh1bh9btrhj</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA8Xo77SyunTxmaCTlMb43XD3FMsGSpORE</string>
+	<string>AIzaSyDicJS2x5RAh0XsKc3covN98Gf2CUhqr1Y</string>
 	<key>GCM_SENDER_ID</key>
-	<string>22052510911</string>
+	<string>516464037352</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.playstage.playstage</string>
 	<key>PROJECT_ID</key>
-	<string>playstage-dev</string>
+	<string>playstage-dev-b0ba8</string>
 	<key>STORAGE_BUCKET</key>
-	<string>playstage-dev.appspot.com</string>
+	<string>playstage-dev-b0ba8.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:22052510911:ios:e21e89eacb938306327a0a</string>
-	<key>DATABASE_URL</key>
-	<string>https://playstage-dev-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+	<string>1:516464037352:ios:ca1fe652f884594488685d</string>
 </dict>
 </plist>

@@ -260,13 +260,14 @@ class _ConnectionViewState extends State<ConnectionView> {
                         },
                       ),
                       GridView.builder(
+                        padding: const EdgeInsets.all(10.0),
                         shrinkWrap: true,
                         itemCount: _followers.length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 8.0,
-                          mainAxisSpacing: 8.0,
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 10.0,
                         ),
                         itemBuilder: (BuildContext context, int index) {
                           MemberInfoEntity member = _followers[index];

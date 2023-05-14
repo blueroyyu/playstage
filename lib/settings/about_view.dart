@@ -70,7 +70,7 @@ class AboutView extends StatelessWidget {
                     height: 20.0,
                   ),
                   Text(
-                    '경기도 부천시 상일로 82, 901호(상동, 중동다모아쇼핑타운)',
+                    '경기도 부천시 상동400 다모아빌딩 901호',
                     textAlign: TextAlign.left,
                   ),
                 ],

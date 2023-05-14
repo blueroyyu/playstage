@@ -127,6 +127,16 @@ class _ChannelListViewState extends State<ChannelListView>
                       onTap: () {
                         gotoChannel(channel.channelUrl);
                       },
+                      trailing: channel.members.firstWhereOrNull(
+                                  (element) => element.isBlockedByMe) !=
+                              null
+                          ? Text(
+                              'blocked'.tr,
+                              style: const TextStyle(
+                                color: Colors.red,
+                              ),
+                            )
+                          : null,
                     );
                   },
                 );
