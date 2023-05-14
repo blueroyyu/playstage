@@ -6,6 +6,7 @@ import 'package:playstage/const.dart';
 import 'package:playstage/feed/feed_detail.dart';
 import 'package:playstage/people/member_feed_entity/member_feed_entity.dart';
 import 'package:playstage/people/member_info_entity/member_info_entity.dart';
+import 'package:playstage/shared_data.dart';
 
 Widget iconButton(
     {required Icon icon, required Text label, Function()? onPressed}) {
@@ -50,6 +51,11 @@ ListView makeFeedList(MemberInfoEntity member, List<MemberFeedEntity> feedList,
     itemBuilder: (BuildContext context, int index) {
       final feed = feedList[index];
       final images = feed.tbFeedPhotoInfoList;
+
+      var likes = feed.tbFeedLikeMemberInfoList;
+      bool liked = likes?.firstWhereOrNull((element) =>
+              element.memberSeq == SharedData().owner!.memberSeq) !=
+          null;
 
       final feedDt = df.format(feed.createDt!);
       return GestureDetector(
@@ -170,13 +176,14 @@ ListView makeFeedList(MemberInfoEntity member, List<MemberFeedEntity> feedList,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const Spacer(),
-                    const Image(
-                      image: AssetImage('assets/images/icon_like.png'),
+                    Image(
+                      image: const AssetImage('assets/images/icon_like.png'),
                       width: 20.0,
+                      color: liked ? Colors.red : Colors.grey,
                     ),
                     const SizedBox(width: 4.0),
                     Text(
-                      feed.feedLikeCnt!.toInt().toString(),
+                      likes!.length.toString(),
                       style: const TextStyle(
                         fontSize: 18.0,
                         color: colorTextGrey,

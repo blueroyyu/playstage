@@ -6,6 +6,7 @@ import 'package:playstage/const.dart';
 import 'package:playstage/factory.dart';
 import 'package:playstage/people/main_view.dart';
 import 'package:playstage/people/member_feed_entity/member_feed_entity.dart';
+import 'package:playstage/settings/app_settings.dart';
 import 'package:playstage/shared_data.dart';
 import 'package:playstage/utils/api_provider.dart';
 
@@ -487,7 +488,9 @@ class _ProfileViewState extends State<ProfileView> {
                                 children: [
                                   const Spacer(),
                                   InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Get.to(() => const AppSettings());
+                                      },
                                       child: Image.asset(
                                         'assets/images/btn_setting.png',
                                         width: 60.0,

@@ -231,6 +231,20 @@ class _FeedDetailState extends State<FeedDetail> {
                                     print(responseData);
                                   }
 
+                                  setState(() {
+                                    liked = !liked;
+                                  });
+
+                                  if (liked) {
+                                    likes!.add(TbFeedLikeMemberInfoList(
+                                        memberSeq:
+                                            SharedData().owner!.memberSeq));
+                                  } else {
+                                    likes!.removeWhere((element) =>
+                                        element.memberSeq ==
+                                        SharedData().owner!.memberSeq);
+                                  }
+
                                   _loadLikeList();
                                 } on Exception catch (e) {
                                   if (kDebugMode) {
@@ -238,10 +252,11 @@ class _FeedDetailState extends State<FeedDetail> {
                                   }
                                 }
                               },
-                              child: const Image(
-                                image:
-                                    AssetImage('assets/images/icon_like.png'),
+                              child: Image(
+                                image: const AssetImage(
+                                    'assets/images/icon_like.png'),
                                 width: 20.0,
+                                color: liked ? Colors.red : Colors.grey,
                               ),
                             ),
                             const SizedBox(width: 4.0),
@@ -287,6 +302,9 @@ class _FeedDetailState extends State<FeedDetail> {
                             return InkWell(
                               onTap: () {
                                 Get.to(() => LikeFeedView(likeList: likeList));
+                                setState(() {
+                                  liked = !liked;
+                                });
                               },
                               child: likeList.isNotEmpty
                                   ? CircleAvatar(
