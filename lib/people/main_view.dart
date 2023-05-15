@@ -32,6 +32,7 @@ class MainView extends StatefulWidget {
 
 class _MainViewState extends State<MainView> {
   final List<MemberInfoEntity> _memberList = <MemberInfoEntity>[];
+  final PageController _pageController = PageController();
 
   int _currentProfileIndex = 0;
   MemberInfoEntity? _currentMember;
@@ -218,14 +219,16 @@ class _MainViewState extends State<MainView> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: PageView.builder(
+                    controller: _pageController,
                     onPageChanged: (index) {
+                      _currentMember = _memberList[index];
                       setState(() {
-                        _currentMember = _memberList[index];
                         _currentProfileIndex = 0;
                       });
                     },
                     itemCount: _memberList.length,
                     itemBuilder: (BuildContext context, int index) {
+                      final member = _memberList[index];
                       return Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
@@ -253,36 +256,30 @@ class _MainViewState extends State<MainView> {
                                     ],
                                   );
                                 },
-                                child: _currentMember != null
-                                    ? Image.network(
-                                        _makeCurrentImagePath(),
-                                        key:
-                                            ValueKey<int>(_currentProfileIndex),
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (BuildContext context,
-                                            Object exception,
-                                            StackTrace? stackTrace) {
-                                          return Image.asset(
-                                            'assets/images/default_profile.png',
-                                            fit: BoxFit.cover,
-                                          );
-                                        },
-                                        loadingBuilder: (BuildContext context,
-                                            Widget child,
-                                            ImageChunkEvent? loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          }
-                                          return const Center(
-                                            child: CircularProgressIndicator(
-                                                color: Colors.black),
-                                          );
-                                        },
-                                      )
-                                    : Image.asset(
-                                        'assets/images/default_profile.png',
-                                        fit: BoxFit.cover,
-                                      ),
+                                child: Image.network(
+                                  member.makeProfileImagePath(),
+                                  key: ValueKey<int>(_currentProfileIndex),
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (BuildContext context,
+                                      Object exception,
+                                      StackTrace? stackTrace) {
+                                    return Image.asset(
+                                      'assets/images/default_profile.png',
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    }
+                                    return const Center(
+                                      child: CircularProgressIndicator(
+                                          color: Colors.black),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                             Positioned(
@@ -335,7 +332,7 @@ class _MainViewState extends State<MainView> {
                                         left: 20,
                                         bottom: 140,
                                         child: Text(
-                                          _currentMember!.name(),
+                                          member.name(),
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 24.0,
@@ -347,7 +344,7 @@ class _MainViewState extends State<MainView> {
                                         left: 20,
                                         bottom: 116,
                                         child: Text(
-                                          '${_currentMember!.memberTendency()} · 1km',
+                                          member.memberTendency(),
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,
@@ -374,8 +371,16 @@ class _MainViewState extends State<MainView> {
                                                       ElevatedButton.styleFrom(
                                                     backgroundColor: colorBtnBg,
                                                   ),
-                                                  onPressed: () {
-                                                    // 버튼1 클릭 시 수행할 동작
+                                                  onPressed: () async {
+                                                    await _requestHate(
+                                                        _currentMember!
+                                                            .memberId!);
+                                                    _pageController.nextPage(
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    500),
+                                                        curve: Curves.linear);
                                                   },
                                                   child: const Icon(Icons.close,
                                                       color: Colors.white),
@@ -399,6 +404,13 @@ class _MainViewState extends State<MainView> {
                                                       Get.to(() => MatchedView(
                                                           matchedMember:
                                                               _currentMember!));
+                                                    } else {
+                                                      _pageController.nextPage(
+                                                          duration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      500),
+                                                          curve: Curves.linear);
                                                     }
                                                   },
                                                   child: const Icon(
@@ -501,6 +513,19 @@ class _MainViewState extends State<MainView> {
     }
 
     return false;
+  }
+
+  Future<void> _requestHate(String targetMemeberId) async {
+    try {
+      await ApiProvider.requestAddHateMember(
+          SharedData().owner!.memberId!, targetMemeberId);
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+
+      rethrow;
+    }
   }
 }
 
