@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:playstage/shared_data.dart';
+import 'package:playstage/utils/loader.dart';
 import 'package:sendbird_sdk/sendbird_sdk.dart';
 import 'dart:async';
 
@@ -20,6 +21,8 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> with ChannelEventHandler {
   List<BaseMessage> _messages = [];
   final ImagePicker _imagePicker = ImagePicker();
+
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -65,7 +68,7 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
         automaticallyImplyLeading: true,
         backgroundColor: Colors.white,
         centerTitle: false,
-        leading: BackButton(color: Theme.of(context).buttonColor),
+        leading: const BackButton(color: Colors.black),
         title: SizedBox(
           width: 250,
           child: Text(
@@ -84,7 +87,7 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ListTile(
-                        leading: const Icon(Icons.arrow_outward),
+                        leading: const Icon(Icons.logout),
                         title: Text('채팅방 나가기'.tr),
                         onTap: () {
                           showDialog(
@@ -184,82 +187,85 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
 
   Widget body(BuildContext context) {
     ChatUser user = asDashChatUser(SendbirdSdk().currentUser!);
-    return Padding(
-      // A little breathing room for devices with no home button.
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 40),
-      child: DashChat(
-        currentUser: user,
-        // dateFormat: DateFormat("E, MMM d"),
-        // timeFormat: DateFormat.jm(),
-        // showUserAvatar: true,
-        key: Key(widget.groupChannel.channelUrl),
-        onSend: (ChatMessage message) async {
-          var sentMessage =
-              widget.groupChannel.sendUserMessageWithText(message.text);
-          setState(() {
-            _messages.add(sentMessage);
-          });
-        },
-        // sendOnEnter: true,
-        // textInputAction: TextInputAction.send,
-        messages: asDashChatMessages(_messages),
-        inputOptions: InputOptions(
-          inputDecoration:
-              InputDecoration.collapsed(hintText: 'type_message'.tr),
-          leading: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add, color: Colors.grey[400]),
-              onPressed: () async {
-                showModalBottomSheet(
-                  useSafeArea: Platform.isIOS,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ListTile(
-                          leading: const Icon(Icons.photo_library),
-                          title: Text('album'.tr),
-                          onTap: () {
-                            _pickImage();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.camera_alt),
-                          title: Text('camera'.tr),
-                          onTap: () {
-                            _takePhoto();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.video_file),
-                          title: Text('album_video'.tr),
-                          onTap: () {
-                            _pickVideo();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.video_camera_front),
-                          title: Text('camera_video'.tr),
-                          onTap: () {
-                            _takeVideo();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            )
-          ],
-          alwaysShowSend: true,
+    return Stack(children: [
+      Padding(
+        // A little breathing room for devices with no home button.
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 40),
+        child: DashChat(
+          currentUser: user,
+          // dateFormat: DateFormat("E, MMM d"),
+          // timeFormat: DateFormat.jm(),
+          // showUserAvatar: true,
+          key: Key(widget.groupChannel.channelUrl),
+          onSend: (ChatMessage message) async {
+            var sentMessage =
+                widget.groupChannel.sendUserMessageWithText(message.text);
+            setState(() {
+              _messages.add(sentMessage);
+            });
+          },
+          // sendOnEnter: true,
+          // textInputAction: TextInputAction.send,
+          messages: asDashChatMessages(_messages),
+          inputOptions: InputOptions(
+            inputDecoration:
+                InputDecoration.collapsed(hintText: 'type_message'.tr),
+            leading: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add, color: Colors.grey[400]),
+                onPressed: () async {
+                  showModalBottomSheet(
+                    useSafeArea: Platform.isIOS,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            leading: const Icon(Icons.photo_library),
+                            title: Text('album'.tr),
+                            onTap: () {
+                              _pickImage();
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.camera_alt),
+                            title: Text('camera'.tr),
+                            onTap: () {
+                              _takePhoto();
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.video_file),
+                            title: Text('album_video'.tr),
+                            onTap: () {
+                              _pickVideo();
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.video_camera_front),
+                            title: Text('camera_video'.tr),
+                            onTap: () {
+                              _takeVideo();
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              )
+            ],
+            alwaysShowSend: true,
+          ),
         ),
       ),
-    );
+      Container(child: _isLoading ? const Loader(loadingTxt: '') : Container()),
+    ]);
   }
 
   List<ChatMessage> asDashChatMessages(List<BaseMessage> messages) {
@@ -316,10 +322,16 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
         ..pushOption = PushNotificationDeliveryOption.normal;
 
       try {
+        setState(() {
+          _isLoading = true;
+        });
+
         final preMessage = widget.groupChannel.sendFileMessage(params,
             onCompleted: (message, error) {
           if (error != null) {
-            // Handle error.
+            setState(() {
+              _isLoading = false;
+            });
           }
           // A file message with detailed configuration is successfully sent to the channel.
           // By using fileMessage.messageId, fileMessage.fileName, fileMessage.customType, and so on,
