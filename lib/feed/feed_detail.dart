@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mysql1/mysql1.dart';
 import 'package:playstage/const.dart';
 import 'package:playstage/feed/like_feed_view.dart';
 import 'package:playstage/people/member_feed_entity/member_feed_entity.dart';
@@ -10,6 +11,7 @@ import 'package:playstage/people/member_feed_entity/tb_feed_comment_info_list.da
 import 'package:playstage/people/member_feed_entity/tb_feed_like_member_info_list.dart';
 import 'package:playstage/people/member_feed_entity/tb_feed_photo_info_list.dart';
 import 'package:playstage/people/member_info_entity/member_info_entity.dart';
+import 'package:playstage/people/people_detail.dart';
 import 'package:playstage/shared_data.dart';
 import 'package:playstage/utils/api_provider.dart';
 
@@ -31,6 +33,7 @@ class _FeedDetailState extends State<FeedDetail> {
   List<TbFeedPhotoInfoList>? images;
   List<TbFeedLikeMemberInfoList>? likes;
   List<TbFeedCommentInfoList>? comments;
+  List<MemberInfoEntity> commentWriters = <MemberInfoEntity>[];
 
   bool liked = false;
 
@@ -51,6 +54,7 @@ class _FeedDetailState extends State<FeedDetail> {
         null;
 
     _loadLikeList();
+    _loadCommentWriterList();
   }
 
   Future<void> _loadLikeList() async {
@@ -69,6 +73,47 @@ class _FeedDetailState extends State<FeedDetail> {
 
         setState(() {
           likeList.add(info);
+        });
+      }
+    }
+  }
+
+  Future<MySqlConnection> getConnection() async {
+    final conn = await MySqlConnection.connect(ConnectionSettings(
+      host: '3.35.179.159',
+      port: 3306,
+      user: 'playstage_dev',
+      password: 'playstage@2023!',
+      db: 'playstage_new',
+    ));
+    return conn;
+  }
+
+  Future<void> _loadCommentWriterList() async {
+    commentWriters.clear();
+
+    MySqlConnection conn = await getConnection();
+
+    for (TbFeedCommentInfoList comment in comments!) {
+      // TODO: request member_seq should be in commentList
+      var results = await conn.query(
+          'select member_seq from TB_FEED_COMMENT_INFO where comment_seq = ?',
+          [comment.commentSeq]);
+      var row = results.first;
+      comment.memberSeq = row['member_seq'];
+
+      int seq = comment.memberSeq!;
+
+      final responseData = await ApiProvider.requestMemberBySeq(seq);
+      if (responseData['resultCode'] == '200') {
+        final memberMap = responseData['data'];
+        MemberInfoEntity info = MemberInfoEntity.fromMap(memberMap);
+        if (kDebugMode) {
+          print(info.toString());
+        }
+
+        setState(() {
+          commentWriters.add(info);
         });
       }
     }
@@ -137,18 +182,20 @@ class _FeedDetailState extends State<FeedDetail> {
                       ),
                       onTap: () {},
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 20.0,
-                      ),
-                      child: Text(
-                        feed!.feedContent ?? '',
-                        style: const TextStyle(
-                          fontSize: 17.0,
-                        ),
-                      ),
-                    ),
+                    feed?.feedContent == null
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8.0,
+                              horizontal: 20.0,
+                            ),
+                            child: Text(
+                              feed!.feedContent ?? '',
+                              style: const TextStyle(
+                                fontSize: 17.0,
+                              ),
+                            ),
+                          )
+                        : Container(),
                     ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -368,7 +415,10 @@ class _FeedDetailState extends State<FeedDetail> {
                               photoPath,
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            Get.to(() => PeopleDetail(
+                                memberInfoEntity: commentWriters[index]));
+                          },
                         );
                       },
                     ),
@@ -392,27 +442,31 @@ class _FeedDetailState extends State<FeedDetail> {
                     children: [
                       const SizedBox(width: 20.0),
                       Expanded(
-                        child: TextFormField(
-                          controller: _commentController,
-                          textAlignVertical: TextAlignVertical.bottom,
-                          decoration: const InputDecoration(
-                            hintText: '댓글을 입력하세요.',
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.horizontal(
-                                left: Radius.circular(25.0),
-                                right: Radius.circular(25.0),
+                        child: SizedBox(
+                          height: 50.0,
+                          child: TextFormField(
+                            controller: _commentController,
+                            textAlignVertical: TextAlignVertical.bottom,
+                            decoration: const InputDecoration(
+                              hintText: '댓글을 입력하세요.',
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.horizontal(
+                                  left: Radius.circular(25.0),
+                                  right: Radius.circular(25.0),
+                                ),
                               ),
+                              filled: true,
+                              fillColor: colorTextFieldBg,
                             ),
-                            filled: true,
-                            fillColor: colorTextFieldBg,
                           ),
                         ),
                       ),
                       const SizedBox(width: 12.0),
                       Container(
-                        width: 80.0,
+                        width: 70.0,
                         height: 50.0,
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: colorTextFieldBg,
                           shape: BoxShape.rectangle,

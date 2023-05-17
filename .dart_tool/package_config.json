@@ -164,6 +164,12 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "dots_indicator",
+      "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/dots_indicator-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "encrypt",
       "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/encrypt-5.0.1",
       "packageUri": "lib/",
@@ -447,9 +453,9 @@
     },
     {
       "name": "lints",
-      "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/lints-2.1.0",
+      "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/lints-2.0.1",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.17"
     },
     {
       "name": "logger",
@@ -603,9 +609,9 @@
     },
     {
       "name": "petitparser",
-      "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/petitparser-5.4.0",
+      "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/petitparser-5.1.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "2.18"
     },
     {
       "name": "pinput",
@@ -915,9 +921,9 @@
     },
     {
       "name": "xml",
-      "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/xml-6.3.0",
+      "rootUri": "file:///Users/bluebear/.pub-cache/hosted/pub.dev/xml-6.2.2",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "2.18"
     },
     {
       "name": "yaml",
@@ -932,7 +938,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-05-15T07:57:09.639464Z",
+  "generated": "2023-05-16T23:46:08.303763Z",
   "generator": "pub",
   "generatorVersion": "3.0.0"
 }

@@ -96,18 +96,20 @@ ListView makeFeedList(MemberInfoEntity member, List<MemberFeedEntity> feedList,
               ),
               onTap: () {},
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 8.0,
-                horizontal: 20.0,
-              ),
-              child: Text(
-                feed.feedContent ?? '',
-                style: const TextStyle(
-                  fontSize: 17.0,
-                ),
-              ),
-            ),
+            feed.feedContent == null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8.0,
+                      horizontal: 20.0,
+                    ),
+                    child: Text(
+                      feed.feedContent ?? '',
+                      style: const TextStyle(
+                        fontSize: 17.0,
+                      ),
+                    ),
+                  )
+                : Container(),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,

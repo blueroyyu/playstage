@@ -3,6 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:playstage/people/main_view.dart';
+import 'package:playstage/people/member_info_entity/member_info_entity.dart';
+import 'package:playstage/people/people_detail.dart';
+import 'package:playstage/utils/api_provider.dart';
 import 'package:sendbird_sdk/sendbird_sdk.dart';
 import 'chat_view.dart';
 
@@ -112,9 +115,31 @@ class _ChannelListViewState extends State<ChannelListView>
                   itemBuilder: (context, index) {
                     GroupChannel channel = channels![index];
                     return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: CachedNetworkImageProvider(
-                          channel.inviter?.profileUrl ?? '',
+                      leading: InkWell(
+                        onTap: () async {
+                          if (channel.inviter == null) {
+                            return;
+                          }
+
+                          final responseMember =
+                              await ApiProvider.requestMemberById(
+                                  channel.inviter!.userId);
+                          if (responseMember['resultCode'] == '200') {
+                            final memberMap = responseMember['data'];
+                            MemberInfoEntity info =
+                                MemberInfoEntity.fromMap(memberMap);
+
+                            if (kDebugMode) {
+                              print(info.toString());
+                            }
+
+                            Get.to(() => PeopleDetail(memberInfoEntity: info));
+                          }
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: CachedNetworkImageProvider(
+                            channel.inviter?.profileUrl ?? '',
+                          ),
                         ),
                       ),
                       // Display all channel members as the title

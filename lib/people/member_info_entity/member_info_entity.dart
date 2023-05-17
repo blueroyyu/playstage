@@ -219,9 +219,13 @@ class MemberInfoEntity {
   }
 
   int age() {
-    int year = int.parse(memberBirthday!.substring(0, 4));
-    int month = int.parse(memberBirthday!.substring(4, 6));
-    int day = int.parse(memberBirthday!.substring(6, 8));
+    int year = memberBirthday == null
+        ? 2000
+        : int.parse(memberBirthday!.substring(0, 4));
+    int month =
+        memberBirthday == null ? 1 : int.parse(memberBirthday!.substring(4, 6));
+    int day =
+        memberBirthday == null ? 1 : int.parse(memberBirthday!.substring(6, 8));
 
     DateTime birthDate = DateTime(year, month, day);
     DateTime now = DateTime.now();
@@ -235,10 +239,10 @@ class MemberInfoEntity {
     return age;
   }
 
-  String makeProfileImagePath() {
+  String makeProfileImagePath({int index = 0}) {
     if (tbMemberPhotoInfoList == null || tbMemberPhotoInfoList!.isEmpty) {
       return '';
     }
-    return '$s3Url/$memberId/profile/${tbMemberPhotoInfoList![0].photoSavedFileName}';
+    return '$s3Url/$memberId/profile/${tbMemberPhotoInfoList![index].photoSavedFileName}';
   }
 }

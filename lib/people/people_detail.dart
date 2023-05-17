@@ -309,173 +309,183 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                   IndexedStack(
                                     index: _selectedIndex,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              _currentMember.memberIntro ?? '',
-                                              style: const TextStyle(
-                                                fontSize: 16.0,
+                                      Visibility(
+                                        visible: _selectedIndex == 0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                _currentMember.memberIntro ??
+                                                    '',
+                                                style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 10.0),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text:
-                                                        '${'find_tendency'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 10.0),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '${'find_tendency'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: _currentMember
-                                                        .searchTendency(),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: _currentMember
+                                                          .searchTendency(),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: '${'height'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: '${'height'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text:
-                                                        _currentMember.height(),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: _currentMember
+                                                          .height(),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: '${'body_type'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '${'body_type'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: _currentMember
-                                                        .bodyType(),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: _currentMember
+                                                          .bodyType(),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text:
-                                                        '${'language_spoken'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '${'language_spoken'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: _currentMember
-                                                        .spokenLanguage(),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: _currentMember
+                                                          .spokenLanguage(),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: '${'drinking'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '${'drinking'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: _currentMember
-                                                        .frequency(
-                                                            code: _currentMember
-                                                                .drinkInfo),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: _currentMember
+                                                          .frequency(
+                                                              code: _currentMember
+                                                                  .drinkInfo),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: '${'smoking'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: '${'smoking'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: _currentMember
-                                                        .frequency(
-                                                            code: _currentMember
-                                                                .smokingInfo),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: _currentMember
+                                                          .frequency(
+                                                              code: _currentMember
+                                                                  .smokingInfo),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                      makeFeedList(_currentMember, _feedList),
+                                      Visibility(
+                                        visible: _selectedIndex == 1,
+                                        child: makeFeedList(
+                                            _currentMember, _feedList),
+                                      ),
                                     ],
                                   ),
                                 ],

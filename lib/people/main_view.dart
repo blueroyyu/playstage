@@ -18,7 +18,7 @@ import 'package:playstage/utils/api_provider.dart';
 import 'package:sendbird_sdk/sendbird_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mysql1/mysql1.dart';
-
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:playstage/const.dart';
 
 class MainView extends StatefulWidget {
@@ -171,13 +171,6 @@ class _MainViewState extends State<MainView> {
     return conn;
   }
 
-  String _makeCurrentImagePath() {
-    if (_currentMember!.tbMemberPhotoInfoList!.isEmpty) {
-      return '';
-    }
-    return '$s3Url/${_currentMember!.memberId}/profile/${_currentMember!.tbMemberPhotoInfoList![_currentProfileIndex].photoSavedFileName}';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -219,235 +212,244 @@ class _MainViewState extends State<MainView> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: PageView.builder(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      _currentMember = _memberList[index];
-                      setState(() {
-                        _currentProfileIndex = 0;
-                      });
-                    },
-                    itemCount: _memberList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final member = _memberList[index];
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        clipBehavior: Clip.hardEdge,
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 500),
-                                transitionBuilder: (Widget child,
-                                    Animation<double> animation) {
-                                  return FadeTransition(
-                                    opacity: animation,
-                                    child: child,
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    _currentMember = _memberList[index];
+                    setState(() {
+                      _currentProfileIndex = 0;
+                    });
+                  },
+                  itemCount: _memberList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final member = _memberList[index];
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 500),
+                              transitionBuilder:
+                                  (Widget child, Animation<double> animation) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                              layoutBuilder: (Widget? currentChild,
+                                  List<Widget> previousChildren) {
+                                return Stack(
+                                  fit: StackFit.expand,
+                                  children: <Widget>[
+                                    ...previousChildren,
+                                    if (currentChild != null) currentChild,
+                                  ],
+                                );
+                              },
+                              child: Image.network(
+                                member.makeProfileImagePath(
+                                    index: _currentProfileIndex),
+                                key: ValueKey<int>(_currentProfileIndex),
+                                fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context,
+                                    Object exception, StackTrace? stackTrace) {
+                                  return Image.asset(
+                                    'assets/images/default_profile.png',
+                                    fit: BoxFit.cover,
                                   );
                                 },
-                                layoutBuilder: (Widget? currentChild,
-                                    List<Widget> previousChildren) {
-                                  return Stack(
-                                    fit: StackFit.expand,
-                                    children: <Widget>[
-                                      ...previousChildren,
-                                      if (currentChild != null) currentChild,
-                                    ],
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return const Center(
+                                    child: CircularProgressIndicator(
+                                        color: Colors.black),
                                   );
                                 },
-                                child: Image.network(
-                                  member.makeProfileImagePath(),
-                                  key: ValueKey<int>(_currentProfileIndex),
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (BuildContext context,
-                                      Object exception,
-                                      StackTrace? stackTrace) {
-                                    return Image.asset(
-                                      'assets/images/default_profile.png',
-                                      fit: BoxFit.cover,
-                                    );
-                                  },
-                                  loadingBuilder: (BuildContext context,
-                                      Widget child,
-                                      ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    }
-                                    return const Center(
-                                      child: CircularProgressIndicator(
-                                          color: Colors.black),
-                                    );
-                                  },
-                                ),
                               ),
                             ),
-                            Positioned(
-                              left: 15,
-                              top: 7,
-                              child: Container(
-                                width: 148,
-                                height: 3,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(2),
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 167,
-                              top: 7,
-                              child: Container(
-                                width: 148,
-                                height: 3,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(2),
-                                  color: const Color(0x7fffffff),
-                                ),
-                              ),
-                            ),
-                            Positioned.fill(
-                              child: GestureDetector(
-                                onTapUp: (TapUpDetails details) {
-                                  _onTapUp(details, context);
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.black.withOpacity(0.25),
-                                        Colors.black.withOpacity(0.50),
-                                        Colors.black.withOpacity(1.0),
-                                      ],
-                                      stops: const [0.0, 0.5, 0.75, 1.0],
+                          ),
+                          // Positioned(
+                          //   left: 15,
+                          //   top: 7,
+                          //   child: Container(
+                          //     width: 148,
+                          //     height: 3,
+                          //     decoration: BoxDecoration(
+                          //       borderRadius: BorderRadius.circular(2),
+                          //       color: Colors.white,
+                          //     ),
+                          //   ),
+                          // ),
+                          member.tbMemberPhotoInfoList!.length > 1
+                              ? Positioned(
+                                  top: 7,
+                                  left: 0,
+                                  right: 0,
+                                  child: DotsIndicator(
+                                    dotsCount: member.tbMemberPhotoInfoList!
+                                        .length, // 전체 페이지 수
+                                    position:
+                                        _currentProfileIndex, // 현재 페이지 인덱스
+                                    decorator: DotsDecorator(
+                                      activeColor:
+                                          Colors.white, // 활성화된 페이지 인디케이터 색상
+                                      size: const Size.square(5.0), // 인디케이터 크기
+                                      activeSize: const Size(18.0, 5.0),
+                                      activeShape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            5.0), // 활성화된 인디케이터 모양
+                                        side: const BorderSide(
+                                            color: Color(0xFFB4B4B4),
+                                            width: 0.1),
+                                      ),
                                     ),
                                   ),
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        left: 20,
-                                        bottom: 140,
-                                        child: Text(
-                                          member.name(),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 24.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                )
+                              : Container(),
+                          Positioned.fill(
+                            child: GestureDetector(
+                              onTapUp: (TapUpDetails details) {
+                                _onTapUp(details, context);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withOpacity(0.25),
+                                      Colors.black.withOpacity(0.50),
+                                      Colors.black.withOpacity(1.0),
+                                    ],
+                                    stops: const [0.0, 0.5, 0.75, 1.0],
+                                  ),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      left: 20,
+                                      bottom: 140,
+                                      child: Text(
+                                        member.name(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      Positioned(
-                                        left: 20,
-                                        bottom: 116,
-                                        child: Text(
-                                          member.memberTendency(),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                          ),
+                                    ),
+                                    Positioned(
+                                      left: 20,
+                                      bottom: 116,
+                                      child: Text(
+                                        member.memberTendency(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
                                         ),
                                       ),
-                                      Positioned(
-                                        left: 8,
-                                        bottom: 8,
-                                        child: SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width -
-                                              46,
-                                          height: 50.0,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    backgroundColor: colorBtnBg,
-                                                  ),
-                                                  onPressed: () async {
-                                                    await _requestHate(
-                                                        _currentMember!
-                                                            .memberId!);
+                                    ),
+                                    Positioned(
+                                      left: 8,
+                                      bottom: 8,
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                46,
+                                        height: 50.0,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Expanded(
+                                              flex: 2,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: colorBtnBg,
+                                                ),
+                                                onPressed: () async {
+                                                  await _requestHate(
+                                                      _currentMember!
+                                                          .memberId!);
+                                                  _pageController.nextPage(
+                                                      duration: const Duration(
+                                                          milliseconds: 500),
+                                                      curve: Curves.linear);
+                                                },
+                                                child: const Icon(Icons.close,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              flex: 6,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: colorBtnBg,
+                                                ),
+                                                onPressed: () async {
+                                                  final matched =
+                                                      await _requestLike(
+                                                          _currentMember!
+                                                              .memberId!);
+
+                                                  if (matched) {
+                                                    Get.to(() => MatchedView(
+                                                        matchedMember:
+                                                            _currentMember!));
+                                                  } else {
                                                     _pageController.nextPage(
                                                         duration:
                                                             const Duration(
                                                                 milliseconds:
                                                                     500),
                                                         curve: Curves.linear);
-                                                  },
-                                                  child: const Icon(Icons.close,
-                                                      color: Colors.white),
-                                                ),
+                                                  }
+                                                },
+                                                child: const Icon(
+                                                    Icons.favorite,
+                                                    color: Colors.red),
                                               ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                flex: 6,
-                                                child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    backgroundColor: colorBtnBg,
-                                                  ),
-                                                  onPressed: () async {
-                                                    final matched =
-                                                        await _requestLike(
-                                                            _currentMember!
-                                                                .memberId!);
-
-                                                    if (matched) {
-                                                      Get.to(() => MatchedView(
-                                                          matchedMember:
-                                                              _currentMember!));
-                                                    } else {
-                                                      _pageController.nextPage(
-                                                          duration:
-                                                              const Duration(
-                                                                  milliseconds:
-                                                                      500),
-                                                          curve: Curves.linear);
-                                                    }
-                                                  },
-                                                  child: const Icon(
-                                                      Icons.favorite,
-                                                      color: Colors.red),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              flex: 2,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: colorBtnBg,
                                                 ),
+                                                onPressed: () {
+                                                  Get.to(() => PeopleDetail(
+                                                      memberInfoEntity:
+                                                          _currentMember!));
+                                                },
+                                                child: const Icon(Icons.info,
+                                                    color: Colors.white),
                                               ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                flex: 2,
-                                                child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    backgroundColor: colorBtnBg,
-                                                  ),
-                                                  onPressed: () {
-                                                    Get.to(() => PeopleDetail(
-                                                        memberInfoEntity:
-                                                            _currentMember!));
-                                                  },
-                                                  child: const Icon(Icons.info,
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      );
-                    }),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(height: 19),
