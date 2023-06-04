@@ -17,7 +17,7 @@ import 'package:playstage/shared_data.dart';
 import 'package:playstage/utils/api_provider.dart';
 import 'package:sendbird_sdk/sendbird_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mysql1/mysql1.dart';
+// import 'package:mysql1/mysql1.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:playstage/const.dart';
 
@@ -44,6 +44,7 @@ class _MainViewState extends State<MainView> {
     super.initState();
 
     sendbird = SendbirdSdk(appId: sendbirdApiId);
+    ApiProvider.accessToken = accessToken;
 
     _loadMemberList();
     _initSendBird();
@@ -144,6 +145,8 @@ class _MainViewState extends State<MainView> {
       if (kDebugMode) {
         print(e);
       }
+
+      rethrow;
     }
   }
 
@@ -160,16 +163,16 @@ class _MainViewState extends State<MainView> {
     }
   }
 
-  Future<MySqlConnection> getConnection() async {
-    final conn = await MySqlConnection.connect(ConnectionSettings(
-      host: '3.35.179.159',
-      port: 3306,
-      user: 'playstage_dev',
-      password: 'playstage@2023!',
-      db: 'playstage_new',
-    ));
-    return conn;
-  }
+  // Future<MySqlConnection> getConnection() async {
+  //   final conn = await MySqlConnection.connect(ConnectionSettings(
+  //     host: '3.35.179.159',
+  //     port: 3306,
+  //     user: 'playstage_dev',
+  //     password: 'playstage@2023!',
+  //     db: 'playstage_new',
+  //   ));
+  //   return conn;
+  // }
 
   @override
   Widget build(BuildContext context) {

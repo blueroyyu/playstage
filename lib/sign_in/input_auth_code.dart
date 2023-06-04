@@ -1,12 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iamport_flutter/model/certification_data.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:pinput/pinput.dart';
 import 'package:playstage/const.dart';
 import 'package:playstage/people/main_view.dart';
-import 'package:playstage/sign_up/select_tendency.dart';
-import 'package:playstage/sign_up/subscriber_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../sign_up/subscriber_info.dart';
+import '../utils/utils.dart';
 
 class InputAuthCode extends StatefulWidget {
   const InputAuthCode({
@@ -59,12 +62,47 @@ class _InputAuthCodeState extends State<InputAuthCode> {
                         await SharedPreferences.getInstance();
                     prefs.setBool(keyLoggedIn, true);
 
-                    Get.offAll(() => const MainView());
+                    bool authenticated = true;
+                    final useBio = prefs.getBool(keyUseBiometrics);
+                    if (useBio == null) {
+                      final LocalAuthentication auth = LocalAuthentication();
+                      final bool canAuthenticate =
+                          await auth.canCheckBiometrics ||
+                              await auth.isDeviceSupported();
+
+                      if (canAuthenticate) {
+                        // ignore: use_build_context_synchronously
+                        final ret = await showAlert(
+                            context, '바이오 인증을 사용하시겠습니까?',
+                            showCancel: true);
+                        if (ret) {
+                          authenticated = await authenticate();
+                          if (authenticated) {
+                            prefs.setBool(keyUseBiometrics, true);
+                          }
+                        }
+                      }
+                    } else if (useBio) {
+                      authenticated = await authenticate();
+                    }
+
+                    if (authenticated) {
+                      Get.offAll(() => const MainView());
+                    }
                   } else {
                     SubscriberInfo info = SubscriberInfo();
                     info.phoneNumber = widget.phoneNumber;
 
-                    Get.to(() => const SelectTendency());
+                    var merchantUid =
+                        'mid_${DateTime.now().millisecondsSinceEpoch}';
+
+                    CertificationData data = CertificationData(
+                      merchantUid: merchantUid,
+                      minAge: 19,
+                    );
+
+                    await showAlert(context, '가입을 위해서 본인인증이 필요합니다.');
+                    Get.toNamed('/certification', arguments: data);
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(

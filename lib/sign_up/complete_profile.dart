@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
@@ -65,7 +66,7 @@ class _CompleteProfileState extends State<CompleteProfile> {
                 ),
               ),
               child: Text(
-                'skip'.tr,
+                'next'.tr,
                 style: TextStyle(
                   color: _filled
                       ? const Color(0xFFFFC800)
@@ -358,7 +359,9 @@ class _CompleteProfileState extends State<CompleteProfile> {
               child: const Text('OK'),
               onPressed: () {
                 // Handle the selected height value here
-                print('Selected height: $height');
+                if (kDebugMode) {
+                  print('Selected height: $height');
+                }
 
                 SubscriberInfo info = SubscriberInfo();
                 info.height = height;

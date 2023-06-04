@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'subscriber_info.dart';
 import 'complete_profile.dart';
 
@@ -20,13 +18,25 @@ class _CreateProfileState extends State<CreateProfile> {
   final TextEditingController _controller = TextEditingController();
   final int _characterLimit = 15;
 
-  String _name = "";
-  String _birthDay = "yyyy/MM/dd";
-  final String _df = "yyyy/MM/dd";
+  String _name = '';
+  String _birthDay = '';
+  // final String _df = "yyyy/MM/dd";
 
-  String _aboutMe = "";
+  String _aboutMe = '';
 
   final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    SubscriberInfo si = SubscriberInfo();
+    setState(() {
+      _name = si.certInfo!.name!;
+      _controller.text = _name;
+      _birthDay = si.certInfo!.birthday!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +63,6 @@ class _CreateProfileState extends State<CreateProfile> {
                 }
 
                 SubscriberInfo info = SubscriberInfo();
-                info.name = _name;
-                info.birthDay = _birthDay;
                 info.aboutMe = _aboutMe;
 
                 Get.to(const CompleteProfile());
@@ -120,18 +128,19 @@ class _CreateProfileState extends State<CreateProfile> {
                 const SizedBox(height: 4),
                 TextField(
                   controller: _controller,
+                  readOnly: true,
                   maxLength: _characterLimit,
-                  onChanged: (value) {
-                    _name = value;
+                  // onChanged: (value) {
+                  //   _name = value;
 
-                    if (_name.isNotEmpty &&
-                        _birthDay.isNotEmpty &&
-                        _aboutMe.isNotEmpty) {
-                      setState(() {
-                        _filled = true;
-                      });
-                    }
-                  },
+                  //   if (_name.isNotEmpty &&
+                  //       _birthDay.isNotEmpty &&
+                  //       _aboutMe.isNotEmpty) {
+                  //     setState(() {
+                  //       _filled = true;
+                  //     });
+                  //   }
+                  // },
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     hintText: 'input_name'.tr,
@@ -151,23 +160,23 @@ class _CreateProfileState extends State<CreateProfile> {
                 ),
                 const SizedBox(height: 4),
                 GestureDetector(
-                  onTap: () async {
-                    DateTime? selectedDate = await _selectDate(context);
-                    if (selectedDate != null) {
-                      if (kDebugMode) {
-                        print(selectedDate.toString());
-                      }
-                      setState(() {
-                        _birthDay = DateFormat(_df).format(selectedDate);
+                  // onTap: () async {
+                  // DateTime? selectedDate = await _selectDate(context);
+                  // if (selectedDate != null) {
+                  //   if (kDebugMode) {
+                  //     print(selectedDate.toString());
+                  //   }
+                  //   setState(() {
+                  //     _birthDay = DateFormat(_df).format(selectedDate);
 
-                        if (_name.isNotEmpty &&
-                            _birthDay.isNotEmpty &&
-                            _aboutMe.isNotEmpty) {
-                          _filled = true;
-                        }
-                      });
-                    }
-                  },
+                  //     if (_name.isNotEmpty &&
+                  //         _birthDay.isNotEmpty &&
+                  //         _aboutMe.isNotEmpty) {
+                  //       _filled = true;
+                  //     }
+                  //   });
+                  // }
+                  // },
                   child: Container(
                     padding: const EdgeInsets.only(bottom: 2.0),
                     decoration: const BoxDecoration(
@@ -183,11 +192,11 @@ class _CreateProfileState extends State<CreateProfile> {
                       children: [
                         Text(
                           _birthDay,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15.0,
-                            color: _birthDay == _df
-                                ? const Color(0xFF8E8E8E)
-                                : Colors.black,
+                            // color: _birthDay == _df
+                            //     ? const Color(0xFF8E8E8E)
+                            //     : Colors.black,
                           ),
                         ),
                         const Icon(

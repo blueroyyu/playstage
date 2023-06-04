@@ -4,11 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:local_auth/local_auth.dart';
 
 import 'package:playstage/const.dart';
 import 'package:playstage/shared_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:playstage/utils/loader.dart';
+import '../utils/utils.dart';
 import 'subscriber_info.dart';
 import 'package:playstage/people/main_view.dart';
 
@@ -244,8 +246,8 @@ class _AllowLocationState extends State<AllowLocation> {
 
     final jsonData = jsonEncode({
       "memberPhone": info.phoneNumber,
-      "memberName": info.name,
-      "memberBirthday": info.birthDay!.replaceAll('/', ''),
+      "memberName": info.certInfo!.name,
+      "memberBirthday": info.certInfo!.birthday!.replaceAll('-', ''),
       "memberIntro": info.aboutMe,
       "memberHeight": info.height?.toString() ?? "",
       "bodyInfo": info.bodyType ?? "",
@@ -265,11 +267,12 @@ class _AllowLocationState extends State<AllowLocation> {
       "address": info.address ?? "",
       "address2": info.address2 ?? "",
       "address3": info.address3 ?? "",
-      "ci": info.ci ?? info.phoneNumber, // TODO: 본인인증
+      "ci": info.certInfo!.uniqueKey!
     });
 
     try {
       final dio = Dio();
+      dio.options.headers['Authorization'] = accessToken;
       final formData = fd.FormData();
 
       final files = info.profileImages;
@@ -303,9 +306,26 @@ class _AllowLocationState extends State<AllowLocation> {
 
       if (responseData['resultCode'] == '200') {
         var memberId = responseData['data']['memberId'];
-        SharedPreferences.getInstance().then((prefs) {
+        await SharedPreferences.getInstance().then((prefs) async {
           prefs.setString(keyUserId, memberId);
           prefs.setBool(keyLoggedIn, true);
+
+          final useBio = prefs.getBool(keyUseBiometrics);
+          if (useBio == null) {
+            final LocalAuthentication auth = LocalAuthentication();
+            final bool canAuthenticate =
+                await auth.canCheckBiometrics || await auth.isDeviceSupported();
+
+            if (canAuthenticate) {
+              final ret = await _showUseBioAlert();
+              if (ret) {
+                bool authenticated = await authenticate();
+                if (authenticated) {
+                  prefs.setBool(keyUseBiometrics, true);
+                }
+              }
+            }
+          }
 
           Get.offAll(() => const MainView());
         });
@@ -321,5 +341,24 @@ class _AllowLocationState extends State<AllowLocation> {
 
       Get.showSnackbar(GetSnackBar(message: 'try_again'.tr));
     }
+  }
+
+  Future<dynamic> _showUseBioAlert() async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content: const Text('바이오 인증을 사용하시겠습니까?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('cancel'.tr),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('ok'.tr),
+          ),
+        ],
+      ),
+    );
   }
 }

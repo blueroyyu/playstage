@@ -50,11 +50,13 @@ class VerifyPhoto extends StatelessWidget {
         children: [
           Expanded(
             flex: 6,
-            child: Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Image.file(
-                File(path),
-                fit: BoxFit.cover,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Image.file(
+                  File(path),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),

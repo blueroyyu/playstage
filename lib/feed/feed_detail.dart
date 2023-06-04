@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:mysql1/mysql1.dart';
+// import 'package:mysql1/mysql1.dart';
 import 'package:playstage/const.dart';
 import 'package:playstage/feed/like_feed_view.dart';
 import 'package:playstage/people/member_feed_entity/member_feed_entity.dart';
@@ -78,29 +78,29 @@ class _FeedDetailState extends State<FeedDetail> {
     }
   }
 
-  Future<MySqlConnection> getConnection() async {
-    final conn = await MySqlConnection.connect(ConnectionSettings(
-      host: '3.35.179.159',
-      port: 3306,
-      user: 'playstage_dev',
-      password: 'playstage@2023!',
-      db: 'playstage_new',
-    ));
-    return conn;
-  }
+  // Future<MySqlConnection> getConnection() async {
+  //   final conn = await MySqlConnection.connect(ConnectionSettings(
+  //     host: '3.35.179.159',
+  //     port: 3306,
+  //     user: 'playstage_dev',
+  //     password: 'playstage@2023!',
+  //     db: 'playstage_new',
+  //   ));
+  //   return conn;
+  // }
 
   Future<void> _loadCommentWriterList() async {
     commentWriters.clear();
 
-    MySqlConnection conn = await getConnection();
+    // MySqlConnection conn = await getConnection();
 
     for (TbFeedCommentInfoList comment in comments!) {
       // TODO: request member_seq should be in commentList
-      var results = await conn.query(
-          'select member_seq from TB_FEED_COMMENT_INFO where comment_seq = ?',
-          [comment.commentSeq]);
-      var row = results.first;
-      comment.memberSeq = row['member_seq'];
+      // var results = await conn.query(
+      //     'select member_seq from TB_FEED_COMMENT_INFO where comment_seq = ?',
+      //     [comment.commentSeq]);
+      // var row = results.first;
+      // comment.memberSeq = row['member_seq'];
 
       int seq = comment.memberSeq!;
 

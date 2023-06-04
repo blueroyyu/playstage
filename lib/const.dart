@@ -1,14 +1,17 @@
 import 'dart:ui';
 
-const String baseUrl = 'http://3.35.179.159:8088';
-
+// const String baseUrl = 'http://3.35.179.159:8088';
+const String baseUrl = 'https://api.playstage.info';
 const String s3Url = 'https://playstage-upload.s3.ap-northeast-2.amazonaws.com';
+
+const String accessToken = '3xCv29981_Tx091dUx98_84PTx905EB';
 
 const String keyLoggedIn = 'is_logged_in';
 const String keyAccessToken = 'access_token';
 const String keyUserId = 'user_id';
 const String keyChatChannel = 'chat_';
 const String keyPushToken = 'push_token';
+const String keyUseBiometrics = 'use_biometrics';
 
 const Color colorContainerBg = Color(0xFFE5E5E5);
 const Color colorPeopleDetailBg = Color(0xFFF6F6F6);

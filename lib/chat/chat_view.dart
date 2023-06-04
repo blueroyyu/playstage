@@ -52,6 +52,8 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
       setState(() {
         _messages = messages;
       });
+
+      channel.markAsRead();
     } catch (e) {
       if (kDebugMode) {
         print('group_channel_view.dart: getMessages: ERROR: $e');
@@ -83,14 +85,18 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
                 useSafeArea: Platform.isIOS,
                 context: context,
                 builder: (BuildContext context) {
+                  bool blocked = channel.members.firstWhereOrNull(
+                          (element) => element.isBlockedByMe) !=
+                      null;
+
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ListTile(
                         leading: const Icon(Icons.logout),
                         title: Text('채팅방 나가기'.tr),
-                        onTap: () {
-                          showDialog(
+                        onTap: () async {
+                          await showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
@@ -108,19 +114,20 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
                                       widget.groupChannel.leave();
                                       Navigator.of(context).pop();
                                       Navigator.of(context).pop();
-                                      Get.back();
                                     },
                                   ),
                                 ],
                               );
                             },
                           );
+
+                          Get.back();
                         },
                       ),
                       ListTile(
                         leading: const Icon(Icons.person_off),
-                        title: Text('block'.tr),
-                        onTap: () {
+                        title: Text(blocked ? 'unblock'.tr : 'block'.tr),
+                        onTap: () async {
                           String blockUserId = '';
                           if (channel.members.first.userId ==
                               SharedData().owner!.memberId!) {
@@ -129,11 +136,13 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
                             blockUserId = channel.members.first.userId;
                           }
                           // await sendbird.blockUser(USER_ID);
-                          showDialog(
+                          await showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                content: Text('block_user'.tr),
+                                content: Text(blocked
+                                    ? 'unblock_user'.tr
+                                    : 'block_user'.tr),
                                 actions: <Widget>[
                                   TextButton(
                                     child: Text('cancel'.tr),
@@ -144,10 +153,14 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
                                   TextButton(
                                     child: Text('ok'.tr),
                                     onPressed: () async {
-                                      await SendbirdSdk()
-                                          .blockUser(blockUserId);
-                                      Get.back();
-                                      Get.back();
+                                      if (blocked) {
+                                        await SendbirdSdk()
+                                            .unblockUser(blockUserId);
+                                      } else {
+                                        await SendbirdSdk()
+                                            .blockUser(blockUserId);
+                                        Get.back();
+                                      }
                                       Get.back();
                                     },
                                   ),
@@ -155,6 +168,8 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
                               );
                             },
                           );
+
+                          Get.back();
                         },
                       ),
                       // ListTile(
@@ -328,11 +343,9 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
 
         final preMessage = widget.groupChannel.sendFileMessage(params,
             onCompleted: (message, error) {
-          if (error != null) {
-            setState(() {
-              _isLoading = false;
-            });
-          }
+          setState(() {
+            _isLoading = false;
+          });
           // A file message with detailed configuration is successfully sent to the channel.
           // By using fileMessage.messageId, fileMessage.fileName, fileMessage.customType, and so on,
           // you can access the result object from the Sendbird server to check your FileMessageParams configuration.

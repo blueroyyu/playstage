@@ -10,13 +10,17 @@ import 'package:get/get.dart';
 import 'package:playstage/components/push_notification.dart';
 import 'package:playstage/firebase_options.dart';
 import 'package:playstage/people/main_view.dart';
+import 'package:playstage/settings/app_settings.dart';
 import 'package:playstage/sign_in/sign_in.dart';
+import 'package:playstage/sign_up/certification.dart';
 import 'package:playstage/utils/notification_service.dart';
 import 'package:sendbird_sdk/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 
 import 'const.dart';
 import 'languages.dart';
+import 'utils/utils.dart';
 
 @pragma('vm:entry-point')
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -50,6 +54,10 @@ void onRecieveLocalNotification(
   Get.toNamed("EmptyRoute");
 }
 
+void clearAppBadge() async {
+  await FlutterAppBadger.removeBadge();
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -58,8 +66,18 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  clearAppBadge();
+
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool(keyLoggedIn) ?? false;
+
+  bool useBio = prefs.getBool(keyUseBiometrics) ?? false;
+  if (useBio && isLoggedIn) {
+    bool authenticated = await authenticate();
+    if (authenticated == false) {
+      isLoggedIn = false;
+    }
+  }
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -242,6 +260,8 @@ class _PlayStageAppState extends State<PlayStageApp> {
       routes: {
         '/main_view': (context) => const MainView(),
         '/sign_in': (context) => const SignIn(),
+        '/certification': (context) => const Certification(),
+        '/app_settings': (context) => const AppSettings(),
       },
     );
   }

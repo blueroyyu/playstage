@@ -1,14 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'input_auth_code.dart';
+import 'package:playstage/utils/api_provider.dart';
 import 'package:playstage/const.dart';
-import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'input_auth_code.dart';
 
 class InputPhoneNumber extends StatefulWidget {
   const InputPhoneNumber({Key? key}) : super(key: key);
@@ -140,50 +139,30 @@ class _InputPhoneNumberState extends State<InputPhoneNumber> {
     String unformatted = phoneNumber!.number;
     String number =
         '${unformatted.substring(0, 3)}-${unformatted.substring(3, 7)}-${unformatted.substring(7, 11)}';
-    final msg = jsonEncode({"authValue": number});
 
-    String url = '$baseUrl/member/smsAuth';
-    var response = await http.post(
-      Uri.parse(url),
-      headers: {
-        "accept": "*/*",
-        "Content-Type": "application/json",
-      },
-      body: msg,
-    );
+    ApiProvider.accessToken = accessToken;
+    try {
+      dynamic res = await ApiProvider.requestSmsAuth(number);
+      final authNumber = res['data']['authNumber'];
+      final isMember = res['data']['isMember'];
+      final memberId = res['data']['memberId'];
 
-    /*
-    {
-      "resultCode": "200",
-      "resultMessage": "",
-      "data": {
-        "isMember": false,
-        "authNumber": "434566"
-      }
-    }
-     */
-    if (response.statusCode == 200) {
-      // 요청이 성공적으로 처리됨
-      var jsonResponse = json.decode(response.body);
       if (kDebugMode) {
-        print('Response status: ${response.statusCode}');
-        print('ID: ${jsonResponse['data']['authNumber']}');
+        print('auth: $authNumber');
       }
 
-      final isMember = jsonResponse['data']['isMember'];
       if (isMember) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString(keyUserId, jsonResponse['data']['memberId']);
+        prefs.setString(keyUserId, memberId);
       }
       Get.to(() => InputAuthCode(
             phoneNumber: number,
-            authCode: jsonResponse['data']['authNumber'],
+            authCode: authNumber,
             isMember: isMember,
           ));
-    } else {
-      // 요청이 실패함
+    } on Exception catch (e) {
       if (kDebugMode) {
-        print('Request failed with status: ${response.statusCode}.');
+        print(e);
       }
 
       Get.to(() => InputAuthCode(
@@ -192,5 +171,57 @@ class _InputPhoneNumberState extends State<InputPhoneNumber> {
             isMember: false,
           ));
     }
+
+    // final msg = jsonEncode({"authValue": number});
+    // String url = '$baseUrl/member/smsAuth';
+    // var response = await http.post(
+    //   Uri.parse(url),
+    //   headers: {
+    //     "accept": "*/*",
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: msg,
+    // );
+
+    // /*
+    // {
+    //   "resultCode": "200",
+    //   "resultMessage": "",
+    //   "data": {
+    //     "isMember": false,
+    //     "authNumber": "434566"
+    //   }
+    // }
+    //  */
+    // if (response.statusCode == 200) {
+    //   // 요청이 성공적으로 처리됨
+    //   var jsonResponse = json.decode(response.body);
+    //   if (kDebugMode) {
+    //     print('Response status: ${response.statusCode}');
+    //     print('ID: ${jsonResponse['data']['authNumber']}');
+    //   }
+
+    //   final isMember = jsonResponse['data']['isMember'];
+    //   if (isMember) {
+    //     SharedPreferences prefs = await SharedPreferences.getInstance();
+    //     prefs.setString(keyUserId, jsonResponse['data']['memberId']);
+    //   }
+    //   Get.to(() => InputAuthCode(
+    //         phoneNumber: number,
+    //         authCode: jsonResponse['data']['authNumber'],
+    //         isMember: isMember,
+    //       ));
+    // } else {
+    //   // 요청이 실패함
+    //   if (kDebugMode) {
+    //     print('Request failed with status: ${response.statusCode}.');
+    //   }
+
+    //   Get.to(() => InputAuthCode(
+    //         phoneNumber: number,
+    //         authCode: '000000',
+    //         isMember: false,
+    //       ));
+    // }
   }
 }

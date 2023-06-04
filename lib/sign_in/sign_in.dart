@@ -1,12 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:playstage/sign_in/input_phone_number.dart';
 import 'package:playstage/sign_in/privacy_policy.dart';
 import 'package:playstage/sign_in/terms.dart';
 import 'package:playstage/factory.dart';
 
 import 'dart:io' show Platform;
+
+import 'input_phone_number.dart';
 
 enum LanguageMenuItem { itemOne, itemTwo, itemThree }
 
@@ -106,6 +107,16 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   onPressed: () {
+                    // var merchantUid =
+                    //     'mid_${DateTime.now().millisecondsSinceEpoch}';
+
+                    // CertificationData data = CertificationData(
+                    //   merchantUid: merchantUid,
+                    // );
+
+                    // Get.toNamed('/certification', arguments: data);
+
+                    // Get.to(const VerifyIdentity());
                     Get.to(const InputPhoneNumber());
                     // Get.to(const MainView());
                   },

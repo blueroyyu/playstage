@@ -17,9 +17,10 @@ const String likeToggleMember = '/member/likeToggleMember';
 const String hateAddMember = '/member/hateAddMember';
 const String updateMember = '/member/updateMember';
 
-const String feedList = '/feed/getFeedList/'; // /feed/getFeedList/{memberSeq}
-const String memberFeedList =
-    '/feed/getFeedListByMemberSeq/'; // /feed/getFeedListByMemberSeq/{memberSeq}
+const String blockInfoList = '/common/getBlockInfoList';
+
+const String feedList = '/feed/getFeedList';
+const String memberFeedList = '/feed/getFeedListByMemberSeq';
 const String handleFeedLike = '/feed/handleFeedLike';
 const String handleFeedComment = '/feed/handleFeedComment';
 const String addFeed = '/feed/addFeed';
@@ -37,7 +38,7 @@ class ApiProvider {
   static String _accessToken = '';
   static set accessToken(String value) {
     _accessToken = value;
-    _dio.options.headers['Authorization'] = 'Bearer $_accessToken';
+    _dio.options.headers['Authorization'] = _accessToken;
   }
 
   static Future<dynamic> getData(String endpoint,
@@ -265,17 +266,31 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestFeedList(int memberSeq) async {
+  static Future<dynamic> requestFeedList(
+      int memberSeq, int pageNumber, int pageSize) async {
+    final data = {
+      'memberSeq': memberSeq,
+      'pageNumber': pageNumber,
+      'pageSize': pageSize,
+    };
+
     try {
-      return await getData('$feedList$memberSeq');
+      return await postData(feedList, data);
     } catch (error) {
       rethrow;
     }
   }
 
-  static Future<dynamic> requestMemberFeedList(int memberSeq) async {
+  static Future<dynamic> requestMemberFeedList(
+      int memberSeq, int pageNumber, int pageSize) async {
+    final data = {
+      'memberSeq': memberSeq,
+      'pageNumber': pageNumber,
+      'pageSize': pageSize,
+    };
+
     try {
-      return await getData('$memberFeedList$memberSeq');
+      return await postData(memberFeedList, data);
     } catch (error) {
       rethrow;
     }
@@ -302,6 +317,7 @@ class ApiProvider {
 
     try {
       final dio = Dio();
+      dio.options.headers['Authorization'] = _accessToken;
       final formData = FormData();
 
       final files = images;
@@ -365,6 +381,62 @@ class ApiProvider {
     try {
       return await postData(handleFeedLike, data);
     } catch (error) {
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> requestGetBlockInfoList(String memberId) async {
+    try {
+      return await postData('$blockInfoList/$memberId', null);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> requestSendInquiry(
+      String memberId, String content, List<String> images) async {
+    final jsonData = jsonEncode({
+      "memberId": memberId,
+      "inquiry": content,
+    });
+
+    try {
+      final dio = Dio();
+      dio.options.headers['Authorization'] = _accessToken;
+      final formData = FormData();
+
+      final files = images;
+      for (final file in files) {
+        if (file.isEmpty) {
+          continue;
+        }
+
+        formData.files.add(MapEntry(
+          'files',
+          await MultipartFile.fromFile(file),
+        ));
+      }
+
+      formData.fields.add(MapEntry('inquiryReqDto', jsonData));
+
+      final response = await dio.post(
+        '$baseUrl$sendInquiry',
+        data: formData,
+      );
+
+      if (response.statusCode! >= 200 && response.statusCode! < 300) {
+        if (kDebugMode) {
+          print(response.data);
+        }
+        return response.data;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+
       rethrow;
     }
   }

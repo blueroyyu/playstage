@@ -20,16 +20,18 @@ address3	[...]
 ci	[...]
  */
 
+import '../models/certification_info/certification_info.dart';
+
 class SubscriberInfo {
   static final SubscriberInfo _singleton = SubscriberInfo._internal();
+
+  CertificationInfo? certInfo;
 
   String? phoneNumber;
 
   String? iam;
   List<String> toFind = [];
 
-  String? name;
-  String? birthDay;
   String? aboutMe;
   int? height;
   String? bodyType;
@@ -45,7 +47,6 @@ class SubscriberInfo {
   String? address;
   String? address2;
   String? address3;
-  String? ci;
 
   factory SubscriberInfo() {
     return _singleton;

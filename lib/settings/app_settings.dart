@@ -1,7 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:playstage/settings/write_inquiry_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:get/get.dart';
 import 'package:playstage/settings/about_view.dart';
+import 'package:playstage/settings/account_view.dart';
+
+import 'block_info_list.dart';
 
 class AppSettings extends StatelessWidget {
   const AppSettings({super.key});
@@ -33,7 +40,9 @@ class AppSettings extends StatelessWidget {
                 style: const TextStyle(fontSize: 20.0),
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {},
+              onTap: () {
+                Get.to(() => const AccountView());
+              },
             ),
             ListTile(
               leading: const Icon(
@@ -45,7 +54,13 @@ class AppSettings extends StatelessWidget {
                 style: const TextStyle(fontSize: 20.0),
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {},
+              onTap: () {
+                if (Platform.isIOS) {
+                  launchUrl(Uri.parse('app-settings:'));
+                } else if (Platform.isAndroid) {
+                  launchUrl(Uri.parse('package:com.android.settings'));
+                }
+              },
             ),
             ListTile(
               leading: const Icon(
@@ -57,7 +72,9 @@ class AppSettings extends StatelessWidget {
                 style: const TextStyle(fontSize: 20.0),
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {},
+              onTap: () async {
+                Get.to(() => const BlockInfoList());
+              },
             ),
             ListTile(
               leading: const Icon(
@@ -69,7 +86,9 @@ class AppSettings extends StatelessWidget {
                 style: const TextStyle(fontSize: 20.0),
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {},
+              onTap: () {
+                Get.to(() => const WriteInquiryView());
+              },
             ),
             ListTile(
               leading: const Icon(

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,7 +51,8 @@ class _PeopleDetailState extends State<PeopleDetail> {
 
     int memberSeq = _currentMember.memberSeq!;
 
-    final responseData = await ApiProvider.requestMemberFeedList(memberSeq);
+    final responseData =
+        await ApiProvider.requestMemberFeedList(memberSeq, 1, 1000);
     if (responseData['resultCode'] == '200') {
       final feedList = responseData['data'];
       if (feedList.length > 0) {
@@ -151,32 +153,40 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
-                                        left: 15,
-                                        top: 7,
-                                        child: Container(
-                                          width: 148,
-                                          height: 3,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(2),
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 167,
-                                        top: 7,
-                                        child: Container(
-                                          width: 148,
-                                          height: 3,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(2),
-                                            color: const Color(0x7fffffff),
-                                          ),
-                                        ),
-                                      ),
+                                      _currentMember.tbMemberPhotoInfoList!
+                                                  .length >
+                                              1
+                                          ? Positioned(
+                                              top: 7,
+                                              left: 0,
+                                              right: 0,
+                                              child: DotsIndicator(
+                                                dotsCount: _currentMember
+                                                    .tbMemberPhotoInfoList!
+                                                    .length, // 전체 페이지 수
+                                                position:
+                                                    _currentProfileIndex, // 현재 페이지 인덱스
+                                                decorator: DotsDecorator(
+                                                  activeColor: Colors
+                                                      .white, // 활성화된 페이지 인디케이터 색상
+                                                  size: const Size.square(
+                                                      5.0), // 인디케이터 크기
+                                                  activeSize:
+                                                      const Size(18.0, 5.0),
+                                                  activeShape:
+                                                      RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5.0), // 활성화된 인디케이터 모양
+                                                    side: const BorderSide(
+                                                        color:
+                                                            Color(0xFFB4B4B4),
+                                                        width: 0.1),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),
                                     ],
                                   ),
                                 ),

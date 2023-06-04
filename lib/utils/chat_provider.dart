@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:playstage/const.dart';
 import 'package:sendbird_sdk/sendbird_sdk.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatProvider {
   static final ChatProvider _instance = ChatProvider._internal();
@@ -24,28 +22,6 @@ class ChatProvider {
         userId,
         nickname: nickName,
       );
-      // final token = appState.token;
-      //
-      // // [Push Notification Set Up]
-      // // register push notification token for sendbird notification
-      // if (token != null) {
-      //   if (kDebugMode) {
-      //     print('registering push token through sendbird server...');
-      //   }
-      //   var result = await _sendbird.registerPushToken(
-      //     type: kIsWeb
-      //         ? PushTokenType.none
-      //         : Platform.isIOS
-      //         ? PushTokenType.apns
-      //         : PushTokenType.fcm,
-      //     token: token,
-      //   );
-      //   // Result for register Push Token
-      //   // [success, pending, error]
-      //   if (kDebugMode) {
-      //     print(result);
-      //   }
-      // }
 
       return user;
     } catch (e) {
@@ -55,23 +31,25 @@ class ChatProvider {
 
   Future<GroupChannel> createChannel(List<String> userIds) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String channelUrl =
-          prefs.getString('$keyChatChannel${userIds.last}') ?? '';
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // String channelUrl =
+      //     prefs.getString('$keyChatChannel${userIds.last}') ?? '';
 
       GroupChannel channel;
-      if (channelUrl.isNotEmpty) {
-        channel = await GroupChannel.getChannel(channelUrl);
-      } else {
-        final params = GroupChannelParams()..userIds = userIds;
-        channel = await GroupChannel.createChannel(params);
+      // if (channelUrl.isNotEmpty) {
+      //   channel = await GroupChannel.getChannel(channelUrl);
+      // } else {
+      final params = GroupChannelParams()
+        ..isDistinct = true
+        ..userIds = userIds;
+      channel = await GroupChannel.createChannel(params);
 
-        bool bRet = await prefs.setString(
-            '$keyChatChannel${userIds.last}', channel.channelUrl);
-        if (kDebugMode) {
-          print(bRet);
-        }
-      }
+      // bool bRet = await prefs.setString(
+      //     '$keyChatChannel${userIds.last}', channel.channelUrl);
+      // if (kDebugMode) {
+      //   print(bRet);
+      // }
+      // }
 
       return channel;
     } catch (e) {

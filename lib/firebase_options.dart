@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '516464037352',
     projectId: 'playstage-dev-b0ba8',
     storageBucket: 'playstage-dev-b0ba8.appspot.com',
-    iosClientId: '516464037352-tg2nrl2degbv56qn518lbjh1bh9btrhj.apps.googleusercontent.com',
+    iosClientId:
+        '516464037352-tg2nrl2degbv56qn518lbjh1bh9btrhj.apps.googleusercontent.com',
     iosBundleId: 'com.playstage.playstage',
   );
 }

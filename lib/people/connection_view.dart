@@ -175,172 +175,206 @@ class _ConnectionViewState extends State<ConnectionView> {
                     ],
                   ),
                   const SizedBox(height: 6.0),
-                  IndexedStack(
-                    index: _selectedIndex,
-                    children: [
-                      GridView.builder(
-                        padding: const EdgeInsets.all(10.0),
-                        shrinkWrap: true,
-                        itemCount: _followings.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0,
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          MemberInfoEntity member = _followings[index];
-                          return InkWell(
-                            onTap: () {
-                              Get.to(
-                                  () => PeopleDetail(memberInfoEntity: member));
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 0.3,
+                  Expanded(
+                    child: IndexedStack(
+                      index: _selectedIndex,
+                      children: [
+                        _followings.isEmpty
+                            ? Center(
+                                child: Text(
+                                  '데이터가 없습니다.'.tr,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
                                 ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              clipBehavior: Clip.hardEdge,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Expanded(
-                                    flex: 8,
-                                    child: CachedNetworkImage(
-                                      imageUrl: member.makeProfileImagePath(),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 6),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            const WidgetSpan(
-                                              child: SizedBox(width: 8.0),
-                                            ),
-                                            TextSpan(
-                                              text: member.name(),
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16.0,
-                                              ),
-                                            ),
-                                            const WidgetSpan(
-                                              child: SizedBox(width: 10.0),
-                                            ),
-                                            TextSpan(
-                                              text: member.age().toString(),
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        child: Text(
-                                          member.memberTendency(),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      GridView.builder(
-                        padding: const EdgeInsets.all(10.0),
-                        shrinkWrap: true,
-                        itemCount: _followers.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0,
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          MemberInfoEntity member = _followers[index];
-                          return InkWell(
-                            onTap: () {
-                              Get.to(
-                                  () => PeopleDetail(memberInfoEntity: member));
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 0.3,
+                              )
+                            : GridView.builder(
+                                padding: const EdgeInsets.all(10.0),
+                                shrinkWrap: true,
+                                itemCount: _followings.length,
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10.0,
+                                  mainAxisSpacing: 10.0,
                                 ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              clipBehavior: Clip.hardEdge,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Expanded(
-                                    flex: 8,
-                                    child: CachedNetworkImage(
-                                      imageUrl: member.makeProfileImagePath(),
-                                      fit: BoxFit.cover,
+                                itemBuilder: (BuildContext context, int index) {
+                                  MemberInfoEntity member = _followings[index];
+                                  return InkWell(
+                                    onTap: () {
+                                      Get.to(() => PeopleDetail(
+                                          memberInfoEntity: member));
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 0.3,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Expanded(
+                                            flex: 8,
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  member.makeProfileImagePath(),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 6),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    const WidgetSpan(
+                                                      child:
+                                                          SizedBox(width: 8.0),
+                                                    ),
+                                                    TextSpan(
+                                                      text: member.name(),
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16.0,
+                                                      ),
+                                                    ),
+                                                    const WidgetSpan(
+                                                      child:
+                                                          SizedBox(width: 10.0),
+                                                    ),
+                                                    TextSpan(
+                                                      text: member
+                                                          .age()
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8.0),
+                                                child: Text(
+                                                  member.memberTendency(),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 6),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 6),
-                                      RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            const WidgetSpan(
-                                              child: SizedBox(width: 8.0),
-                                            ),
-                                            TextSpan(
-                                              text: member.name(),
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16.0,
-                                              ),
-                                            ),
-                                            const WidgetSpan(
-                                              child: SizedBox(width: 10.0),
-                                            ),
-                                            TextSpan(
-                                              text: member.age().toString(),
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        child: Text(
-                                          member.memberTendency(),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                    ],
-                                  ),
-                                ],
+                                  );
+                                },
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                        _followers.isEmpty
+                            ? Center(
+                                child: Text(
+                                  '데이터가 없습니다.'.tr,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              )
+                            : GridView.builder(
+                                padding: const EdgeInsets.all(10.0),
+                                shrinkWrap: true,
+                                itemCount: _followers.length,
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10.0,
+                                  mainAxisSpacing: 10.0,
+                                ),
+                                itemBuilder: (BuildContext context, int index) {
+                                  MemberInfoEntity member = _followers[index];
+                                  return InkWell(
+                                    onTap: () {
+                                      Get.to(() => PeopleDetail(
+                                          memberInfoEntity: member));
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 0.3,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Expanded(
+                                            flex: 8,
+                                            child: CachedNetworkImage(
+                                              imageUrl:
+                                                  member.makeProfileImagePath(),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 6),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    const WidgetSpan(
+                                                      child:
+                                                          SizedBox(width: 8.0),
+                                                    ),
+                                                    TextSpan(
+                                                      text: member.name(),
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16.0,
+                                                      ),
+                                                    ),
+                                                    const WidgetSpan(
+                                                      child:
+                                                          SizedBox(width: 10.0),
+                                                    ),
+                                                    TextSpan(
+                                                      text: member
+                                                          .age()
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8.0),
+                                                child: Text(
+                                                  member.memberTendency(),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 6),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                      ],
+                    ),
                   ),
                 ],
               ),

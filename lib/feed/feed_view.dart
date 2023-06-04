@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:mysql1/mysql1.dart';
+// import 'package:mysql1/mysql1.dart';
 import 'package:playstage/const.dart';
 import 'package:playstage/feed/feed_detail.dart';
 import 'package:playstage/feed/like_feed_view.dart';
@@ -29,6 +29,14 @@ class _FeedViewState extends State<FeedView> {
   final List<dynamic> _feedLikeList = <dynamic>[];
   final List<MemberInfoEntity> _feedWriters = <MemberInfoEntity>[];
 
+  int _pageNumber = 0;
+  final _pageSize = 10;
+
+  int _totalPage = 1;
+  int _totalCount = 0;
+
+  final _scrollController = ScrollController();
+
   final df = DateFormat('yyyy/MM/dd');
 
   @override
@@ -36,25 +44,49 @@ class _FeedViewState extends State<FeedView> {
     _member = widget.member;
     _loadFeeds();
 
+    _scrollController.addListener(_scrollListener);
     super.initState();
   }
 
-  Future<MySqlConnection> getConnection() async {
-    final conn = await MySqlConnection.connect(ConnectionSettings(
-      host: '3.35.179.159',
-      port: 3306,
-      user: 'playstage_dev',
-      password: 'playstage@2023!',
-      db: 'playstage_new',
-    ));
-    return conn;
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
-  Future<void> _loadFeeds() async {
-    var conn = await getConnection();
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      _loadFeeds();
+    }
+  }
 
-    final responseData = await ApiProvider.requestFeedList(_member.memberSeq!);
+  // Future<MySqlConnection> getConnection() async {
+  //   final conn = await MySqlConnection.connect(ConnectionSettings(
+  //     host: '3.35.179.159',
+  //     port: 3306,
+  //     user: 'playstage_dev',
+  //     password: 'playstage@2023!',
+  //     db: 'playstage_new',
+  //   ));
+  //   return conn;
+  // }
+
+  Future<void> _loadFeeds() async {
+    // var conn = await getConnection();
+
+    if (_totalPage > _pageNumber) {
+      _pageNumber++;
+    } else {
+      return;
+    }
+
+    final responseData = await ApiProvider.requestFeedList(
+        _member.memberSeq!, _pageNumber, _pageSize);
     if (responseData['resultCode'] == '200') {
+      _totalPage = responseData['totalPage'];
+      _totalCount = responseData['totalCount'];
+
       final feedList = responseData['data'];
       if (feedList.length > 0) {
         for (dynamic map in feedList.reversed) {
@@ -65,11 +97,11 @@ class _FeedViewState extends State<FeedView> {
 
           // TODO: request member_seq should be in feedList
           // TODO: paging
-          var results = await conn.query(
-              'select member_seq from TB_FEED_INFO where feed_seq = ?',
-              [info.feedSeq]);
-          var row = results.first;
-          info.memberSeq = row['member_seq'];
+          // var results = await conn.query(
+          //     'select member_seq from TB_FEED_INFO where feed_seq = ?',
+          //     [info.feedSeq]);
+          // var row = results.first;
+          // info.memberSeq = row['member_seq'];
           setState(() {
             _feedList.add(info);
           });
@@ -149,6 +181,7 @@ class _FeedViewState extends State<FeedView> {
             Expanded(
               flex: 88,
               child: SingleChildScrollView(
+                controller: _scrollController,
                 child: ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,

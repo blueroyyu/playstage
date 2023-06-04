@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,7 +34,8 @@ class _ProfileViewState extends State<ProfileView> {
   void _loadMemberFeed() async {
     int memberSeq = SharedData().owner!.memberSeq!;
 
-    final responseData = await ApiProvider.requestMemberFeedList(memberSeq);
+    final responseData =
+        await ApiProvider.requestMemberFeedList(memberSeq, 1, 1000);
     if (responseData['resultCode'] == '200') {
       final feedList = responseData['data'];
       if (feedList.length > 0) {
@@ -136,32 +138,43 @@ class _ProfileViewState extends State<ProfileView> {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
-                                        left: 15,
-                                        top: 7,
-                                        child: Container(
-                                          width: 148,
-                                          height: 3,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(2),
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        left: 167,
-                                        top: 7,
-                                        child: Container(
-                                          width: 148,
-                                          height: 3,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(2),
-                                            color: const Color(0x7fffffff),
-                                          ),
-                                        ),
-                                      ),
+                                      SharedData()
+                                                  .owner!
+                                                  .tbMemberPhotoInfoList!
+                                                  .length >
+                                              1
+                                          ? Positioned(
+                                              top: 7,
+                                              left: 0,
+                                              right: 0,
+                                              child: DotsIndicator(
+                                                dotsCount: SharedData()
+                                                    .owner!
+                                                    .tbMemberPhotoInfoList!
+                                                    .length, // 전체 페이지 수
+                                                position:
+                                                    _currentProfileIndex, // 현재 페이지 인덱스
+                                                decorator: DotsDecorator(
+                                                  activeColor: Colors
+                                                      .white, // 활성화된 페이지 인디케이터 색상
+                                                  size: const Size.square(
+                                                      5.0), // 인디케이터 크기
+                                                  activeSize:
+                                                      const Size(18.0, 5.0),
+                                                  activeShape:
+                                                      RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5.0), // 활성화된 인디케이터 모양
+                                                    side: const BorderSide(
+                                                        color:
+                                                            Color(0xFFB4B4B4),
+                                                        width: 0.1),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),
                                     ],
                                   ),
                                 ),
@@ -297,182 +310,192 @@ class _ProfileViewState extends State<ProfileView> {
                                   IndexedStack(
                                     index: _selectedIndex,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              SharedData().owner!.memberIntro!,
-                                              style: const TextStyle(
-                                                fontSize: 16.0,
+                                      Visibility(
+                                        visible: _selectedIndex == 0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                SharedData()
+                                                    .owner!
+                                                    .memberIntro!,
+                                                style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 10.0),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text:
-                                                        '${'find_tendency'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 10.0),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '${'find_tendency'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: SharedData()
-                                                        .owner!
-                                                        .searchTendency(),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: SharedData()
+                                                          .owner!
+                                                          .searchTendency(),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: '${'height'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: '${'height'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: SharedData()
-                                                        .owner!
-                                                        .height(),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: SharedData()
+                                                          .owner!
+                                                          .height(),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: '${'body_type'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '${'body_type'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: SharedData()
-                                                        .owner!
-                                                        .bodyType(),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: SharedData()
+                                                          .owner!
+                                                          .bodyType(),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text:
-                                                        '${'language_spoken'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '${'language_spoken'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: SharedData()
-                                                        .owner!
-                                                        .spokenLanguage(),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: SharedData()
+                                                          .owner!
+                                                          .spokenLanguage(),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: '${'drinking'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '${'drinking'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: SharedData()
-                                                        .owner!
-                                                        .frequency(
-                                                            code: SharedData()
-                                                                .owner!
-                                                                .drinkInfo),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: SharedData()
+                                                          .owner!
+                                                          .frequency(
+                                                              code: SharedData()
+                                                                  .owner!
+                                                                  .drinkInfo),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                    text: '${'smoking'.tr}: ',
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                              const SizedBox(height: 4),
+                                              RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                      text: '${'smoking'.tr}: ',
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(
-                                                    text: SharedData()
-                                                        .owner!
-                                                        .frequency(
-                                                            code: SharedData()
-                                                                .owner!
-                                                                .smokingInfo),
-                                                    style: const TextStyle(
-                                                      fontSize: 15.0,
-                                                      color: Colors.black,
+                                                    TextSpan(
+                                                      text: SharedData()
+                                                          .owner!
+                                                          .frequency(
+                                                              code: SharedData()
+                                                                  .owner!
+                                                                  .smokingInfo),
+                                                      style: const TextStyle(
+                                                        fontSize: 15.0,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                      makeFeedList(
-                                          SharedData().owner!, _feedList),
+                                      Visibility(
+                                        visible: _selectedIndex == 1,
+                                        child: makeFeedList(
+                                            SharedData().owner!, _feedList),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -495,13 +518,13 @@ class _ProfileViewState extends State<ProfileView> {
                                         'assets/images/btn_setting.png',
                                         width: 60.0,
                                       )),
-                                  const SizedBox(width: 10.0),
-                                  InkWell(
-                                      onTap: () {},
-                                      child: Image.asset(
-                                        'assets/images/btn_edit.png',
-                                        width: 60.0,
-                                      )),
+                                  // const SizedBox(width: 10.0),
+                                  // InkWell(
+                                  //     onTap: () {},
+                                  //     child: Image.asset(
+                                  //       'assets/images/btn_edit.png',
+                                  //       width: 60.0,
+                                  //     )),
                                   const SizedBox(width: 20.0),
                                 ],
                               ),
