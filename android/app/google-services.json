@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "516464037352",
-    "project_id": "playstage-dev-b0ba8",
-    "storage_bucket": "playstage-dev-b0ba8.appspot.com"
+    "project_number": "958350765100",
+    "project_id": "playstage-eb013",
+    "storage_bucket": "playstage-eb013.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:516464037352:android:519fd460ebb1df9488685d",
+        "mobilesdk_app_id": "1:958350765100:android:3e68aad0e7957c9e80b589",
         "android_client_info": {
-          "package_name": "com.playstage.playstage"
+          "package_name": "info.playstage.playstage"
         }
       },
       "oauth_client": [
         {
-          "client_id": "516464037352-k9fg0m63utkk9ps14c5pnukfahieoj62.apps.googleusercontent.com",
+          "client_id": "958350765100-b8guiudbi112du0tlp4112im769bumo1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAIVdnzy6jR_uXoKmn9NCkKtxE03YTC840"
+          "current_key": "AIzaSyCG-bdViH52vFpk1UuGrSPiZRMj9S0xSAo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "516464037352-k9fg0m63utkk9ps14c5pnukfahieoj62.apps.googleusercontent.com",
+              "client_id": "958350765100-b8guiudbi112du0tlp4112im769bumo1.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "516464037352-tg2nrl2degbv56qn518lbjh1bh9btrhj.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.playstage.playstage"
-              }
             }
           ]
         }
