@@ -156,7 +156,7 @@ class _FeedDetailState extends State<FeedDetail> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: member!.name(),
+                              text: member!.nickName ?? member?.memberName,
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 16.0,
@@ -390,7 +390,7 @@ class _FeedDetailState extends State<FeedDetail> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: comment.memberName,
+                                  text: comment.nickName ?? comment.memberName,
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 16.0,
@@ -493,7 +493,8 @@ class _FeedDetailState extends State<FeedDetail> {
                               final newComment = TbFeedCommentInfoList(
                                 feedSeq: feed!.feedSeq,
                                 comment: comment,
-                                memberName: SharedData().owner!.name(),
+                                memberName: SharedData().owner!.memberName,
+                                nickName: SharedData().owner!.nickName,
                                 memberPhotoPath:
                                     SharedData().owner!.makeProfileImagePath(),
                                 createDt: DateTime.now(),

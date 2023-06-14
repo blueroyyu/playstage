@@ -74,7 +74,7 @@ class _BlockInfoListState extends State<BlockInfoList> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: member.name(),
+                            text: member.nickName,
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 16.0,

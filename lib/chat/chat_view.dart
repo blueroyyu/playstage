@@ -356,7 +356,13 @@ class _ChatViewState extends State<ChatView> with ChannelEventHandler {
           _messages.add(preMessage);
         });
       } catch (e) {
-        // Handle error.
+        if (kDebugMode) {
+          print(e);
+        }
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }

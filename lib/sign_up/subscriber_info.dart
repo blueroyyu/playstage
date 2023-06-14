@@ -27,6 +27,7 @@ class SubscriberInfo {
 
   CertificationInfo? certInfo;
 
+  String? nickName;
   String? phoneNumber;
 
   String? iam;

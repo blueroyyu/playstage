@@ -11,6 +11,7 @@ class MemberFeedEntity {
   String? feedContent;
   int? memberSeq;
   String? memberName;
+  String? nickName;
   String? memberPhotoPath;
   String? memberPhotoSavedFileName;
   int? feedLikeCnt;
@@ -25,6 +26,7 @@ class MemberFeedEntity {
     this.feedContent,
     this.memberSeq,
     this.memberName,
+    this.nickName,
     this.memberPhotoPath,
     this.memberPhotoSavedFileName,
     this.feedLikeCnt,
@@ -37,7 +39,7 @@ class MemberFeedEntity {
 
   @override
   String toString() {
-    return 'MemberFeedEntity(feedSeq: $feedSeq, feedContent: $feedContent, memberSeq: $memberSeq, memberName: $memberName, memberPhotoPath: $memberPhotoPath, memberPhotoSavedFileName: $memberPhotoSavedFileName, feedLikeCnt: $feedLikeCnt, createDt: $createDt, tbFeedPhotoInfoList: $tbFeedPhotoInfoList, tbFeedCommentInfoList: $tbFeedCommentInfoList, tbFeedLikeMemberInfoList: $tbFeedLikeMemberInfoList, likeMemberInfoList: $likeMemberInfoList)';
+    return 'MemberFeedEntity(feedSeq: $feedSeq, feedContent: $feedContent, memberSeq: $memberSeq, memberName: $memberName, nickName: $nickName, memberPhotoPath: $memberPhotoPath, memberPhotoSavedFileName: $memberPhotoSavedFileName, feedLikeCnt: $feedLikeCnt, createDt: $createDt, tbFeedPhotoInfoList: $tbFeedPhotoInfoList, tbFeedCommentInfoList: $tbFeedCommentInfoList, tbFeedLikeMemberInfoList: $tbFeedLikeMemberInfoList, likeMemberInfoList: $likeMemberInfoList)';
   }
 
   factory MemberFeedEntity.fromMap(Map<String, dynamic> data) {
@@ -46,6 +48,7 @@ class MemberFeedEntity {
       feedContent: data['feedContent'] as String?,
       memberSeq: data['memberSeq'] as int?,
       memberName: data['memberName'] as String?,
+      nickName: data['nickName'] as String?,
       memberPhotoPath: data['memberPhotoPath'] as String?,
       memberPhotoSavedFileName: data['memberPhotoSavedFileName'] as String?,
       feedLikeCnt: data['feedLikeCnt'] as int?,
@@ -74,6 +77,7 @@ class MemberFeedEntity {
         'feedContent': feedContent,
         'memberSeq': memberSeq,
         'memberName': memberName,
+        'nickName': nickName,
         'memberPhotoPath': memberPhotoPath,
         'memberPhotoSavedFileName': memberPhotoSavedFileName,
         'feedLikeCnt': feedLikeCnt,
@@ -105,6 +109,7 @@ class MemberFeedEntity {
     String? feedContent,
     int? memberSeq,
     String? memberName,
+    String? nickName,
     String? memberPhotoPath,
     String? memberPhotoSavedFileName,
     int? feedLikeCnt,
@@ -119,6 +124,7 @@ class MemberFeedEntity {
       feedContent: feedContent ?? this.feedContent,
       memberSeq: memberSeq ?? this.memberSeq,
       memberName: memberName ?? this.memberName,
+      nickName: nickName ?? this.nickName,
       memberPhotoPath: memberPhotoPath ?? this.memberPhotoPath,
       memberPhotoSavedFileName:
           memberPhotoSavedFileName ?? this.memberPhotoSavedFileName,

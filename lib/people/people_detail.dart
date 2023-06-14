@@ -202,7 +202,8 @@ class _PeopleDetailState extends State<PeopleDetail> {
                                           child: SizedBox(width: 20.0),
                                         ),
                                         TextSpan(
-                                          text: _currentMember.name(),
+                                          text: _currentMember.nickName ??
+                                              _currentMember.memberName,
                                           style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 26.0,

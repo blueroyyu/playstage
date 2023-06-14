@@ -19,6 +19,7 @@ class _CreateProfileState extends State<CreateProfile> {
   final int _characterLimit = 15;
 
   String _name = '';
+  String _nickname = '';
   String _birthDay = '';
   // final String _df = "yyyy/MM/dd";
 
@@ -33,7 +34,7 @@ class _CreateProfileState extends State<CreateProfile> {
     SubscriberInfo si = SubscriberInfo();
     setState(() {
       _name = si.certInfo!.name!;
-      _controller.text = _name;
+      // _controller.text = _name;
       _birthDay = si.certInfo!.birthday!;
     });
   }
@@ -63,6 +64,7 @@ class _CreateProfileState extends State<CreateProfile> {
                 }
 
                 SubscriberInfo info = SubscriberInfo();
+                info.nickName = _nickname;
                 info.aboutMe = _aboutMe;
 
                 Get.to(const CompleteProfile());
@@ -118,8 +120,41 @@ class _CreateProfileState extends State<CreateProfile> {
                   ),
                 ),
                 const SizedBox(height: 92),
+                // Text(
+                //   'name'.tr,
+                //   style: const TextStyle(
+                //     fontSize: 15,
+                //     color: Colors.black,
+                //   ),
+                // ),
+                // const SizedBox(height: 4),
+                // TextField(
+                //   controller: _controller,
+                //   readOnly: true,
+                //   maxLength: _characterLimit,
+                //   // onChanged: (value) {
+                //   //   _name = value;
+
+                //   //   if (_name.isNotEmpty &&
+                //   //       _birthDay.isNotEmpty &&
+                //   //       _aboutMe.isNotEmpty) {
+                //   //     setState(() {
+                //   //       _filled = true;
+                //   //     });
+                //   //   }
+                //   // },
+                //   decoration: InputDecoration(
+                //     border: const UnderlineInputBorder(),
+                //     hintText: 'input_name'.tr,
+                //     hintStyle: const TextStyle(
+                //       fontSize: 15,
+                //       color: Color(0xFF8E8E8E),
+                //     ),
+                //   ),
+                // ),
+                // const SizedBox(height: 20),
                 Text(
-                  'name'.tr,
+                  'nickname'.tr,
                   style: const TextStyle(
                     fontSize: 15,
                     color: Colors.black,
@@ -128,86 +163,83 @@ class _CreateProfileState extends State<CreateProfile> {
                 const SizedBox(height: 4),
                 TextField(
                   controller: _controller,
-                  readOnly: true,
                   maxLength: _characterLimit,
-                  // onChanged: (value) {
-                  //   _name = value;
+                  onChanged: (value) {
+                    _nickname = value;
 
-                  //   if (_name.isNotEmpty &&
-                  //       _birthDay.isNotEmpty &&
-                  //       _aboutMe.isNotEmpty) {
-                  //     setState(() {
-                  //       _filled = true;
-                  //     });
-                  //   }
-                  // },
+                    if (_nickname.isNotEmpty && _aboutMe.isNotEmpty) {
+                      setState(() {
+                        _filled = true;
+                      });
+                    }
+                  },
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
-                    hintText: 'input_name'.tr,
+                    hintText: 'input_nickname'.tr,
                     hintStyle: const TextStyle(
                       fontSize: 15,
                       color: Color(0xFF8E8E8E),
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  'birthday'.tr,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                GestureDetector(
-                  // onTap: () async {
-                  // DateTime? selectedDate = await _selectDate(context);
-                  // if (selectedDate != null) {
-                  //   if (kDebugMode) {
-                  //     print(selectedDate.toString());
-                  //   }
-                  //   setState(() {
-                  //     _birthDay = DateFormat(_df).format(selectedDate);
+                // const SizedBox(height: 20),
+                // Text(
+                //   'birthday'.tr,
+                //   style: const TextStyle(
+                //     fontSize: 15,
+                //     color: Colors.black,
+                //   ),
+                // ),
+                // const SizedBox(height: 4),
+                // GestureDetector(
+                //   // onTap: () async {
+                //   // DateTime? selectedDate = await _selectDate(context);
+                //   // if (selectedDate != null) {
+                //   //   if (kDebugMode) {
+                //   //     print(selectedDate.toString());
+                //   //   }
+                //   //   setState(() {
+                //   //     _birthDay = DateFormat(_df).format(selectedDate);
 
-                  //     if (_name.isNotEmpty &&
-                  //         _birthDay.isNotEmpty &&
-                  //         _aboutMe.isNotEmpty) {
-                  //       _filled = true;
-                  //     }
-                  //   });
-                  // }
-                  // },
-                  child: Container(
-                    padding: const EdgeInsets.only(bottom: 2.0),
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          _birthDay,
-                          style: const TextStyle(
-                            fontSize: 15.0,
-                            // color: _birthDay == _df
-                            //     ? const Color(0xFF8E8E8E)
-                            //     : Colors.black,
-                          ),
-                        ),
-                        const Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                          size: 20.0,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                //   //     if (_name.isNotEmpty &&
+                //   //         _birthDay.isNotEmpty &&
+                //   //         _aboutMe.isNotEmpty) {
+                //   //       _filled = true;
+                //   //     }
+                //   //   });
+                //   // }
+                //   // },
+                //   child: Container(
+                //     padding: const EdgeInsets.only(bottom: 2.0),
+                //     decoration: const BoxDecoration(
+                //       border: Border(
+                //         bottom: BorderSide(
+                //           color: Colors.grey,
+                //           width: 1.0,
+                //         ),
+                //       ),
+                //     ),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //       children: [
+                //         Text(
+                //           _birthDay,
+                //           style: const TextStyle(
+                //             fontSize: 15.0,
+                //             // color: _birthDay == _df
+                //             //     ? const Color(0xFF8E8E8E)
+                //             //     : Colors.black,
+                //           ),
+                //         ),
+                //         const Icon(
+                //           Icons.arrow_drop_down,
+                //           color: Colors.black,
+                //           size: 20.0,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(height: 40),
                 Text(
                   'about_me'.tr,
@@ -238,9 +270,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     onChanged: (value) {
                       _aboutMe = value;
 
-                      if (_name.isNotEmpty &&
-                          _birthDay.isNotEmpty &&
-                          _aboutMe.isNotEmpty) {
+                      if (_nickname.isNotEmpty && _aboutMe.isNotEmpty) {
                         setState(() {
                           _filled = true;
                         });
@@ -261,15 +291,15 @@ class _CreateProfileState extends State<CreateProfile> {
     );
   }
 
-  Future<DateTime?> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    return picked;
-  }
+  // Future<DateTime?> _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(1900),
+  //     lastDate: DateTime.now(),
+  //   );
+  //   return picked;
+  // }
 
 // Future<DateTime?> _selectDate(BuildContext context) async {
 //   final DateTime? picked = await showCupertinoModalPopup(

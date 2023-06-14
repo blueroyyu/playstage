@@ -70,7 +70,7 @@ ListView makeFeedList(MemberInfoEntity member, List<MemberFeedEntity> feedList,
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: member.name(),
+                      text: member.nickName ?? member.memberName,
                       style: const TextStyle(
                           color: Colors.black,
                           fontSize: 16.0,

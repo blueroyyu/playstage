@@ -247,6 +247,8 @@ class _AllowLocationState extends State<AllowLocation> {
     final jsonData = jsonEncode({
       "memberPhone": info.phoneNumber,
       "memberName": info.certInfo!.name,
+      "nickName": info.nickName,
+      "sex": info.certInfo!.gender == 'male' ? '1' : '2',
       "memberBirthday": info.certInfo!.birthday!.replaceAll('-', ''),
       "memberIntro": info.aboutMe,
       "memberHeight": info.height?.toString() ?? "",

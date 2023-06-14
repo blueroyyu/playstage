@@ -10,6 +10,8 @@ class MemberInfoEntity {
   int? memberSeq;
   String? memberId;
   String? memberName;
+  String? nickName;
+  String? sex;
   String? memberBirthday;
   String? memberIntro;
   String? memberHeight;
@@ -27,6 +29,8 @@ class MemberInfoEntity {
     this.memberSeq,
     this.memberId,
     this.memberName,
+    this.nickName,
+    this.sex,
     this.memberBirthday,
     this.memberIntro,
     this.memberHeight,
@@ -43,7 +47,7 @@ class MemberInfoEntity {
 
   @override
   String toString() {
-    return 'MemberInfoEntity(memberSeq: $memberSeq, memberId: $memberId, memberName: $memberName, memberBirthday: $memberBirthday, memberIntro: $memberIntro, memberHeight: $memberHeight, language: $language, bodyInfo: $bodyInfo, drinkInfo: $drinkInfo, smokingInfo: $smokingInfo, memberTendencyCd: $memberTendencyCd, searchTendencyCd1: $searchTendencyCd1, searchTendencyCd2: $searchTendencyCd2, searchTendencyCd3: $searchTendencyCd3, tbMemberPhotoInfoList: $tbMemberPhotoInfoList)';
+    return 'MemberInfoEntity(memberSeq: $memberSeq, memberId: $memberId, memberName: $memberName, nickName: $nickName, sex: $sex, memberBirthday: $memberBirthday, memberIntro: $memberIntro, memberHeight: $memberHeight, language: $language, bodyInfo: $bodyInfo, drinkInfo: $drinkInfo, smokingInfo: $smokingInfo, memberTendencyCd: $memberTendencyCd, searchTendencyCd1: $searchTendencyCd1, searchTendencyCd2: $searchTendencyCd2, searchTendencyCd3: $searchTendencyCd3, tbMemberPhotoInfoList: $tbMemberPhotoInfoList)';
   }
 
   factory MemberInfoEntity.fromMap(Map<String, dynamic> data) {
@@ -51,6 +55,8 @@ class MemberInfoEntity {
       memberSeq: data['memberSeq'] as int?,
       memberId: data['memberId'] as String?,
       memberName: data['memberName'] as String?,
+      nickName: data['nickName'] as String?,
+      sex: data['sex'] as String?,
       memberBirthday: data['memberBirthday'] as String?,
       memberIntro: data['memberIntro'] as String?,
       memberHeight: data['memberHeight'] as String?,
@@ -72,6 +78,8 @@ class MemberInfoEntity {
         'memberSeq': memberSeq,
         'memberId': memberId,
         'memberName': memberName,
+        'nickName': nickName,
+        'sex': sex,
         'memberBirthday': memberBirthday,
         'memberIntro': memberIntro,
         'memberHeight': memberHeight,
@@ -103,6 +111,8 @@ class MemberInfoEntity {
     int? memberSeq,
     String? memberId,
     String? memberName,
+    String? nickName,
+    String? sex,
     String? memberBirthday,
     String? memberIntro,
     String? memberHeight,
@@ -120,6 +130,8 @@ class MemberInfoEntity {
       memberSeq: memberSeq ?? this.memberSeq,
       memberId: memberId ?? this.memberId,
       memberName: memberName ?? this.memberName,
+      nickName: nickName ?? this.nickName,
+      sex: sex ?? this.sex,
       memberBirthday: memberBirthday ?? this.memberBirthday,
       memberIntro: memberIntro ?? this.memberIntro,
       memberHeight: memberHeight ?? this.memberHeight,
@@ -135,8 +147,6 @@ class MemberInfoEntity {
           tbMemberPhotoInfoList ?? this.tbMemberPhotoInfoList,
     );
   }
-
-  String name() => memberName ?? '';
 
   String memberTendency() {
     Map? data = tendencies

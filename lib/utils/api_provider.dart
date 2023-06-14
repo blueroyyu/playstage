@@ -142,7 +142,8 @@ class ApiProvider {
       {String removePhotoSeqList = ''}) async {
     final jsonData = jsonEncode({
       'memberId': member.memberId,
-      'memberName': member.name(),
+      'memberName': member.memberName,
+      'nickName': member.nickName,
       'memberHeight': member.memberHeight.toString(),
       'memberIntro': member.memberIntro,
       'bodyInfo': member.bodyInfo,

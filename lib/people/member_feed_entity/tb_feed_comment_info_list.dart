@@ -6,6 +6,7 @@ class TbFeedCommentInfoList {
   int? memberSeq;
   String? comment;
   String? memberName;
+  String? nickName;
   String? memberPhotoPath;
   String? memberPhotoSavedFileName;
   DateTime? createDt;
@@ -16,6 +17,7 @@ class TbFeedCommentInfoList {
     this.memberSeq,
     this.comment,
     this.memberName,
+    this.nickName,
     this.memberPhotoPath,
     this.memberPhotoSavedFileName,
     this.createDt,
@@ -23,7 +25,7 @@ class TbFeedCommentInfoList {
 
   @override
   String toString() {
-    return 'TbFeedCommentInfoList(commentSeq: $commentSeq, feedSeq: $feedSeq, memberSeq: $memberSeq, comment: $comment, memberName: $memberName, memberPhotoPath: $memberPhotoPath, memberPhotoSavedFileName: $memberPhotoSavedFileName, createDt: $createDt)';
+    return 'TbFeedCommentInfoList(commentSeq: $commentSeq, feedSeq: $feedSeq, memberSeq: $memberSeq, comment: $comment, memberName: $memberName, nickName: $nickName, memberPhotoPath: $memberPhotoPath, memberPhotoSavedFileName: $memberPhotoSavedFileName, createDt: $createDt)';
   }
 
   factory TbFeedCommentInfoList.fromMap(Map<String, dynamic> data) {
@@ -33,6 +35,7 @@ class TbFeedCommentInfoList {
       memberSeq: data['memberSeq'] as int?,
       comment: data['comment'] as String?,
       memberName: data['memberName'] as String?,
+      nickName: data['nickName'] as String?,
       memberPhotoPath: data['memberPhotoPath'] as String?,
       memberPhotoSavedFileName: data['memberPhotoSavedFileName'] as String?,
       createDt: data['createDt'] == null
@@ -47,6 +50,7 @@ class TbFeedCommentInfoList {
         'memberSeq': memberSeq,
         'comment': comment,
         'memberName': memberName,
+        'nickName': nickName,
         'memberPhotoPath': memberPhotoPath,
         'memberPhotoSavedFileName': memberPhotoSavedFileName,
         'createDt': createDt?.toIso8601String(),
@@ -71,6 +75,7 @@ class TbFeedCommentInfoList {
     int? memberSeq,
     String? comment,
     String? memberName,
+    String? nickName,
     String? memberPhotoPath,
     String? memberPhotoSavedFileName,
     DateTime? createDt,
@@ -81,6 +86,7 @@ class TbFeedCommentInfoList {
       memberSeq: memberSeq ?? this.memberSeq,
       comment: comment ?? this.comment,
       memberName: memberName ?? this.memberName,
+      nickName: nickName ?? this.nickName,
       memberPhotoPath: memberPhotoPath ?? this.memberPhotoPath,
       memberPhotoSavedFileName:
           memberPhotoSavedFileName ?? this.memberPhotoSavedFileName,

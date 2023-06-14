@@ -190,7 +190,8 @@ class _ProfileViewState extends State<ProfileView> {
                                           child: SizedBox(width: 20.0),
                                         ),
                                         TextSpan(
-                                          text: SharedData().owner!.name(),
+                                          text: SharedData().owner!.nickName ??
+                                              SharedData().owner!.memberName,
                                           style: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 26.0,

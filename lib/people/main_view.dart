@@ -119,13 +119,14 @@ class _MainViewState extends State<MainView> {
 
         var profileUrl =
             '$s3Url/$userId/profile/${sd.owner!.tbMemberPhotoInfoList?.first.photoSavedFileName}';
-        User sbUser = await _connect(userId, sd.owner!.name());
+        User sbUser =
+            await _connect(userId, sd.owner!.nickName ?? sd.owner!.memberName!);
         if (kDebugMode) {
           print(sbUser.toJson());
         }
 
         sendbird.updateCurrentUserInfo(
-            nickname: sd.owner!.name(),
+            nickname: sd.owner!.nickName ?? sd.owner!.memberName,
             fileInfo: FileInfo.fromUrl(url: profileUrl));
       }
 
@@ -342,7 +343,7 @@ class _MainViewState extends State<MainView> {
                                       left: 20,
                                       bottom: 140,
                                       child: Text(
-                                        member.name(),
+                                        member.nickName ?? member.memberName!,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 24.0,

@@ -238,7 +238,8 @@ class _ConnectionViewState extends State<ConnectionView> {
                                                           SizedBox(width: 8.0),
                                                     ),
                                                     TextSpan(
-                                                      text: member.name(),
+                                                      text: member.nickName ??
+                                                          member.memberName,
                                                       style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16.0,
@@ -335,7 +336,8 @@ class _ConnectionViewState extends State<ConnectionView> {
                                                           SizedBox(width: 8.0),
                                                     ),
                                                     TextSpan(
-                                                      text: member.name(),
+                                                      text: member.nickName ??
+                                                          member.memberName,
                                                       style: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16.0,

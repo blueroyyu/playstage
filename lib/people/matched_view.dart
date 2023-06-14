@@ -46,7 +46,7 @@ class MatchedView extends StatelessWidget {
               const SizedBox(height: 80),
               Center(
                 child: Text(
-                  '${matchedMember.name()}님도 회원님에게 좋아요를 표시했어요!',
+                  '${matchedMember.nickName ?? matchedMember.memberName}님도 회원님에게 좋아요를 표시했어요!',
                   style: const TextStyle(
                     fontSize: 14.0,
                     color: Colors.black,

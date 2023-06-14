@@ -28,6 +28,8 @@ class Languages extends Translations {
           'create_profile': '프로필을 생성하세요',
           'name': '이름',
           'input_name': '이름을 입력하세요.',
+          'nickname': '닉네임',
+          'input_nickname': '닉네임을 입력하세요.',
           'birthday': '생년월일',
           'about_me': '자기소개',
           'input_after_touch': '터치 후 입력하세요.',
