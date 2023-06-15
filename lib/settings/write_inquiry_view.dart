@@ -52,7 +52,7 @@ class _WriteInquiryViewState extends State<WriteInquiryView> {
                         _loading = true;
                       });
 
-                      var responseData = await ApiProvider.requestAddFeed(
+                      var responseData = await ApiProvider.requestSendInquiry(
                           memberId, _textController.text, _imageFilePath);
 
                       if (kDebugMode) {

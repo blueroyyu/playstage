@@ -134,3 +134,7 @@ app.*.symbols
 .flutter-plugins-dependencies
 .dart_tool/package_config.json
 .flutter-plugins-dependencies
+.flutter-plugins-dependencies
+.dart_tool/package_config.json
+.dart_tool/version
+ios/Flutter/flutter_export_environment.sh
