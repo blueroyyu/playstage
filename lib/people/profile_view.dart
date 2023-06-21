@@ -7,6 +7,7 @@ import 'package:playstage/const.dart';
 import 'package:playstage/factory.dart';
 import 'package:playstage/people/main_view.dart';
 import 'package:playstage/people/member_feed_entity/member_feed_entity.dart';
+import 'package:playstage/people/update_profile_view.dart';
 import 'package:playstage/settings/app_settings.dart';
 import 'package:playstage/shared_data.dart';
 import 'package:playstage/utils/api_provider.dart';
@@ -71,6 +72,21 @@ class _ProfileViewState extends State<ProfileView> {
         MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 15.0, top: 15.0),
+          child: Text(
+            '내 프로필'.tr,
+            style: const TextStyle(
+              fontSize: 25,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        leadingWidth: 200,
+      ),
       body: SafeArea(
         child: Container(
           color: colorPeopleDetailBg,
@@ -513,19 +529,23 @@ class _ProfileViewState extends State<ProfileView> {
                                   const Spacer(),
                                   InkWell(
                                       onTap: () {
-                                        Get.to(() => const AppSettings());
+                                        Get.to(() => const AppSettings(),
+                                            transition: Transition.cupertino);
                                       },
                                       child: Image.asset(
                                         'assets/images/btn_setting.png',
                                         width: 60.0,
                                       )),
-                                  // const SizedBox(width: 10.0),
-                                  // InkWell(
-                                  //     onTap: () {},
-                                  //     child: Image.asset(
-                                  //       'assets/images/btn_edit.png',
-                                  //       width: 60.0,
-                                  //     )),
+                                  const SizedBox(width: 10.0),
+                                  InkWell(
+                                      onTap: () {
+                                        Get.to(() => const UpdateProfileView(),
+                                            transition: Transition.cupertino);
+                                      },
+                                      child: Image.asset(
+                                        'assets/images/btn_edit.png',
+                                        width: 60.0,
+                                      )),
                                   const SizedBox(width: 20.0),
                                 ],
                               ),

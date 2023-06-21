@@ -155,7 +155,6 @@ class PlayStageApp extends StatefulWidget {
 
 class _PlayStageAppState extends State<PlayStageApp> {
   // This widget is the root of your application.
-  late int _totalNotifications;
   late final FirebaseMessaging _messaging;
   PushNotification? _notificationInfo;
 
@@ -218,7 +217,6 @@ class _PlayStageAppState extends State<PlayStageApp> {
 
         setState(() {
           _notificationInfo = notification;
-          _totalNotifications++;
         });
         if (_notificationInfo != null) {
           NotificationService.showNotification(
@@ -242,10 +240,8 @@ class _PlayStageAppState extends State<PlayStageApp> {
       );
       setState(() {
         _notificationInfo = notification;
-        _totalNotifications++;
       });
     });
-    _totalNotifications = 0;
     super.initState();
   }
 

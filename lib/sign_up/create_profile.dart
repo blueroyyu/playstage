@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../utils/api_provider.dart';
+import '../utils/utils.dart';
 import 'subscriber_info.dart';
 import 'complete_profile.dart';
 
@@ -18,25 +21,21 @@ class _CreateProfileState extends State<CreateProfile> {
   final TextEditingController _controller = TextEditingController();
   final int _characterLimit = 15;
 
-  String _name = '';
   String _nickname = '';
-  String _birthDay = '';
+
+  bool _nicknameDuplicated = false;
+  bool _nicknameChecked = false;
   // final String _df = "yyyy/MM/dd";
 
   String _aboutMe = '';
+
+  bool _nicknameChecking = false;
 
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-
-    SubscriberInfo si = SubscriberInfo();
-    setState(() {
-      _name = si.certInfo!.name!;
-      // _controller.text = _name;
-      _birthDay = si.certInfo!.birthday!;
-    });
   }
 
   @override
@@ -58,7 +57,14 @@ class _CreateProfileState extends State<CreateProfile> {
           Container(
             margin: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                if (_nicknameChecked == false) {
+                  if (!mounted) {
+                    return;
+                  }
+                  await showAlert(context, '닉네임 중복 확인을 해 주세요.');
+                }
+
                 if (_filled == false) {
                   return;
                 }
@@ -161,26 +167,92 @@ class _CreateProfileState extends State<CreateProfile> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                TextField(
-                  controller: _controller,
-                  maxLength: _characterLimit,
-                  onChanged: (value) {
-                    _nickname = value;
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 75,
+                      child: TextField(
+                        controller: _controller,
+                        maxLength: _characterLimit,
+                        onChanged: (value) {
+                          _nicknameChecked = false;
+                          _nickname = value;
 
-                    if (_nickname.isNotEmpty && _aboutMe.isNotEmpty) {
-                      setState(() {
-                        _filled = true;
-                      });
-                    }
-                  },
-                  decoration: InputDecoration(
-                    border: const UnderlineInputBorder(),
-                    hintText: 'input_nickname'.tr,
-                    hintStyle: const TextStyle(
-                      fontSize: 15,
-                      color: Color(0xFF8E8E8E),
+                          setState(() {
+                            _filled = false;
+                            _nicknameChecking = false;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          border: const UnderlineInputBorder(),
+                          hintText: 'input_nickname'.tr,
+                          hintStyle: const TextStyle(
+                            fontSize: 15,
+                            color: Color(0xFF8E8E8E),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      flex: 25,
+                      child: ElevatedButton(
+                        onPressed: _nicknameChecking
+                            ? null
+                            : () async {
+                                setState(() {
+                                  _nicknameChecking = true;
+                                });
+                                try {
+                                  dynamic res = await ApiProvider
+                                      .requestIsDuplicateNickName(
+                                          _controller.text);
+                                  if (kDebugMode) {
+                                    print(res.toString());
+                                  }
+
+                                  _nicknameDuplicated = res['data'];
+                                  if (_nicknameDuplicated) {
+                                    setState(() {
+                                      _nicknameChecked = false;
+                                    });
+                                    if (!mounted) {
+                                      return;
+                                    }
+                                    await showAlert(context, '사용 중인 닉네임 입니다.');
+                                  } else {
+                                    setState(() {
+                                      _nicknameChecked = true;
+                                    });
+                                    if (!mounted) {
+                                      return;
+                                    }
+                                    await showAlert(
+                                        context, '사용이 가능한 닉네임 입니다.');
+
+                                    if (_nickname.isNotEmpty &&
+                                        _aboutMe.isNotEmpty &&
+                                        _nicknameChecked) {
+                                      setState(() {
+                                        _filled = true;
+                                      });
+                                    }
+                                  }
+                                } on Exception catch (e) {
+                                  if (kDebugMode) {
+                                    print(e);
+                                  }
+                                }
+                              },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFFC800)),
+                        child: const Text(
+                          '중복확인',
+                          style: TextStyle(fontSize: 12, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 // const SizedBox(height: 20),
                 // Text(
@@ -270,7 +342,9 @@ class _CreateProfileState extends State<CreateProfile> {
                     onChanged: (value) {
                       _aboutMe = value;
 
-                      if (_nickname.isNotEmpty && _aboutMe.isNotEmpty) {
+                      if (_nickname.isNotEmpty &&
+                          _aboutMe.isNotEmpty &&
+                          _nicknameChecked) {
                         setState(() {
                           _filled = true;
                         });

@@ -64,9 +64,11 @@ class _FilterViewState extends State<FilterView> {
       String address =
           await getAddressFromLatLng(position.latitude, position.longitude);
 
-      setState(() {
-        _location = address;
-      });
+      if (mounted) {
+        setState(() {
+          _location = address;
+        });
+      }
     } on Exception catch (e) {
       if (kDebugMode) {
         print(e);

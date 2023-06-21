@@ -41,7 +41,8 @@ class AppSettings extends StatelessWidget {
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                Get.to(() => const AccountView());
+                Get.to(() => const AccountView(),
+                    transition: Transition.cupertino);
               },
             ),
             ListTile(
@@ -73,7 +74,8 @@ class AppSettings extends StatelessWidget {
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () async {
-                Get.to(() => const BlockInfoList());
+                Get.to(() => const BlockInfoList(),
+                    transition: Transition.cupertino);
               },
             ),
             ListTile(
@@ -87,7 +89,8 @@ class AppSettings extends StatelessWidget {
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                Get.to(() => const WriteInquiryView());
+                Get.to(() => const WriteInquiryView(),
+                    transition: Transition.cupertino);
               },
             ),
             ListTile(
@@ -101,7 +104,8 @@ class AppSettings extends StatelessWidget {
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                Get.to(() => const AboutView());
+                Get.to(() => const AboutView(),
+                    transition: Transition.cupertino);
               },
             ),
           ],

@@ -111,6 +111,9 @@ class _MainViewState extends State<MainView> {
       final memberResponse = await ApiProvider.requestMemberById(userId);
       if (memberResponse['resultCode'] == '200') {
         final memberData = memberResponse['data'];
+        if (memberData == null) {
+          return;
+        }
 
         sd.owner = MemberInfoEntity.fromMap(memberData);
         if (kDebugMode) {
@@ -565,7 +568,7 @@ class MainTab extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {
-                  Get.to(() => const MainView());
+                  Get.to(() => const MainView(), transition: Transition.fadeIn);
                 },
                 icon: Icon(
                   index == 0 ? CupertinoIcons.house_fill : CupertinoIcons.house,
@@ -581,7 +584,8 @@ class MainTab extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {
-                  Get.to(() => ConnectionView(memberId: sd.owner!.memberId!));
+                  Get.to(() => ConnectionView(memberId: sd.owner!.memberId!),
+                      transition: Transition.fadeIn);
                 },
                 icon: Icon(index == 1
                     ? CupertinoIcons.star_fill
@@ -598,8 +602,10 @@ class MainTab extends StatelessWidget {
               child: IconButton(
                 onPressed: () {
                   index == 2
-                      ? Get.to(() => const AddFeed())
-                      : Get.to(() => FeedView(member: sd.owner!));
+                      ? Get.to(() => const AddFeed(),
+                          transition: Transition.fadeIn)
+                      : Get.to(() => FeedView(member: sd.owner!),
+                          transition: Transition.fadeIn);
                 },
                 icon: index == 2
                     ? const Icon(CupertinoIcons.add_circled)
@@ -615,7 +621,8 @@ class MainTab extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {
-                  Get.to(() => const ChannelListView());
+                  Get.to(() => const ChannelListView(),
+                      transition: Transition.fadeIn);
                 },
                 icon: Icon(index == 3
                     ? CupertinoIcons.chat_bubble_fill
@@ -631,7 +638,8 @@ class MainTab extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {
-                  Get.to(() => const ProfileView());
+                  Get.to(() => const ProfileView(),
+                      transition: Transition.fadeIn);
                   // Get.to(() => MatchedView(matchedMember: SharedData().owner!));
                   // Get.to(() => const AppSettings());
                 },

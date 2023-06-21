@@ -43,34 +43,29 @@ class AboutView extends StatelessWidget {
                 Get.to(const PrivacyPolicy());
               },
             ),
-            const SizedBox(height: 40.0),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            const SizedBox(height: 60.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: const [
+                children: [
                   Text(
-                    '주식회사 라인온(Line on)',
+                    'Playstage Co.,Ltd',
                     textAlign: TextAlign.left,
                   ),
                   SizedBox(height: 20.0),
                   Text(
-                    '대표: 김상경외 1명 | 사업자등록번호: 637-03-02344',
+                    'Business Registration No.: 637-03-02344',
                     textAlign: TextAlign.left,
                   ),
+                  SizedBox(height: 6.0),
                   Text(
-                    '고객센터: 032-655-2212',
+                    'Email: maychoice@naver.com',
                     textAlign: TextAlign.left,
                   ),
+                  SizedBox(height: 6.0),
                   Text(
-                    '이메일: playstage.m@gmail.com',
-                    textAlign: TextAlign.left,
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Text(
-                    '경기도 부천시 상동400 다모아빌딩 901호',
+                    'Mobile: 010-7586-8888',
                     textAlign: TextAlign.left,
                   ),
                 ],

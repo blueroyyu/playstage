@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:playstage/const.dart';
+import 'package:playstage/settings/delete_account.dart';
 import 'package:playstage/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,17 +54,20 @@ class AccountView extends StatelessWidget {
                 }
               },
             ),
-            // ListTile(
-            //   title: Text(
-            //     'delete_account'.tr,
-            //     style: const TextStyle(
-            //       fontSize: 20.0,
-            //       color: Colors.red,
-            //     ),
-            //     textAlign: TextAlign.center,
-            //   ),
-            //   onTap: () {},
-            // ),
+            ListTile(
+              title: Text(
+                'delete_account'.tr,
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.red,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              onTap: () {
+                Get.to(() => const DeleteAccount(),
+                    transition: Transition.cupertino);
+              },
+            ),
           ],
         ),
       ),

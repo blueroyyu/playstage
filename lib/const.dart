@@ -9,9 +9,9 @@ const String accessToken = '3xCv29981_Tx091dUx98_84PTx905EB';
 const String keyLoggedIn = 'is_logged_in';
 const String keyAccessToken = 'access_token';
 const String keyUserId = 'user_id';
-const String keyChatChannel = 'chat_';
 const String keyPushToken = 'push_token';
 const String keyUseBiometrics = 'use_biometrics';
+const String keyChatChannel = 'chat_';
 
 const Color colorContainerBg = Color(0xFFE5E5E5);
 const Color colorPeopleDetailBg = Color(0xFFF6F6F6);

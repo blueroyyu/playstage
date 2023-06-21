@@ -16,6 +16,8 @@ const String memberInfoById =
 const String likeToggleMember = '/member/likeToggleMember';
 const String hateAddMember = '/member/hateAddMember';
 const String updateMember = '/member/updateMember';
+const String isDuplicateNickName = '/member/isDuplicateNickName/';
+const String deleteMember = '/member/deleteMember';
 
 const String blockInfoList = '/common/getBlockInfoList';
 
@@ -438,6 +440,51 @@ class ApiProvider {
         print(error);
       }
 
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> requestIsDuplicateNickName(String nickName) async {
+    try {
+      String endPoint = Uri.encodeFull('$isDuplicateNickName$nickName');
+      return await getData(endPoint);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  /*
+  "memberSeq": 0,
+  "targetMemberSeq": 0,
+  "blockType": 0, // 1: 차단
+  "blockDesc": "string",
+  "setType": 0    // 1: 설정, 2: 해제
+  */
+  static Future<dynamic> requestSetBlockInfo(int memberSeq, int targetMemberSeq,
+      int blockType, String blockDesc, int setType) async {
+    final data = {
+      'memberSeq': memberSeq,
+      'targetMemberSeq': targetMemberSeq,
+      'blockType': blockType,
+      'blockDesc': blockDesc,
+      'setType': setType,
+    };
+
+    try {
+      return await postData(setBlockInfo, data);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> requestDeleteMember(int memberSeq) async {
+    final data = {
+      'memberSeq': memberSeq,
+    };
+
+    try {
+      return await postData(deleteMember, data);
+    } catch (error) {
       rethrow;
     }
   }

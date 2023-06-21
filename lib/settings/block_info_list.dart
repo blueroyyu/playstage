@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:playstage/people/member_info_entity/member_info_entity.dart';
 
+import '../people/people_detail.dart';
 import '../shared_data.dart';
 import '../utils/api_provider.dart';
 
@@ -99,8 +100,27 @@ class _BlockInfoListState extends State<BlockInfoList> {
                           member.makeProfileImagePath()),
                     ),
                     onTap: () {
-                      // Get.to(() => PeopleDetail(memberInfoEntity: member));
+                      Get.to(() => PeopleDetail(memberInfoEntity: member),
+                          transition: Transition.cupertino);
                     },
+                    trailing: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0.0,
+                        side: const BorderSide(
+                          width: 2.0,
+                          color: Colors.grey,
+                        ),
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                      child: const Text(
+                        '해제',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
                   );
                 },
               )
