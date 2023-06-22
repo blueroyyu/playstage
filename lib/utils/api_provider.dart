@@ -9,10 +9,8 @@ const String smsAuth = '/member/smsAuth';
 const String memberList = '/member/getMemberList';
 const String likeMemberList = '/member/getLikeMemberList';
 const String receiveLikeMemberList = '/member/getReceiveLikeMemberList';
-const String memberInfoBySeq =
-    '/member/getMemberBySeq/'; // /member/getMemberBySeq/{memberSeq}
-const String memberInfoById =
-    '/member/getMemberById/'; // /member/getMemberById/{memberId}
+const String memberInfoBySeq = '/member/getMemberBySeq/'; // /member/getMemberBySeq/{memberSeq}
+const String memberInfoById = '/member/getMemberById/'; // /member/getMemberById/{memberId}
 const String likeToggleMember = '/member/likeToggleMember';
 const String hateAddMember = '/member/hateAddMember';
 const String updateMember = '/member/updateMember';
@@ -43,8 +41,7 @@ class ApiProvider {
     _dio.options.headers['Authorization'] = _accessToken;
   }
 
-  static Future<dynamic> getData(String endpoint,
-      {Map<String, dynamic>? queryParams}) async {
+  static Future<dynamic> getData(String endpoint, {Map<String, dynamic>? queryParams}) async {
     try {
       Response response = await dio.get(endpoint, queryParameters: queryParams);
       if (response.statusCode! >= 200 && response.statusCode! < 300) {
@@ -57,8 +54,7 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> postData(
-      String endpoint, Map<String, dynamic>? data) async {
+  static Future<dynamic> postData(String endpoint, Map<String, dynamic>? data) async {
     try {
       if (kDebugMode) {
         print(dio.options.headers);
@@ -100,12 +96,7 @@ class ApiProvider {
   }
   */
   static Future<dynamic> requestMemberList(String memberId,
-      {String location = '',
-      int fromAge = 0,
-      int toAge = 100,
-      int distance = 9999,
-      int pageNumber = 1,
-      int pageSize = 0}) async {
+      {String location = '', int fromAge = 0, int toAge = 100, int distance = 9999, int pageNumber = 1, int pageSize = 0}) async {
     final data = {
       'memberId': memberId,
       'location': location,
@@ -140,8 +131,7 @@ class ApiProvider {
   }
 
   // 삭제는 removePhotoSeqList 이 이름으로 넘기시면되구요 30,34 이런식으로 삭제할 시퀀스를 넘기면되구요
-  static Future<dynamic> requestUpdateMember(MemberInfoEntity member,
-      {String removePhotoSeqList = ''}) async {
+  static Future<dynamic> requestUpdateMember(MemberInfoEntity member, {String removePhotoSeqList = '', List<String>? profileFiles}) async {
     final jsonData = jsonEncode({
       'memberId': member.memberId,
       'memberName': member.memberName,
@@ -160,6 +150,20 @@ class ApiProvider {
     });
 
     final formData = FormData();
+
+    if (profileFiles != null) {
+      for (final file in profileFiles) {
+        if (file.isEmpty) {
+          continue;
+        }
+
+        formData.files.add(MapEntry(
+          'files',
+          await MultipartFile.fromFile(file),
+        ));
+      }
+    }
+
     formData.fields.add(MapEntry('updateMemberReqDto', jsonData));
 
     try {
@@ -192,11 +196,7 @@ class ApiProvider {
 }
 */
   static Future<dynamic> requestLikeMemberList(String memberId,
-      {int pageNumber = 1,
-      int pageSize = 25,
-      int fromAge = 19,
-      int toAge = 120,
-      double distance = 9999.0}) async {
+      {int pageNumber = 1, int pageSize = 25, int fromAge = 19, int toAge = 120, double distance = 9999.0}) async {
     final data = {
       'pageNumber': pageNumber,
       'pageSize': pageSize,
@@ -214,11 +214,7 @@ class ApiProvider {
   }
 
   static Future<dynamic> requestReceiveLikeMemberList(String memberId,
-      {int pageNumber = 1,
-      int pageSize = 25,
-      int fromAge = 19,
-      int toAge = 120,
-      double distance = 9999.0}) async {
+      {int pageNumber = 1, int pageSize = 25, int fromAge = 19, int toAge = 120, double distance = 9999.0}) async {
     final data = {
       'pageNumber': pageNumber,
       'pageSize': pageSize,
@@ -241,8 +237,7 @@ class ApiProvider {
     "targetMemberId": "string"
   }
    */
-  static Future<dynamic> requestToggleMemberLike(
-      String memberId, String targetId) async {
+  static Future<dynamic> requestToggleMemberLike(String memberId, String targetId) async {
     final data = {
       'memberId': memberId,
       'targetMemberId': targetId,
@@ -255,8 +250,7 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestAddHateMember(
-      String memberId, String targetId) async {
+  static Future<dynamic> requestAddHateMember(String memberId, String targetId) async {
     final data = {
       'memberId': memberId,
       'targetId': targetId,
@@ -269,8 +263,7 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestFeedList(
-      int memberSeq, int pageNumber, int pageSize) async {
+  static Future<dynamic> requestFeedList(int memberSeq, int pageNumber, int pageSize) async {
     final data = {
       'memberSeq': memberSeq,
       'pageNumber': pageNumber,
@@ -284,8 +277,7 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestMemberFeedList(
-      int memberSeq, int pageNumber, int pageSize) async {
+  static Future<dynamic> requestMemberFeedList(int memberSeq, int pageNumber, int pageSize) async {
     final data = {
       'memberSeq': memberSeq,
       'pageNumber': pageNumber,
@@ -311,8 +303,7 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestAddFeed(
-      String memberId, String content, List<String> images) async {
+  static Future<dynamic> requestAddFeed(String memberId, String content, List<String> images) async {
     final jsonData = jsonEncode({
       "memberId": memberId,
       "feedContent": content,
@@ -359,8 +350,7 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestHandleComment(
-      String memberId, int feedSeq, String comment) async {
+  static Future<dynamic> requestHandleComment(String memberId, int feedSeq, String comment) async {
     final data = {
       'memberId': memberId,
       'feedSeq': feedSeq,
@@ -374,8 +364,7 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestHandleFeedLike(
-      String memberId, int feedSeq) async {
+  static Future<dynamic> requestHandleFeedLike(String memberId, int feedSeq) async {
     final data = {
       'memberId': memberId,
       'feedSeq': feedSeq,
@@ -396,8 +385,7 @@ class ApiProvider {
     }
   }
 
-  static Future<dynamic> requestSendInquiry(
-      String memberId, String content, List<String> images) async {
+  static Future<dynamic> requestSendInquiry(String memberId, String content, List<String> images) async {
     final jsonData = jsonEncode({
       "memberId": memberId,
       "inquiry": content,
@@ -460,8 +448,7 @@ class ApiProvider {
   "blockDesc": "string",
   "setType": 0    // 1: 설정, 2: 해제
   */
-  static Future<dynamic> requestSetBlockInfo(int memberSeq, int targetMemberSeq,
-      int blockType, String blockDesc, int setType) async {
+  static Future<dynamic> requestSetBlockInfo(int memberSeq, int targetMemberSeq, int blockType, String blockDesc, int setType) async {
     final data = {
       'memberSeq': memberSeq,
       'targetMemberSeq': targetMemberSeq,

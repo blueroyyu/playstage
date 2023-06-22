@@ -35,8 +35,7 @@ class _ProfileViewState extends State<ProfileView> {
   void _loadMemberFeed() async {
     int memberSeq = SharedData().owner!.memberSeq!;
 
-    final responseData =
-        await ApiProvider.requestMemberFeedList(memberSeq, 1, 1000);
+    final responseData = await ApiProvider.requestMemberFeedList(memberSeq, 1, 1000);
     if (responseData['resultCode'] == '200') {
       final feedList = responseData['data'];
       if (feedList.length > 0) {
@@ -67,9 +66,7 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    double safeAreaHeight = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        MediaQuery.of(context).padding.bottom;
+    double safeAreaHeight = MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
       appBar: AppBar(
@@ -111,30 +108,25 @@ class _ProfileViewState extends State<ProfileView> {
                                     children: [
                                       Positioned.fill(
                                         child: AnimatedSwitcher(
-                                          duration:
-                                              const Duration(milliseconds: 500),
-                                          transitionBuilder: (Widget child,
-                                              Animation<double> animation) {
+                                          duration: const Duration(milliseconds: 500),
+                                          transitionBuilder: (Widget child, Animation<double> animation) {
                                             return FadeTransition(
                                               opacity: animation,
                                               child: child,
                                             );
                                           },
-                                          layoutBuilder: (Widget? currentChild,
-                                              List<Widget> previousChildren) {
+                                          layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
                                             return Stack(
                                               fit: StackFit.expand,
                                               children: <Widget>[
                                                 ...previousChildren,
-                                                if (currentChild != null)
-                                                  currentChild,
+                                                if (currentChild != null) currentChild,
                                               ],
                                             );
                                           },
                                           child: CachedNetworkImage(
                                             imageUrl: _makeCurrentImagePath(),
-                                            key: ValueKey<int>(
-                                                _currentProfileIndex),
+                                            key: ValueKey<int>(_currentProfileIndex),
                                             fit: BoxFit.cover,
                                             errorWidget: (context, url, error) {
                                               return Image.asset(
@@ -142,11 +134,9 @@ class _ProfileViewState extends State<ProfileView> {
                                                 fit: BoxFit.cover,
                                               );
                                             },
-                                            progressIndicatorBuilder: (context,
-                                                url, downloadProgress) {
+                                            progressIndicatorBuilder: (context, url, downloadProgress) {
                                               return const Center(
-                                                child:
-                                                    CircularProgressIndicator(
+                                                child: CircularProgressIndicator(
                                                   color: Colors.grey,
                                                 ),
                                               );
@@ -154,38 +144,21 @@ class _ProfileViewState extends State<ProfileView> {
                                           ),
                                         ),
                                       ),
-                                      SharedData()
-                                                  .owner!
-                                                  .tbMemberPhotoInfoList!
-                                                  .length >
-                                              1
+                                      SharedData().owner!.tbMemberPhotoInfoList!.length > 1
                                           ? Positioned(
                                               top: 7,
                                               left: 0,
                                               right: 0,
                                               child: DotsIndicator(
-                                                dotsCount: SharedData()
-                                                    .owner!
-                                                    .tbMemberPhotoInfoList!
-                                                    .length, // 전체 페이지 수
-                                                position:
-                                                    _currentProfileIndex, // 현재 페이지 인덱스
+                                                dotsCount: SharedData().owner!.tbMemberPhotoInfoList!.length, // 전체 페이지 수
+                                                position: _currentProfileIndex, // 현재 페이지 인덱스
                                                 decorator: DotsDecorator(
-                                                  activeColor: Colors
-                                                      .white, // 활성화된 페이지 인디케이터 색상
-                                                  size: const Size.square(
-                                                      5.0), // 인디케이터 크기
-                                                  activeSize:
-                                                      const Size(18.0, 5.0),
-                                                  activeShape:
-                                                      RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5.0), // 활성화된 인디케이터 모양
-                                                    side: const BorderSide(
-                                                        color:
-                                                            Color(0xFFB4B4B4),
-                                                        width: 0.1),
+                                                  activeColor: Colors.white, // 활성화된 페이지 인디케이터 색상
+                                                  size: const Size.square(5.0), // 인디케이터 크기
+                                                  activeSize: const Size(18.0, 5.0),
+                                                  activeShape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(5.0), // 활성화된 인디케이터 모양
+                                                    side: const BorderSide(color: Color(0xFFB4B4B4), width: 0.1),
                                                   ),
                                                 ),
                                               ),
@@ -206,21 +179,14 @@ class _ProfileViewState extends State<ProfileView> {
                                           child: SizedBox(width: 20.0),
                                         ),
                                         TextSpan(
-                                          text: SharedData().owner!.nickName ??
-                                              SharedData().owner!.memberName,
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 26.0,
-                                              fontWeight: FontWeight.w600),
+                                          text: SharedData().owner!.nickName ?? SharedData().owner!.memberName,
+                                          style: const TextStyle(color: Colors.black, fontSize: 26.0, fontWeight: FontWeight.w600),
                                         ),
                                         const WidgetSpan(
                                           child: SizedBox(width: 10.0),
                                         ),
                                         TextSpan(
-                                          text: SharedData()
-                                              .owner!
-                                              .age()
-                                              .toString(),
+                                          text: SharedData().owner!.age().toString(),
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 16.0,
@@ -231,8 +197,7 @@ class _ProfileViewState extends State<ProfileView> {
                                   ),
                                   const SizedBox(height: 4),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0),
+                                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                                     child: Text(
                                       SharedData().owner!.memberTendency(),
                                       style: const TextStyle(
@@ -249,9 +214,7 @@ class _ProfileViewState extends State<ProfileView> {
                                             border: Border(
                                               bottom: BorderSide(
                                                 width: 3,
-                                                color: _selectedIndex == 0
-                                                    ? colorTabBottom
-                                                    : Colors.transparent,
+                                                color: _selectedIndex == 0 ? colorTabBottom : Colors.transparent,
                                               ),
                                             ),
                                           ),
@@ -264,17 +227,13 @@ class _ProfileViewState extends State<ProfileView> {
                                                 });
                                               },
                                               child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 4),
+                                                padding: const EdgeInsets.symmetric(vertical: 4),
                                                 child: Text(
                                                   'detail'.tr,
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     fontSize: 20,
-                                                    color: _selectedIndex == 0
-                                                        ? colorTabBottom
-                                                        : Colors.grey,
+                                                    color: _selectedIndex == 0 ? colorTabBottom : Colors.grey,
                                                   ),
                                                 ),
                                               ),
@@ -288,9 +247,7 @@ class _ProfileViewState extends State<ProfileView> {
                                             border: Border(
                                               bottom: BorderSide(
                                                 width: 3,
-                                                color: _selectedIndex == 1
-                                                    ? colorTabBottom
-                                                    : Colors.transparent,
+                                                color: _selectedIndex == 1 ? colorTabBottom : Colors.transparent,
                                               ),
                                             ),
                                           ),
@@ -303,17 +260,13 @@ class _ProfileViewState extends State<ProfileView> {
                                                 });
                                               },
                                               child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 4),
+                                                padding: const EdgeInsets.symmetric(vertical: 4),
                                                 child: Text(
                                                   'feed'.tr,
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     fontSize: 20,
-                                                    color: _selectedIndex == 1
-                                                        ? colorTabBottom
-                                                        : Colors.grey,
+                                                    color: _selectedIndex == 1 ? colorTabBottom : Colors.grey,
                                                   ),
                                                 ),
                                               ),
@@ -330,16 +283,12 @@ class _ProfileViewState extends State<ProfileView> {
                                       Visibility(
                                         visible: _selectedIndex == 0,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20.0),
+                                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                SharedData()
-                                                    .owner!
-                                                    .memberIntro!,
+                                                SharedData().owner!.memberIntro!,
                                                 style: const TextStyle(
                                                   fontSize: 16.0,
                                                 ),
@@ -349,19 +298,15 @@ class _ProfileViewState extends State<ProfileView> {
                                                 text: TextSpan(
                                                   children: [
                                                     TextSpan(
-                                                      text:
-                                                          '${'find_tendency'.tr}: ',
+                                                      text: '${'find_tendency'.tr}: ',
                                                       style: const TextStyle(
                                                         fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                        fontWeight: FontWeight.w600,
                                                         color: Colors.black,
                                                       ),
                                                     ),
                                                     TextSpan(
-                                                      text: SharedData()
-                                                          .owner!
-                                                          .searchTendency(),
+                                                      text: SharedData().owner!.searchTendency(),
                                                       style: const TextStyle(
                                                         fontSize: 15.0,
                                                         color: Colors.black,
@@ -378,15 +323,12 @@ class _ProfileViewState extends State<ProfileView> {
                                                       text: '${'height'.tr}: ',
                                                       style: const TextStyle(
                                                         fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                        fontWeight: FontWeight.w600,
                                                         color: Colors.black,
                                                       ),
                                                     ),
                                                     TextSpan(
-                                                      text: SharedData()
-                                                          .owner!
-                                                          .height(),
+                                                      text: SharedData().owner!.height(),
                                                       style: const TextStyle(
                                                         fontSize: 15.0,
                                                         color: Colors.black,
@@ -400,19 +342,15 @@ class _ProfileViewState extends State<ProfileView> {
                                                 text: TextSpan(
                                                   children: [
                                                     TextSpan(
-                                                      text:
-                                                          '${'body_type'.tr}: ',
+                                                      text: '${'body_type'.tr}: ',
                                                       style: const TextStyle(
                                                         fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                        fontWeight: FontWeight.w600,
                                                         color: Colors.black,
                                                       ),
                                                     ),
                                                     TextSpan(
-                                                      text: SharedData()
-                                                          .owner!
-                                                          .bodyType(),
+                                                      text: SharedData().owner!.bodyType(),
                                                       style: const TextStyle(
                                                         fontSize: 15.0,
                                                         color: Colors.black,
@@ -426,19 +364,15 @@ class _ProfileViewState extends State<ProfileView> {
                                                 text: TextSpan(
                                                   children: [
                                                     TextSpan(
-                                                      text:
-                                                          '${'language_spoken'.tr}: ',
+                                                      text: '${'language_spoken'.tr}: ',
                                                       style: const TextStyle(
                                                         fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                        fontWeight: FontWeight.w600,
                                                         color: Colors.black,
                                                       ),
                                                     ),
                                                     TextSpan(
-                                                      text: SharedData()
-                                                          .owner!
-                                                          .spokenLanguage(),
+                                                      text: SharedData().owner!.spokenLanguage(),
                                                       style: const TextStyle(
                                                         fontSize: 15.0,
                                                         color: Colors.black,
@@ -452,22 +386,15 @@ class _ProfileViewState extends State<ProfileView> {
                                                 text: TextSpan(
                                                   children: [
                                                     TextSpan(
-                                                      text:
-                                                          '${'drinking'.tr}: ',
+                                                      text: '${'drinking'.tr}: ',
                                                       style: const TextStyle(
                                                         fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                        fontWeight: FontWeight.w600,
                                                         color: Colors.black,
                                                       ),
                                                     ),
                                                     TextSpan(
-                                                      text: SharedData()
-                                                          .owner!
-                                                          .frequency(
-                                                              code: SharedData()
-                                                                  .owner!
-                                                                  .drinkInfo),
+                                                      text: SharedData().owner!.frequency(code: SharedData().owner!.drinkInfo),
                                                       style: const TextStyle(
                                                         fontSize: 15.0,
                                                         color: Colors.black,
@@ -484,18 +411,12 @@ class _ProfileViewState extends State<ProfileView> {
                                                       text: '${'smoking'.tr}: ',
                                                       style: const TextStyle(
                                                         fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                        fontWeight: FontWeight.w600,
                                                         color: Colors.black,
                                                       ),
                                                     ),
                                                     TextSpan(
-                                                      text: SharedData()
-                                                          .owner!
-                                                          .frequency(
-                                                              code: SharedData()
-                                                                  .owner!
-                                                                  .smokingInfo),
+                                                      text: SharedData().owner!.frequency(code: SharedData().owner!.smokingInfo),
                                                       style: const TextStyle(
                                                         fontSize: 15.0,
                                                         color: Colors.black,
@@ -510,8 +431,7 @@ class _ProfileViewState extends State<ProfileView> {
                                       ),
                                       Visibility(
                                         visible: _selectedIndex == 1,
-                                        child: makeFeedList(
-                                            SharedData().owner!, _feedList),
+                                        child: makeFeedList(SharedData().owner!, _feedList),
                                       ),
                                     ],
                                   ),
@@ -529,8 +449,7 @@ class _ProfileViewState extends State<ProfileView> {
                                   const Spacer(),
                                   InkWell(
                                       onTap: () {
-                                        Get.to(() => const AppSettings(),
-                                            transition: Transition.cupertino);
+                                        Get.to(() => const AppSettings(), transition: Transition.cupertino);
                                       },
                                       child: Image.asset(
                                         'assets/images/btn_setting.png',
@@ -539,8 +458,7 @@ class _ProfileViewState extends State<ProfileView> {
                                   const SizedBox(width: 10.0),
                                   InkWell(
                                       onTap: () {
-                                        Get.to(() => const UpdateProfileView(),
-                                            transition: Transition.cupertino);
+                                        Get.to(() => const UpdateProfileView(), transition: Transition.cupertino);
                                       },
                                       child: Image.asset(
                                         'assets/images/btn_edit.png',
@@ -577,8 +495,7 @@ class _ProfileViewState extends State<ProfileView> {
   void _showNextImage() {
     setState(() {
       if (SharedData().owner!.tbMemberPhotoInfoList!.isNotEmpty) {
-        _currentProfileIndex = (_currentProfileIndex + 1) %
-            SharedData().owner!.tbMemberPhotoInfoList!.length;
+        _currentProfileIndex = (_currentProfileIndex + 1) % SharedData().owner!.tbMemberPhotoInfoList!.length;
       }
     });
   }
@@ -586,8 +503,7 @@ class _ProfileViewState extends State<ProfileView> {
   void _showPrevImage() {
     setState(() {
       if (SharedData().owner!.tbMemberPhotoInfoList!.isNotEmpty) {
-        _currentProfileIndex = (_currentProfileIndex - 1) %
-            SharedData().owner!.tbMemberPhotoInfoList!.length;
+        _currentProfileIndex = (_currentProfileIndex - 1) % SharedData().owner!.tbMemberPhotoInfoList!.length;
       }
     });
   }
